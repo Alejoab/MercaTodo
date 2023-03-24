@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,10 +17,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        /**
+         * Insert the cities and the states in the database from a sql file with
+         * an insert statement.
+         */
         $path = base_path() . '/database/seeders/cities_states.sql';
         $sql = file_get_contents($path);
         DB::unprepared($sql);
 
+        /**
+         * Create the initial roles in the database.
+         */
+        Role::create(['name' => 'Administrator']);
+        Role::create(['name' => 'Customer']);
+
+        /**
+         * Create the initial admin user in the database.
+         */
         User::factory()->create([
             'name' => 'Alejandro',
             'surname' => 'Alvarez',
@@ -30,8 +44,13 @@ class DatabaseSeeder extends Seeder
             'address' => 'Calle 1 # 2 - 3',
             'password' => Hash::make('alejo1234'),
             'city_id' => 1,
-        ]);
+        ])->assignRole('Administrator');
 
-        User::factory(200)->create();
+        /**
+         * Create a random users in the database with the role of customer.
+         */
+        User::factory(200)->create()->each(function ($user) {
+            $user->assignRole('Customer');
+        });
     }
 }
