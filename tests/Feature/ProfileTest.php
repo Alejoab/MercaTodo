@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -12,6 +13,10 @@ class ProfileTest extends TestCase
 
     public function test_profile_page_is_displayed(): void
     {
+        $path = base_path() . '/database/seeders/cities_departments.sql';
+        $sql = file_get_contents($path);
+        DB::unprepared($sql);
+
         $user = User::factory()->create();
 
         $response = $this
@@ -76,7 +81,7 @@ class ProfileTest extends TestCase
             ->assertRedirect('/');
 
         $this->assertGuest();
-        $this->assertNull($user->fresh());
+        $this->assertNotNull($user->deleted_at);
     }
 
     public function test_correct_password_must_be_provided_to_delete_account(): void
