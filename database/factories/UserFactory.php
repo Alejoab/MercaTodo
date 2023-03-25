@@ -22,10 +22,10 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'surname' => fake()->lastName(),
-            'document' => fake()->unique()->randomNumber(5, true),
+            'document' => fake()->unique()->numberBetween(1000000000, 9999999999),
             'document_type' => fake()->randomElement(DocumentType::cases()),
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->unique()->phoneNumber(),
+            'phone' => fake()->numberBetween(1000000000, 9999999999),
             'address' => fake()->address(),
             'city_id' => fake()->numberBetween(1, 1100),
             'email_verified_at' => now(),
