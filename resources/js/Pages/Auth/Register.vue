@@ -5,14 +5,38 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import {ref} from "vue";
+
+const props = defineProps({
+    document_types: {
+        type: Object
+    },
+    states: {
+        type: Object
+    }
+})
 
 const form = useForm({
     name: '',
+    surname: '',
+    document: '',
+    document_type: '',
     email: '',
+    phone: '',
+    address: '',
+    city_id: 0,
     password: '',
     password_confirmation: '',
     terms: false,
 });
+
+const state_id = ref(0);
+const cities = ref({});
+
+const getCities = async () => {
+    const response = await fetch(route('cities', state_id.value));
+    cities.value = await response.json();
+};
 
 const submit = () => {
     form.post(route('register'), {
@@ -43,6 +67,52 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
+                <InputLabel for="surname" value="Surname" />
+
+                <TextInput
+                    id="surname"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.surname"
+                    required
+                    autocomplete="surname"
+                />
+
+                <InputError class="mt-2" :message="form.errors.surname" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="document_type" value="Document Type" />
+
+                <select
+                    id="document_type"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model="form.document_type"
+                    required
+                    autocomplete="document_type"
+                >
+                    <option v-for="type in document_types" :value="type">{{type}}</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.document_type" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="document" value="Document" />
+
+                <TextInput
+                    id="document"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.document"
+                    required
+                    autocomplete="document"
+                />
+
+                <InputError class="mt-2" :message="form.errors.document" />
+            </div>
+
+            <div class="mt-4">
                 <InputLabel for="email" value="Email" />
 
                 <TextInput
@@ -55,6 +125,67 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="phone" value="Phone" />
+
+                <TextInput
+                    id="phone"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.phone"
+                    required
+                    autocomplete="phone"
+                />
+
+                <InputError class="mt-2" :message="form.errors.phone" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="state" value="State" />
+
+                <select
+                    id="state"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model="state_id"
+                    required
+                    @change="getCities()"
+                >
+                    <option v-for="state in states" :value="state.id">{{state.name}}</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="city_id" value="City" />
+
+                <select
+                    id="city_id"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model.number="form.city_id"
+
+                    required
+                    autocomplete="city_id"
+                >
+                <option v-for="city in cities" :value="city.id">{{city.name}}</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.city_id" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="address" value="Address" />
+
+                <TextInput
+                    id="address"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.address"
+                    required
+                    autocomplete="adress"
+                />
+
+                <InputError class="mt-2" :message="form.errors.address" />
             </div>
 
             <div class="mt-4">
