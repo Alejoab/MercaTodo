@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -19,9 +20,18 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        DB::unprepared('INSERT INTO departments (id, name) VALUES (1, "Test State")');
+        DB::unprepared('INSERT INTO cities (id, name, department_id) VALUES (1, "Test City", 1)');
+
         $response = $this->post('/register', [
             'name' => 'Test User',
+            'surname' => 'Test User',
+            'document' => '12345678',
+            'document_type' => 'cedula de ciudadanía',
             'email' => 'test@example.com',
+            'phone' => '1234567890',
+            'address' => 'Test Address',
+            'city_id' => '1',
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);

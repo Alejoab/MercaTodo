@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'address' => fake()->address(),
             'city_id' => fake()->numberBetween(1, 1100),
             'email_verified_at' => now(),
-            'password' => Hash::make('password123'), // password
+            'password' => Hash::make('password'), // password
             'remember_token' => Str::random(10),
         ];
     }
