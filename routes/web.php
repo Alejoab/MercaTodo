@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('cities/{state_id}', function ($state_id) {
-    return City::where('state_id', $state_id)->get();
+    return City::where('department_id', $state_id)->get();
 })->name('cities');
 
 require __DIR__.'/auth.php';

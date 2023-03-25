@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
          * Insert the cities and the states in the database from a sql file with
          * an insert statement.
          */
-        $path = base_path() . '/database/seeders/cities_states.sql';
+        $path = base_path() . '/database/seeders/cities_departments.sql';
         $sql = file_get_contents($path);
         DB::unprepared($sql);
 

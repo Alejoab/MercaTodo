@@ -11,9 +11,9 @@ class City extends Model
 {
     use HasFactory;
 
-    public function state(): BelongsTo
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function users(): HasMany

@@ -11,7 +11,7 @@ const props = defineProps({
     document_types: {
         type: Object
     },
-    states: {
+    departments: {
         type: Object
     }
 })
@@ -30,11 +30,11 @@ const form = useForm({
     terms: false,
 });
 
-const state_id = ref(0);
+const department_id = ref(0);
 const cities = ref({});
 
 const getCities = async () => {
-    const response = await fetch(route('cities', state_id.value));
+    const response = await fetch(route('cities', department_id.value));
     cities.value = await response.json();
 };
 
@@ -47,7 +47,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head><title>Registration</title></Head>
 
         <form @submit.prevent="submit">
             <div>
@@ -143,16 +143,16 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="state" value="State" />
+                <InputLabel for="department" value="Department" />
 
                 <select
-                    id="state"
+                    id="department"
                     class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
-                    v-model="state_id"
+                    v-model="department_id"
                     required
                     @change="getCities()"
                 >
-                    <option v-for="state in states" :value="state.id">{{state.name}}</option>
+                    <option v-for="department in departments" :value="department.id">{{department.name}}</option>
                 </select>
             </div>
 

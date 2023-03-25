@@ -1,4 +1,4 @@
-INSERT INTO `states` (`name`)
+INSERT INTO `departments` (`name`)
 VALUES
 	('Antioquia'),
 	('Atlantico'),
@@ -34,7 +34,7 @@ VALUES
 	('Vaupes'),
 	('Vichada');
 
-INSERT INTO `cities` (`state_id`, `name`)
+INSERT INTO `cities` (`department_id`, `name`)
 VALUES
 	(1, 'MEDELLIN'),
 	(1, 'ABEJORRAL'),

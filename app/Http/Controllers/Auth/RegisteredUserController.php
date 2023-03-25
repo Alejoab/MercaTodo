@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
-use App\Models\State;
+use App\Models\Department;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -25,7 +25,7 @@ class RegisteredUserController extends Controller
     {
         return Inertia::render('Auth/Register', [
             'document_types' => DocumentType::cases(),
-            'states' => State::all(),
+            'departments' => Department::all(),
         ]);
     }
 
