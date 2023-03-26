@@ -3,8 +3,9 @@ import AuthenticatedLayout from '@/Layouts/UserLayout.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head } from '@inertiajs/vue3';
-import UpdateAdressInformation from "@/Pages/Profile/Partials/UpdateAdressInformation.vue";
+import { Head, Link } from '@inertiajs/vue3';
+import UpdateAddressInformation from "@/Pages/Profile/Partials/UpdateAddressInformation.vue";
+import BackButton from "@/Components/BackButton.vue";
 
 defineProps({
     mustVerifyEmail: {
@@ -29,15 +30,20 @@ defineProps({
         <div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="relative">
+                        <div class="absolute top-0 right-0">
+                            <BackButton :href="route('home')"></BackButton>
+                        </div>
+                    </div>
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
-                        class="max-w-xl"
+                        class="max-w-xl mt-5 sm:mt-0"
                     />
                 </div>
 
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <UpdateAdressInformation
+                    <UpdateAddressInformation
                         :departments="departments"
                         :department_id="department_id"
                         class="max-w-xl"
