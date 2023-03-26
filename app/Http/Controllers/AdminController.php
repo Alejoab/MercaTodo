@@ -29,4 +29,14 @@ class AdminController extends Controller
                 ;
             })->paginate(50);
     }
+
+    public function userDestroy($id): void
+    {
+        User::find($id)->delete();
+    }
+
+    public function userRestore($id): void
+    {
+        User::withTrashed()->where('id', $id)->restore();
+    }
 }

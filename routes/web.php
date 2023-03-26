@@ -37,6 +37,9 @@ Route::get('cities/{state_id}', function ($state_id) {
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/users/{id}', [AdminController::class, 'userShow'])->name('admin.user.show');
+    Route::delete('/users/{id}', [AdminController::class, 'userDestroy'])->name('admin.user.destroy');
+    Route::put('/users/{id}', [AdminController::class, 'userRestore'])->name('admin.user.restore');
 
     Route::get('/list-users', [AdminController::class, 'listUsers'])->name('admin.list-users');
 });
