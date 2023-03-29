@@ -34,7 +34,7 @@ Route::get('cities/{state_id}', function ($state_id) {
     return City::where('department_id', $state_id)->get();
 })->name('cities');
 
-Route::prefix('admin')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/users/{id}', [AdminController::class, 'userShow'])->name('admin.user.show');

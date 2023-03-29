@@ -12,7 +12,7 @@ defineProps({
         type: Object
     },
     role: {
-        type: Array
+        type: Object
     },
     documentTypes: {
         type: Object
@@ -32,7 +32,7 @@ defineProps({
                     <BackButton :href="route('admin.users')"></BackButton>
                 </div>
             </div>
-            <UpdateInformation :user="user" :role="role[0]" :documentTypes="documentTypes" class="max-w-xl mt-5 sm:mt-0"/>
+            <UpdateInformation :user="user" :role="role" :documentTypes="documentTypes" class="max-w-xl mt-5 sm:mt-0"/>
         </div>
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <UpdateAddressInformationAdmin :user="user" :departments="departments" class="max-w-xl"/>

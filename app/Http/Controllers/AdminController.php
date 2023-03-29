@@ -40,7 +40,7 @@ class AdminController extends Controller
 
     public function userShow($id): Response
     {
-        $user = User::withTrashed()->find($id)->load('city');
+        $user = User::withTrashed()->findOrFail($id)->load('city');
         return Inertia::render('Administrator/EditUser', [
             'user' => $user,
             'role' => $user->getRoleNames(),
@@ -51,7 +51,7 @@ class AdminController extends Controller
 
     public function userUpdate(Request $request, $id): RedirectResponse
     {
-        $user = User::withTrashed()->find($id);
+        $user = User::withTrashed()->findOrFail($id);
 
         $request->validate([
             'name' => ['string', 'max:255'],
@@ -60,28 +60,32 @@ class AdminController extends Controller
             'document' => ['string', 'digits_between:8,11', Rule::unique(User::class)->ignore($id)],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($id)],
             'phone' => ['string', 'digits:10'],
-            'role' => ['boolean']
+            'role' => ['required', 'string'],
         ]);
 
         $user->fill($request->only('name', 'surname', 'document_type', 'document', 'email', 'phone'));
-        $user->save();
 
-        $role = $user->getRoleNames();
+        $rol = $user->getRoleNames();
 
-        if (!$role->isEmpty() != $request->role) {
-            if ($request->role) {
-                $user->assignRole('Administrator');
-            } else {
-                $user->removeRole('Administrator');
-            }
+        if (empty($rol->toArray())) {
+            $user->assignRole($request->role);
+        } elseif ($rol[0] != $request->role) {
+            $user->removeRole($rol[0]);
+            $user->assignRole($request->role);
         }
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return redirect()->route('admin.user.show', $id);
     }
 
     public function userUpdateAddress(Request $request, $id): RedirectResponse
     {
-        $user = User::withTrashed()->find($id);
+        $user = User::withTrashed()->findOrFail($id);
 
         $request->validate([
             'city_id' => ['required', 'integer'],
@@ -97,7 +101,7 @@ class AdminController extends Controller
 
     public function userUpdatePassword(Request $request, $id): RedirectResponse
     {
-        $user = User::withTrashed()->find($id);
+        $user = User::withTrashed()->findOrFail($id);
 
         $request->validate([
             'password' => ['required', Password::defaults(), 'confirmed'],
@@ -111,12 +115,13 @@ class AdminController extends Controller
 
     public function userDestroy($id): void
     {
-        User::find($id)->delete();
+
+        User::withTrashed()->findOrFail($id)->delete();
     }
 
     public function userRestore($id): void
     {
-        User::withTrashed()->where('id', $id)->restore();
+        User::withTrashed()->findOrFail($id)->restore();
     }
 
     public function userForceDelete(Request $request, $id): RedirectResponse
@@ -125,7 +130,7 @@ class AdminController extends Controller
             'password' => ['required', 'current-password'],
         ]);
 
-        User::withTrashed()->find($id)->forceDelete();
+        User::withTrashed()->findOrFail($id)->forceDelete();
 
         return Redirect::to(route('admin.users'));
     }
