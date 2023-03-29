@@ -4,14 +4,13 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
     user: {
         type: Object
     },
     role: {
-        type: String
+        type: Object
     },
     documentTypes: {
         type: Object
@@ -27,7 +26,7 @@ const form = useForm({
     document: user.document,
     email: user.email,
     phone: user.phone,
-    role: !! usePage().props.role[0],
+    role: usePage().props.role[0],
 });
 </script>
 
@@ -94,6 +93,8 @@ const form = useForm({
                     v-model="form.document"
                     autocomplete="document"
                 />
+
+                <InputError class="mt-2" :message="form.errors.document"/>
             </div>
 
             <div>
@@ -127,11 +128,18 @@ const form = useForm({
             </div>
 
             <div>
-                <h1 class="mb-2">Role</h1>
-                <div class="flex items-center">
-                    <Checkbox id="Administrator" value="Administrator" :checked="!!form.role" v-model="form.role"/>
-                    <label class="ml-3 font-medium text-gray-700" for="Administrator">Administrator</label>
+                <InputLabel value="Rol" class="mb-2"/>
+
+                <div class="flex items-center mb-4">
+                    <input v-model="form.role" id="roleAdministrator" type="radio" value="Administrator" name="roleAdministrator" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2 ">
+                    <label for="roleAdministrator" class="ml-2 text-sm font-medium">Administrator</label>
                 </div>
+                <div class="flex items-center">
+                    <input v-model="form.role" id="roleCustomer" type="radio" value="Customer" name="roleCustomer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2">
+                    <label for="roleCustomer" class="ml-2 text-sm font-medium ">Customer</label>
+                </div>
+
+                <InputError class="mt-2" :message="form.errors.roles" />
             </div>
 
             <div class="flex items-center gap-4">

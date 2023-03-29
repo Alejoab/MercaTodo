@@ -2,10 +2,15 @@
 import { TailwindPagination } from "laravel-vue-pagination";
 import { Link } from '@inertiajs/vue3';
 import {ref} from "vue";
+import Modal from "@/Components/Modal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const users = ref({});
 const search = ref('');
 let pageT = 1;
+const destroyUserId = ref('');
+const restoreUserId = ref('');
 
 const getResults = async (page = 1, search = '') => {
     pageT = page;
@@ -14,11 +19,13 @@ const getResults = async (page = 1, search = '') => {
 }
 
 const destroyUser = async (id) => {
+    destroyUserId.value = '';
     await axios.delete(route('admin.user.destroy', id))
     await getResults(pageT, search.value);
 }
 
 const restoreUser = async (id) => {
+    restoreUserId.value = '';
     await axios.put(route('admin.user.restore', id))
     await getResults(pageT, search.value);
 }
@@ -71,10 +78,10 @@ getResults();
                                 <Link :href="route('admin.user.show', user.id)">
                                     <svg class="h-6 w-6 text-black"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>
                                 </Link>
-                                <button v-if="!user.deleted_at" @click="destroyUser(user.id)">
+                                <button v-if="!user.deleted_at" @click="destroyUserId = user.id">
                                     <svg class="h-6 w-6 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="4" y1="7" x2="20" y2="7" />  <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
                                 </button>
-                                <button v-else @click="restoreUser(user.id)">
+                                <button v-else @click="restoreUserId = user.id">
                                     <svg class="h-6 w-6 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />  <circle cx="8.5" cy="7" r="4" />  <line x1="20" y1="8" x2="20" y2="14" />  <line x1="23" y1="11" x2="17" y2="11" /></svg>
                                 </button>
                             </div>
@@ -87,4 +94,50 @@ getResults();
             </div>
         </div>
     </div>
+
+    <Modal :show="!! destroyUserId" @close="destroyUserId = ''">
+        <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900">
+                Are you sure you want to delete the account?
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Once you delete this account, it will only be disabled for the user, but the information will still be stored.
+            </p>
+
+            <div class="mt-6 flex justify-end">
+                <SecondaryButton @click="destroyUserId = ''"> Cancel </SecondaryButton>
+
+                <DangerButton
+                    class="ml-3"
+                    @click="destroyUser(destroyUserId)"
+                >
+                    Delete Account
+                </DangerButton>
+            </div>
+        </div>
+    </Modal>
+
+    <Modal :show="!! restoreUserId" @close="restoreUserId = ''">
+        <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900">
+                Are you sure you want to restore the account?
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Once you restore the account the user will have access to it again.
+            </p>
+
+            <div class="mt-6 flex justify-end">
+                <SecondaryButton @click="restoreUserId = ''"> Cancel </SecondaryButton>
+
+                <DangerButton
+                    class="ml-3 bg-green-400 hover:bg-green-500 active:bg-green-400 focus:ring-green-600"
+                    @click="restoreUser(restoreUserId)"
+                >
+                    Restore Account
+                </DangerButton>
+            </div>
+        </div>
+    </Modal>
 </template>

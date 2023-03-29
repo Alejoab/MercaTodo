@@ -18,13 +18,17 @@ defineProps({
 const user = usePage().props.user;
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
+const destroyUserId = ref('');
+const restoreUserId = ref('');
 
 const destroyUser = async (id) => {
+    destroyUserId.value = '';
     await axios.delete(route('admin.user.destroy', id));
     window.location.href = route('admin.users');
 }
 
 const restoreUser = async (id) => {
+    restoreUserId.value = '';
     await axios.put(route('admin.user.restore', id));
     window.location.href = route('admin.users');
 }
@@ -62,10 +66,10 @@ const closeModal = () => {
     </header>
     <div class="mt-4">
         <div v-if="user.deleted_at">
-            <DangerButton @click="restoreUser(user.id)" class="bg-green-500 mr-5 hover:bg-green-900 active:bg-green-700 focus:ring-green-700">Restore Account</DangerButton>
+            <DangerButton @click="restoreUserId = user.id" class="bg-green-400 mr-5 hover:bg-green-600 active:bg-green-600 focus:ring-green-600">Restore Account</DangerButton>
             <DangerButton @click="confirmUserDeletion"> Force Delete Account </DangerButton>
         </div>
-            <DangerButton v-else @click="destroyUser(user.id)">Delete Account</DangerButton>
+            <DangerButton v-else @click="destroyUserId = user.id">Delete Account</DangerButton>
     </div>
 
     <Modal :show="confirmingUserDeletion" @close="closeModal">
@@ -105,6 +109,52 @@ const closeModal = () => {
                     @click="deleteUser"
                 >
                     Delete Account
+                </DangerButton>
+            </div>
+        </div>
+    </Modal>
+
+    <Modal :show="!! destroyUserId" @close="destroyUserId = ''">
+        <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900">
+                Are you sure you want to delete the account?
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Once you delete this account, it will only be disabled for the user, but the information will still be stored.
+            </p>
+
+            <div class="mt-6 flex justify-end">
+                <SecondaryButton @click="destroyUserId = ''"> Cancel </SecondaryButton>
+
+                <DangerButton
+                    class="ml-3"
+                    @click="destroyUser(destroyUserId)"
+                >
+                    Delete Account
+                </DangerButton>
+            </div>
+        </div>
+    </Modal>
+
+    <Modal :show="!! restoreUserId" @close="restoreUserId = ''">
+        <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900">
+                Are you sure you want to restore the account?
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Once you restore the account the user will have access to it again.
+            </p>
+
+            <div class="mt-6 flex justify-end">
+                <SecondaryButton @click="restoreUserId = ''"> Cancel </SecondaryButton>
+
+                <DangerButton
+                    class="ml-3 bg-green-400 hover:bg-green-500 active:bg-green-400 focus:ring-green-600"
+                    @click="restoreUser(restoreUserId)"
+                >
+                    Restore Account
                 </DangerButton>
             </div>
         </div>
