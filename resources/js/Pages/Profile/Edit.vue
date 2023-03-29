@@ -32,7 +32,7 @@ defineProps({
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <div class="text-end pb-3 md:pb-0">
                         <BackButton :href="route('home')" ></BackButton>
-                    </div>      
+                    </div>
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"

@@ -5,6 +5,7 @@ import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
 
 const users = ref({});
 const search = ref('');
@@ -131,12 +132,12 @@ getResults();
             <div class="mt-6 flex justify-end">
                 <SecondaryButton @click="restoreUserId = ''"> Cancel </SecondaryButton>
 
-                <DangerButton
-                    class="ml-3 bg-green-400 hover:bg-green-500 active:bg-green-400 focus:ring-green-600"
+                <SuccessButton
+                    class="ml-3"
                     @click="restoreUser(restoreUserId)"
                 >
                     Restore Account
-                </DangerButton>
+                </SuccessButton>
             </div>
         </div>
     </Modal>

@@ -8,6 +8,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Modal from "@/Components/Modal.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
 
 defineProps({
     user: {
@@ -66,7 +67,7 @@ const closeModal = () => {
     </header>
     <div class="mt-4">
         <div v-if="user.deleted_at">
-            <DangerButton @click="restoreUserId = user.id" class="bg-green-400 mr-5 hover:bg-green-600 active:bg-green-600 focus:ring-green-600">Restore Account</DangerButton>
+            <SuccessButton @click="restoreUserId = user.id" class="mr-5">Restore Account</SuccessButton>
             <DangerButton @click="confirmUserDeletion"> Force Delete Account </DangerButton>
         </div>
             <DangerButton v-else @click="destroyUserId = user.id">Delete Account</DangerButton>
@@ -150,12 +151,12 @@ const closeModal = () => {
             <div class="mt-6 flex justify-end">
                 <SecondaryButton @click="restoreUserId = ''"> Cancel </SecondaryButton>
 
-                <DangerButton
-                    class="ml-3 bg-green-400 hover:bg-green-500 active:bg-green-400 focus:ring-green-600"
+                <SuccessButton
+                    class="ml-3"
                     @click="restoreUser(restoreUserId)"
                 >
                     Restore Account
-                </DangerButton>
+                </SuccessButton>
             </div>
         </div>
     </Modal>
