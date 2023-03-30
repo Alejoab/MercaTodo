@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -35,6 +36,7 @@ class ProfileController extends Controller
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
+            Log::info('User ' . $request->user()->id . ' changed his email to ' . $request->user()->email);
             $request->user()->email_verified_at = null;
         }
 
@@ -69,6 +71,8 @@ class ProfileController extends Controller
         Auth::logout();
 
         $user->delete();
+
+        Log::info('User ' . $user->id . ' deleted his account');
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
