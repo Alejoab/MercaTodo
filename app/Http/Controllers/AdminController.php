@@ -9,6 +9,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -68,13 +69,16 @@ class AdminController extends Controller
         $rol = $user->getRoleNames();
 
         if (empty($rol->toArray())) {
+            Log::warning('The administrator '.auth()->user()->id.' has assigned the role '.$request->role.' to the user '.$id);
             $user->assignRole($request->role);
         } elseif ($rol[0] != $request->role) {
+            Log::warning('The administrator '.auth()->user()->id.' has assigned the role '.$request->role.' to the user '.$id);
             $user->removeRole($rol[0]);
             $user->assignRole($request->role);
         }
 
         if ($user->isDirty('email')) {
+            Log::warning('The administrator '.auth()->user()->id.' has changed the email of the user '.$id);
             $user->email_verified_at = null;
         }
 
@@ -107,6 +111,8 @@ class AdminController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
+        Log::warning('The administrator '.auth()->user()->id.' has changed the password of the user '.$id);
+
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -115,12 +121,13 @@ class AdminController extends Controller
 
     public function userDestroy($id): void
     {
-
+        Log::warning('The administrator '.auth()->user()->id.' has disabled the user '.$id);
         User::withTrashed()->findOrFail($id)->delete();
     }
 
     public function userRestore($id): void
     {
+        Log::warning('The administrator '.auth()->user()->id.' has enabled the user '.$id);
         User::withTrashed()->findOrFail($id)->restore();
     }
 
@@ -131,6 +138,8 @@ class AdminController extends Controller
         ]);
 
         User::withTrashed()->findOrFail($id)->forceDelete();
+
+        Log::warning('The administrator '.auth()->user()->id.' has deleted the user '.$id);
 
         return Redirect::to(route('admin.users'));
     }
