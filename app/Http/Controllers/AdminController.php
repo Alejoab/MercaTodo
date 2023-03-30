@@ -31,12 +31,16 @@ class AdminController extends Controller
 
     public function listUsers(Request $request): LengthAwarePaginator
     {
-        return User::withTrashed()->when($request->input('search'), function ($query, $search) {
+        return User::withTrashed()
+            ->join('model_has_roles', 'id', '=', 'model_id' )
+            ->select('id', 'name', 'surname', 'document_type', 'document', 'email', 'name', 'deleted_at', 'role_id')
+            ->when($request->input('search'), function ($query, $search) {
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orwhere('surname', 'like', '%' . $search . '%')
                     ->orWhere('email', 'like', '%' . $search . '%')
                 ;
-            })->paginate(50);
+            })
+            ->paginate(50);
     }
 
     public function userShow($id): Response

@@ -59,7 +59,7 @@ getResults();
                     <th scope="col" class="px-6 py-3"> Document Type </th>
                     <th scope="col" class="px-6 py-3"> Document </th>
                     <th scope="col" class="px-6 py-3"> Email </th>
-                    <th scope="col" class="px-6 py-3"> Phone </th>
+                    <th scope="col" class="px-6 py-3"> Role </th>
                     <th scope="col" class="px-6 py-3"> Status </th>
                     <th scope="col" class="px-6 py-3"> Action </th>
                 </thead>
@@ -72,7 +72,7 @@ getResults();
                         <td class="px-6 py-1.5"> {{user.document_type}} </td>
                         <td class="px-6 py-1.5"> {{user.document}} </td>
                         <td class="px-6 py-1.5"> {{user.email}} </td>
-                        <td class="px-6 py-1.5"> {{user.phone}} </td>
+                        <td class="px-6 py-1.5"> {{user.role_id === 1?'Administrator':'Customer'}} </td>
                         <td class="px-6 py-1.5"> {{user.deleted_at?'Disabled':'Active'}} </td>
                         <td class="px-6 py-1.5 text-center">
                             <div class="inline-flex space-x-1">

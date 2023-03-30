@@ -1,6 +1,6 @@
 <template>
     <div class="flex">
-        <span class="font-extrabold m-auto text-2xl mr-1 pt-1 text-gray-700">MercaTodo</span>
+        <span class="font-extrabold m-auto text-xl mr-1 pt-1 text-gray-700">MercaTodo</span>
 
         <svg class="text-gray-700" width="36" height="36"  viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <title>shopping-bag-line</title>
