@@ -11,12 +11,17 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_profile_page_is_displayed(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         $path = base_path() . '/database/seeders/cities_departments.sql';
         $sql = file_get_contents($path);
         DB::unprepared($sql);
+    }
 
+    public function test_profile_page_is_displayed(): void
+    {
         $user = User::factory()->create();
 
         $response = $this
