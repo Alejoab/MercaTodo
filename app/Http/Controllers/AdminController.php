@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -32,14 +33,9 @@ class AdminController extends Controller
     public function listUsers(Request $request): LengthAwarePaginator
     {
         return User::withTrashed()
-            ->join('model_has_roles', 'id', '=', 'model_id' )
-            ->select('id', 'name', 'surname', 'document_type', 'document', 'email', 'name', 'deleted_at', 'role_id')
-            ->when($request->input('search'), function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orwhere('surname', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                ;
-            })
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->select('users.id', 'users.name', 'users.surname', 'users.document_type', 'users.document', 'users.email', 'roles.name as role', DB::raw('(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'))
             ->paginate(50);
     }
 
