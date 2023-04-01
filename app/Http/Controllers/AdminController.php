@@ -64,8 +64,8 @@ class AdminController extends Controller
             'document_type' => [new Enum(DocumentType::class)],
             'document' => ['string', 'digits_between:8,11', Rule::unique(User::class)->ignore($id)],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($id)],
-            'phone' => ['string', 'digits:10'],
-            'role' => ['required', 'string'],
+            'phone' => ['nullable', 'string', 'digits:10'],
+            'role' => ['string'],
         ]);
 
         $user->fill($request->only('name', 'surname', 'document_type', 'document', 'email', 'phone'));
