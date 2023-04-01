@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Alejandro',
             'surname' => 'Alvarez',
             'document' => '12345678',
-            'document_type' => DocumentType::CEDULA_CIUDADANIA,
+            'document_type' => DocumentType::ID,
             'email' => 'alejo@alejo.com',
             'phone' => '3003003030',
             'address' => 'Calle 1 # 2 - 3',

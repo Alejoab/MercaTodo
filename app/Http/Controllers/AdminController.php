@@ -49,7 +49,7 @@ class AdminController extends Controller
         return Inertia::render('Administrator/EditUser', [
             'user' => $user,
             'role' => $user->getRoleNames(),
-            'documentTypes' => DocumentType::cases(),
+            'document_types' => DocumentType::cases(),
             'departments' => Department::all(),
         ]);
     }

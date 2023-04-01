@@ -12,7 +12,7 @@ defineProps({
     role: {
         type: Object
     },
-    documentTypes: {
+    document_types: {
         type: Object
     },
 });
@@ -77,7 +77,7 @@ const form = useForm({
                     required
                     autocomplete="document_type"
                 >
-                    <option v-for="type in documentTypes" :value="type">{{ type }}</option>
+                    <option v-for="type in document_types" :value="type">{{ type }}</option>
                 </select>
 
                 <InputError class="mt-2" :message="form.errors.document_type"/>
