@@ -21,10 +21,12 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        Log::info('The user ' . $request->user()->id . ' has changed his password');
-
         $request->user()->update([
             'password' => Hash::make($validated['password']),
+        ]);
+
+        Log::info('[PASSWORD]', [
+            'user_id' => $request->user()->id,
         ]);
 
         return back();

@@ -63,27 +63,32 @@ class AdminController extends Controller
             'surname' => ['string', 'max:255'],
             'document_type' => [new Enum(DocumentType::class)],
             'document' => ['string', 'digits_between:8,11', Rule::unique(User::class)->ignore($id)],
-            'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($id)],
             'phone' => ['nullable', 'string', 'digits:10'],
             'role' => ['string'],
         ]);
 
-        $user->fill($request->only('name', 'surname', 'document_type', 'document', 'email', 'phone'));
+        $user->fill($request->only('name', 'surname', 'document_type', 'document', 'phone'));
 
         $rol = $user->getRoleNames();
 
         if (empty($rol->toArray())) {
-            Log::warning('The administrator '.auth()->user()->id.' has assigned the role '.$request->role.' to the user '.$id);
             $user->assignRole($request->role);
+
+            Log::warning('[ROLE]', [
+                'admin_id' => auth()->user()->id,
+                'user_id' => $id,
+                'role' => $request->role,
+            ]);
+
         } elseif ($rol[0] != $request->role) {
-            Log::warning('The administrator '.auth()->user()->id.' has assigned the role '.$request->role.' to the user '.$id);
             $user->removeRole($rol[0]);
             $user->assignRole($request->role);
-        }
 
-        if ($user->isDirty('email')) {
-            Log::warning('The administrator '.auth()->user()->id.' has changed the email of the user '.$id);
-            $user->email_verified_at = null;
+            Log::warning('[ROLE]', [
+                'admin_id' => auth()->user()->id,
+                'user_id' => $id,
+                'role' => $request->role,
+            ]);
         }
 
         $user->save();
@@ -115,24 +120,35 @@ class AdminController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        Log::warning('The administrator '.auth()->user()->id.' has changed the password of the user '.$id);
-
         $user->password = Hash::make($request->password);
         $user->save();
+
+        Log::warning('[PASSWORD]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
 
         return redirect()->route('admin.user.show', $id);
     }
 
     public function userDestroy($id): void
     {
-        Log::warning('The administrator '.auth()->user()->id.' has disabled the user '.$id);
         User::withTrashed()->findOrFail($id)->delete();
+
+        Log::warning('[DELETE]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
     }
 
     public function userRestore($id): void
     {
-        Log::warning('The administrator '.auth()->user()->id.' has enabled the user '.$id);
         User::withTrashed()->findOrFail($id)->restore();
+
+        Log::warning('[RESTORE]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
     }
 
     public function userForceDelete(Request $request, $id): RedirectResponse
@@ -143,7 +159,10 @@ class AdminController extends Controller
 
         User::withTrashed()->findOrFail($id)->forceDelete();
 
-        Log::warning('The administrator '.auth()->user()->id.' has deleted the user '.$id);
+        Log::warning('[FORCE DELETE]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
 
         return Redirect::to(route('admin.users'));
     }

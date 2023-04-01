@@ -103,9 +103,9 @@ const form = useForm({
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full cursor-not-allowed bg-gray-100"
                     v-model="form.email"
-                    required
+                    disabled
                     autocomplete="username"
                 />
 
