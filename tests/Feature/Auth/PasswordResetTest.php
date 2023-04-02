@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\City;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,6 +13,13 @@ use Tests\TestCase;
 class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Department::factory(1)->create();
+        City::factory(1)->create();
+    }
 
     public function test_reset_password_link_screen_can_be_rendered(): void
     {

@@ -10,6 +10,8 @@ class Department extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function cities(): HasMany
     {
         return $this->hasMany(City::class);

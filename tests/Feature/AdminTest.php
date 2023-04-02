@@ -3,10 +3,10 @@
 namespace Tests\Feature;
 
 use App\Enums\DocumentType;
+use App\Models\City;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use PhpParser\Comment\Doc;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -23,6 +23,9 @@ class AdminTest extends TestCase
 
         $roleAdmin = Role::create(['name' => 'Administrator']);
         $roleCustomer = Role::create(['name' => 'Customer']);
+
+        Department::factory(1)->create();
+        City::factory(1)->create();
 
         $this->user = User::factory()->create();
         $this->user->assignRole($roleCustomer);

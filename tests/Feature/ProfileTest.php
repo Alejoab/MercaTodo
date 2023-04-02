@@ -2,22 +2,22 @@
 
 namespace Tests\Feature;
 
+use App\Models\City;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
+
     public function setUp(): void
     {
         parent::setUp();
-
-        $path = base_path() . '/database/seeders/cities_departments.sql';
-        $sql = file_get_contents($path);
-        DB::unprepared($sql);
+        Department::factory(1)->create();
+        City::factory(1)->create();
     }
 
     public function test_profile_page_is_displayed(): void
