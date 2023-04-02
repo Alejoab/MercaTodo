@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
 use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\City>
+ * @extends Factory<City>
  */
 class CityFactory extends Factory
 {
@@ -19,7 +20,9 @@ class CityFactory extends Factory
     {
         return [
             'name' => fake()->city(),
-            'department_id' => fake()->randomElement(Department::select('id')->get())->id,
+            'department_id' => fake()->randomElement(
+                Department::select('id')->get()
+            )->id,
         ];
     }
 }

@@ -44,10 +44,14 @@ class AdminTest extends TestCase
 
     public function test_only_created_users_can_be_updated(): void
     {
-        $response = $this->actingAs($this->admin)->get(route('admin.user.show', $this->user->id));
+        $response = $this->actingAs($this->admin)->get(
+            route('admin.user.show', $this->user->id)
+        );
         $response->assertStatus(200);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.user.show', 0));
+        $response = $this->actingAs($this->admin)->get(
+            route('admin.user.show', 0)
+        );
         $response->assertStatus(404);
     }
 
@@ -99,7 +103,8 @@ class AdminTest extends TestCase
         $response->assertRedirect(route('admin.user.show', $this->user->id));
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged_by_an_admin(): void
+    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged_by_an_admin(
+    ): void
     {
         $response = $this
             ->actingAs($this->admin)
@@ -117,27 +122,37 @@ class AdminTest extends TestCase
 
     public function test_admin_can_disable_and_enable_a_user(): void
     {
-        $response = $this->actingAs($this->admin)->delete(route('admin.user.destroy', $this->user->id));
+        $response = $this->actingAs($this->admin)->delete(
+            route('admin.user.destroy', $this->user->id)
+        );
         $response->assertSessionHasNoErrors();
         $this->assertNotNull($this->user->refresh()->deleted_at);
 
-        $response = $this->actingAs($this->admin)->put(route('admin.user.restore', $this->user->id));
+        $response = $this->actingAs($this->admin)->put(
+            route('admin.user.restore', $this->user->id)
+        );
         $response->assertSessionHasNoErrors();
         $this->assertNull($this->user->refresh()->deleted_at);
     }
 
     public function test_admin_can_force_delete_a_user(): void
     {
-        $response = $this->actingAs($this->admin)->delete(route('admin.user.force-delete', $this->user->id), [
-            'password' => 'password',
-        ]);
+        $response = $this->actingAs($this->admin)->delete(
+            route('admin.user.force-delete', $this->user->id),
+            [
+                'password' => 'password',
+            ]
+        );
         $response->assertSessionHasNoErrors();
         $this->assertNull(User::find($this->user->id));
     }
 
-    public function test_the_admin_password_is_required_when_force_deleting_a_user(): void
+    public function test_the_admin_password_is_required_when_force_deleting_a_user(
+    ): void
     {
-        $response = $this->actingAs($this->admin)->delete(route('admin.user.force-delete', $this->user->id));
+        $response = $this->actingAs($this->admin)->delete(
+            route('admin.user.force-delete', $this->user->id)
+        );
         $response->assertSessionHasErrors('password');
     }
 }

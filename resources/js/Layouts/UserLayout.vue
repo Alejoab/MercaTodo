@@ -9,7 +9,7 @@ import UserNavBar from "@/Components/UserNavBar.vue";
 
         <!-- Page Content -->
         <main class="py-12">
-            <slot />
+            <slot/>
         </main>
     </div>
 </template>

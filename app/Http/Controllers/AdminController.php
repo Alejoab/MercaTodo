@@ -33,14 +33,30 @@ class AdminController extends Controller
     public function listUsers(Request $request): LengthAwarePaginator
     {
         return User::withTrashed()
-            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join(
+                'model_has_roles',
+                'users.id',
+                '=',
+                'model_has_roles.model_id'
+            )
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->when($request->input('search'), function ($query, $search) {
                 $query->where('users.name', 'like', '%' . $search . '%')
                     ->orWhere('users.surname', 'like', '%' . $search . '%')
                     ->orWhere('users.email', 'like', '%' . $search . '%');
             })
-            ->select('users.id', 'users.name', 'users.surname', 'users.document_type', 'users.document', 'users.email', 'roles.name as role', DB::raw('(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'))
+            ->select(
+                'users.id',
+                'users.name',
+                'users.surname',
+                'users.document_type',
+                'users.document',
+                'users.email',
+                'roles.name as role',
+                DB::raw(
+                    '(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'
+                )
+            )
             ->paginate(50);
     }
 
@@ -63,12 +79,24 @@ class AdminController extends Controller
             'name' => ['string', 'max:255'],
             'surname' => ['string', 'max:255'],
             'document_type' => [new Enum(DocumentType::class)],
-            'document' => ['string', 'digits_between:8,11', Rule::unique(User::class)->ignore($id)],
+            'document' => [
+                'string',
+                'digits_between:8,11',
+                Rule::unique(User::class)->ignore($id)
+            ],
             'phone' => ['nullable', 'string', 'digits:10'],
             'role' => ['string'],
         ]);
 
-        $user->fill($request->only('name', 'surname', 'document_type', 'document', 'phone'));
+        $user->fill(
+            $request->only(
+                'name',
+                'surname',
+                'document_type',
+                'document',
+                'phone'
+            )
+        );
 
         $rol = $user->getRoleNames();
 
@@ -80,7 +108,6 @@ class AdminController extends Controller
                 'user_id' => $id,
                 'role' => $request->role,
             ]);
-
         } elseif ($rol[0] != $request->role) {
             $user->removeRole($rol[0]);
             $user->assignRole($request->role);

@@ -4,12 +4,13 @@ namespace Database\Factories;
 
 use App\Enums\DocumentType;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -23,7 +24,10 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'surname' => fake()->lastName(),
-            'document' => fake()->unique()->numberBetween(1000000000, 9999999999),
+            'document' => fake()->unique()->numberBetween(
+                1000000000,
+                9999999999
+            ),
             'document_type' => fake()->randomElement(DocumentType::cases()),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->numberBetween(1000000000, 9999999999),
@@ -40,7 +44,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

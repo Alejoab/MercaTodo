@@ -16,8 +16,12 @@ class RegistrationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        DB::unprepared('INSERT INTO departments (id, name) VALUES (1, "Test State")');
-        DB::unprepared('INSERT INTO cities (id, name, department_id) VALUES (1, "Test City", 1)');
+        DB::unprepared(
+            'INSERT INTO departments (id, name) VALUES (1, "Test State")'
+        );
+        DB::unprepared(
+            'INSERT INTO cities (id, name, department_id) VALUES (1, "Test City", 1)'
+        );
         Role::create(['name' => 'Customer']);
     }
 
@@ -30,7 +34,6 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-
         $response = $this->post('/register', [
             'name' => 'Test User',
             'surname' => 'Test User',

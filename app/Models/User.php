@@ -27,37 +27,40 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'surname',
-        'document',
-        'document_type',
-        'email',
-        'phone',
-        'address',
-        'password',
-        'city_id',
-    ];
+    protected $fillable
+        = [
+            'name',
+            'surname',
+            'document',
+            'document_type',
+            'email',
+            'phone',
+            'address',
+            'password',
+            'city_id',
+        ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden
+        = [
+            'password',
+            'remember_token',
+        ];
 
     /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'document_type' => DocumentType::class
-    ];
+    protected $casts
+        = [
+            'email_verified_at' => 'datetime',
+            'document_type' => DocumentType::class
+        ];
 
     public function city(): BelongsTo
     {
