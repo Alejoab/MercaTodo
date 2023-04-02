@@ -98,19 +98,8 @@ class AdminController extends Controller
             )
         );
 
-        $rol = $user->getRoleNames();
-
-        if (empty($rol->toArray())) {
-            $user->assignRole($request->role);
-
-            Log::warning('[ROLE]', [
-                'admin_id' => auth()->user()->id,
-                'user_id' => $id,
-                'role' => $request->role,
-            ]);
-        } elseif ($rol[0] != $request->role) {
-            $user->removeRole($rol[0]);
-            $user->assignRole($request->role);
+        if (!$user->hasRole($request->role)) {
+            $user->syncRoles($request->role);
 
             Log::warning('[ROLE]', [
                 'admin_id' => auth()->user()->id,
