@@ -1,11 +1,11 @@
 <script setup>
-import UserNavLink from "@/Components/UserNavLink.vue";
+import UserNavBar from "@/Components/UserNavBar.vue";
 </script>
 
 <template>
     <div class="min-h-screen bg-gray-100">
         <!-- Responsive Navigation Menu -->
-        <UserNavLink></UserNavLink>
+        <UserNavBar></UserNavBar>
 
         <!-- Page Content -->
         <main class="py-12">
