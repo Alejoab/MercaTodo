@@ -5,9 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,18 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         /**
-         * Insert the cities and the states in the database from a sql file with
-         * an insert statement.
+         * Insert the cities, states and roles in the database
          */
-        $path = base_path() . '/database/seeders/cities_departments.sql';
-        $sql = file_get_contents($path);
-        DB::unprepared($sql);
-
-        /**
-         * Create the initial roles in the database.
-         */
-        Role::create(['name' => 'Administrator']);
-        Role::create(['name' => 'Customer']);
+        $this->call([
+            DepartmentsCitiesSeeder::class,
+            RolesSeeder::class
+        ]);
 
         /**
          * Create the initial admin user in the database.
