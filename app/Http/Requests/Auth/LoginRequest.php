@@ -45,7 +45,7 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
-            Log::info('Login failed', [
+            Log::info('[LOGIN:FAILED]', [
                 'email' => $this->input('email'),
                 'ip' => $this->ip(),
             ]);
@@ -55,7 +55,7 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        Log::info('Login success', [
+        Log::info('[LOGIN:SUCCESS]', [
             'email' => $this->input('email'),
             'ip' => $this->ip(),
         ]);

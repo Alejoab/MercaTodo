@@ -24,7 +24,7 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'departments' => Department::all(),
-            'department_id' => $request->user()->city->department->id,
+            'department_id' => $request->user()->city->department_id,
         ]);
     }
 
@@ -36,7 +36,12 @@ class ProfileController extends Controller
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
-            Log::info('User ' . $request->user()->id . ' changed his email to ' . $request->user()->email);
+            Log::info('[EMAIL]', [
+                'user_id' => $request->user()->id,
+                'old_email' => $request->user()->getOriginal('email'),
+                'new_email' => $request->user()->email,
+            ]);
+
             $request->user()->email_verified_at = null;
         }
 
@@ -72,7 +77,9 @@ class ProfileController extends Controller
 
         $user->delete();
 
-        Log::info('User ' . $user->id . ' deleted his account');
+        Log::info('[DELETE]', [
+            'user_id' => $user->id,
+        ]);
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

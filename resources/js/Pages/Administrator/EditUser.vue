@@ -14,7 +14,7 @@ defineProps({
     role: {
         type: Object
     },
-    documentTypes: {
+    document_types: {
         type: Object
     },
     departments: {
@@ -30,7 +30,7 @@ defineProps({
             <div class="text-end pb-3 md:pb-0">
                 <BackButton :href="route('admin.users')" ></BackButton>
             </div>
-            <UpdateInformation :user="user" :role="role" :documentTypes="documentTypes" class="max-w-xl mt-5 sm:mt-0 mt-16"/>
+            <UpdateInformation :user="user" :role="role" :document_types="document_types" class="max-w-xl mt-5 sm:mt-0 mt-16"/>
         </div>
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <UpdateAddressInformationAdmin :user="user" :departments="departments" class="max-w-xl"/>

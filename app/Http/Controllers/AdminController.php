@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -32,14 +33,30 @@ class AdminController extends Controller
     public function listUsers(Request $request): LengthAwarePaginator
     {
         return User::withTrashed()
-            ->join('model_has_roles', 'id', '=', 'model_id' )
-            ->select('id', 'name', 'surname', 'document_type', 'document', 'email', 'name', 'deleted_at', 'role_id')
+            ->join(
+                'model_has_roles',
+                'users.id',
+                '=',
+                'model_has_roles.model_id'
+            )
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
             ->when($request->input('search'), function ($query, $search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orwhere('surname', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                ;
+                $query->where('users.name', 'like', '%' . $search . '%')
+                    ->orWhere('users.surname', 'like', '%' . $search . '%')
+                    ->orWhere('users.email', 'like', '%' . $search . '%');
             })
+            ->select(
+                'users.id',
+                'users.name',
+                'users.surname',
+                'users.document_type',
+                'users.document',
+                'users.email',
+                'roles.name as role',
+                DB::raw(
+                    '(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'
+                )
+            )
             ->paginate(50);
     }
 
@@ -49,7 +66,7 @@ class AdminController extends Controller
         return Inertia::render('Administrator/EditUser', [
             'user' => $user,
             'role' => $user->getRoleNames(),
-            'documentTypes' => DocumentType::cases(),
+            'document_types' => DocumentType::cases(),
             'departments' => Department::all(),
         ]);
     }
@@ -62,28 +79,44 @@ class AdminController extends Controller
             'name' => ['string', 'max:255'],
             'surname' => ['string', 'max:255'],
             'document_type' => [new Enum(DocumentType::class)],
-            'document' => ['string', 'digits_between:8,11', Rule::unique(User::class)->ignore($id)],
-            'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($id)],
-            'phone' => ['string', 'digits:10'],
-            'role' => ['required', 'string'],
+            'document' => [
+                'string',
+                'digits_between:8,11',
+                Rule::unique(User::class)->ignore($id)
+            ],
+            'phone' => ['nullable', 'string', 'digits:10'],
+            'role' => ['string'],
         ]);
 
-        $user->fill($request->only('name', 'surname', 'document_type', 'document', 'email', 'phone'));
+        $user->fill(
+            $request->only(
+                'name',
+                'surname',
+                'document_type',
+                'document',
+                'phone'
+            )
+        );
 
         $rol = $user->getRoleNames();
 
         if (empty($rol->toArray())) {
-            Log::warning('The administrator '.auth()->user()->id.' has assigned the role '.$request->role.' to the user '.$id);
             $user->assignRole($request->role);
+
+            Log::warning('[ROLE]', [
+                'admin_id' => auth()->user()->id,
+                'user_id' => $id,
+                'role' => $request->role,
+            ]);
         } elseif ($rol[0] != $request->role) {
-            Log::warning('The administrator '.auth()->user()->id.' has assigned the role '.$request->role.' to the user '.$id);
             $user->removeRole($rol[0]);
             $user->assignRole($request->role);
-        }
 
-        if ($user->isDirty('email')) {
-            Log::warning('The administrator '.auth()->user()->id.' has changed the email of the user '.$id);
-            $user->email_verified_at = null;
+            Log::warning('[ROLE]', [
+                'admin_id' => auth()->user()->id,
+                'user_id' => $id,
+                'role' => $request->role,
+            ]);
         }
 
         $user->save();
@@ -115,24 +148,35 @@ class AdminController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        Log::warning('The administrator '.auth()->user()->id.' has changed the password of the user '.$id);
-
         $user->password = Hash::make($request->password);
         $user->save();
+
+        Log::warning('[PASSWORD]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
 
         return redirect()->route('admin.user.show', $id);
     }
 
     public function userDestroy($id): void
     {
-        Log::warning('The administrator '.auth()->user()->id.' has disabled the user '.$id);
         User::withTrashed()->findOrFail($id)->delete();
+
+        Log::warning('[DELETE]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
     }
 
     public function userRestore($id): void
     {
-        Log::warning('The administrator '.auth()->user()->id.' has enabled the user '.$id);
         User::withTrashed()->findOrFail($id)->restore();
+
+        Log::warning('[RESTORE]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
     }
 
     public function userForceDelete(Request $request, $id): RedirectResponse
@@ -143,7 +187,10 @@ class AdminController extends Controller
 
         User::withTrashed()->findOrFail($id)->forceDelete();
 
-        Log::warning('The administrator '.auth()->user()->id.' has deleted the user '.$id);
+        Log::warning('[FORCE DELETE]', [
+            'admin_id' => auth()->user()->id,
+            'user_id' => $id,
+        ]);
 
         return Redirect::to(route('admin.users'));
     }

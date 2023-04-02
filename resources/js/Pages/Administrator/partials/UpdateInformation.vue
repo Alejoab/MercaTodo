@@ -12,7 +12,7 @@ defineProps({
     role: {
         type: Object
     },
-    documentTypes: {
+    document_types: {
         type: Object
     },
 });
@@ -28,6 +28,15 @@ const form = useForm({
     phone: user.phone,
     role: usePage().props.role[0],
 });
+
+const isNumber = (evt) => {
+    const keysAllowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const keyPressed = evt.key;
+
+    if (!keysAllowed.includes(keyPressed)) {
+        evt.preventDefault()
+    }
+}
 </script>
 
 <template>
@@ -77,7 +86,7 @@ const form = useForm({
                     required
                     autocomplete="document_type"
                 >
-                    <option v-for="type in documentTypes" :value="type">{{ type }}</option>
+                    <option v-for="type in document_types" :value="type">{{ type }}</option>
                 </select>
 
                 <InputError class="mt-2" :message="form.errors.document_type"/>
@@ -92,6 +101,8 @@ const form = useForm({
                     class="mt-1 block w-full"
                     v-model="form.document"
                     autocomplete="document"
+                    maxlength="10"
+                    v-on:keypress="isNumber($event)"
                 />
 
                 <InputError class="mt-2" :message="form.errors.document"/>
@@ -103,9 +114,9 @@ const form = useForm({
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full cursor-not-allowed bg-gray-100"
                     v-model="form.email"
-                    required
+                    disabled
                     autocomplete="username"
                 />
 
@@ -120,8 +131,9 @@ const form = useForm({
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.phone"
-                    required
                     autocomplete="phone"
+                    maxlength="10"
+                    v-on:keypress="isNumber($event)"
                 />
 
                 <InputError class="mt-2" :message="form.errors.phone"/>

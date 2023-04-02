@@ -2,21 +2,26 @@
 
 namespace Tests\Feature;
 
+use App\Models\City;
+use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Department::factory(1)->create();
+        City::factory(1)->create();
+    }
+
     public function test_profile_page_is_displayed(): void
     {
-        $path = base_path() . '/database/seeders/cities_departments.sql';
-        $sql = file_get_contents($path);
-        DB::unprepared($sql);
-
         $user = User::factory()->create();
 
         $response = $this
@@ -48,7 +53,8 @@ class ProfileTest extends TestCase
         $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(
+    ): void
     {
         $user = User::factory()->create();
 
@@ -84,7 +90,8 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->deleted_at);
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account(): void
+    public function test_correct_password_must_be_provided_to_delete_account(
+    ): void
     {
         $user = User::factory()->create();
 
