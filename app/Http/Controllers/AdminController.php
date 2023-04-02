@@ -35,6 +35,11 @@ class AdminController extends Controller
         return User::withTrashed()
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->when($request->input('search'), function ($query, $search) {
+                $query->where('users.name', 'like', '%' . $search . '%')
+                    ->orWhere('users.surname', 'like', '%' . $search . '%')
+                    ->orWhere('users.email', 'like', '%' . $search . '%');
+            })
             ->select('users.id', 'users.name', 'users.surname', 'users.document_type', 'users.document', 'users.email', 'roles.name as role', DB::raw('(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'))
             ->paginate(50);
     }
