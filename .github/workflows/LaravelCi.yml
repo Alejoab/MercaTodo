@@ -1,6 +1,9 @@
 name: Laravel CI
 
-on: push
+on:
+  push:
+    branches:
+      - "develop"
 
 jobs:
   phpunit:
@@ -37,7 +40,7 @@ jobs:
       - name: Run build vite
         run: npm run build
 
-      - name: Run Testsuite
+      - name: Run Tests
         run: vendor/bin/phpunit tests/
 
       - name: Run PhpStan
