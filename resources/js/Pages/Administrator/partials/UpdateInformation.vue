@@ -28,6 +28,15 @@ const form = useForm({
     phone: user.phone,
     role: usePage().props.role[0],
 });
+
+const isNumber = (evt) => {
+    const keysAllowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const keyPressed = evt.key;
+
+    if (!keysAllowed.includes(keyPressed)) {
+        evt.preventDefault()
+    }
+}
 </script>
 
 <template>
@@ -92,6 +101,8 @@ const form = useForm({
                     class="mt-1 block w-full"
                     v-model="form.document"
                     autocomplete="document"
+                    maxlength="10"
+                    v-on:keypress="isNumber($event)"
                 />
 
                 <InputError class="mt-2" :message="form.errors.document"/>
@@ -121,6 +132,8 @@ const form = useForm({
                     class="mt-1 block w-full"
                     v-model="form.phone"
                     autocomplete="phone"
+                    maxlength="10"
+                    v-on:keypress="isNumber($event)"
                 />
 
                 <InputError class="mt-2" :message="form.errors.phone"/>
