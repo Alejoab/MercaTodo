@@ -35,15 +35,15 @@ class DatabaseSeeder extends Seeder
          * Create the initial admin user in the database.
          */
         User::factory()->create([
-            'name' => 'Alejandro',
-            'surname' => 'Alvarez',
-            'document' => '12345678',
-            'document_type' => DocumentType::ID,
-            'email' => 'alejo@alejo.com',
-            'phone' => '3003003030',
-            'address' => 'Calle 1 # 2 - 3',
-            'password' => Hash::make('alejo1234'),
-            'city_id' => 1,
+            'name' => env('ADMIN_NAME'),
+            'surname' => env('ADMIN_SURNAME'),
+            'document_type' => env('ADMIN_DOCUMENT_TYPE'),
+            'document' => env('ADMIN_DOCUMENT'),
+            'email' => env('ADMIN_EMAIL'),
+            'phone' => env('ADMIN_PHONE'),
+            'address' => env('ADMIN_ADDRESS'),
+            'password' => Hash::make(env('ADMIN_PASSWORD')),
+            'city_id' => env('ADMIN_CITY_ID'),
         ])->assignRole('Administrator');
 
         /**
