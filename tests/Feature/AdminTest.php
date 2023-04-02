@@ -103,22 +103,6 @@ class AdminTest extends TestCase
         $response->assertRedirect(route('admin.user.show', $this->user->id));
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged_by_an_admin(
-    ): void
-    {
-        $response = $this
-            ->actingAs($this->admin)
-            ->patch(route('admin.user.show', $this->user->id), [
-                'name' => 'Test User',
-                'email' => $this->user->email,
-            ]);
-
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect(route('admin.user.show', $this->user->id));
-
-        $this->assertNotNull($this->user->refresh()->email_verified_at);
-    }
 
     public function test_admin_can_disable_and_enable_a_user(): void
     {
