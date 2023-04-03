@@ -23,6 +23,7 @@ In order to run the application, you must do the following:
 - Configure the needed information in the .env file.
 - Run `composer install` to install the dependencies.
 - Run `npm install` to install the dependencies
+- Run `php artisan key:generate` to generate the application key.
 - Run `php artisan migrate:fresh --seed` to create the database tables.
 - Run `npm run dev` to compile the assets.
 - Run `php artisan serve` to start the application.
