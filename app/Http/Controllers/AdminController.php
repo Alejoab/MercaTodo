@@ -20,16 +20,33 @@ use Inertia\Response;
 
 class AdminController extends Controller
 {
+    /**
+     * Create the home page for the administrator.
+     *
+     * @return Response
+     */
     public function index(): Response
     {
         return Inertia::render('Administrator/Home');
     }
 
+    /**
+     * Create the users management page for the administrator.
+     *
+     * @return Response
+     */
     public function users(): Response
     {
         return Inertia::render('Administrator/Users');
     }
 
+    /**
+     * List the users according to the search criteria and page number.
+     *
+     * @param Request $request
+     *
+     * @return LengthAwarePaginator
+     */
     public function listUsers(Request $request): LengthAwarePaginator
     {
         return User::withTrashed()
@@ -60,6 +77,13 @@ class AdminController extends Controller
             ->paginate(50);
     }
 
+    /**
+     * Create the page to update the user's information
+     *
+     * @param $id
+     *
+     * @return Response
+     */
     public function userShow($id): Response
     {
         $user = User::withTrashed()->findOrFail($id)->load('city');
@@ -71,6 +95,14 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Update the basic information of the user.
+     *
+     * @param Request $request
+     * @param         $id
+     *
+     * @return RedirectResponse
+     */
     public function userUpdate(Request $request, $id): RedirectResponse
     {
         $user = User::withTrashed()->findOrFail($id);
@@ -113,6 +145,14 @@ class AdminController extends Controller
         return redirect()->route('admin.user.show', $id);
     }
 
+    /**
+     * Update the address information of the user.
+     *
+     * @param Request $request
+     * @param         $id
+     *
+     * @return RedirectResponse
+     */
     public function userUpdateAddress(Request $request, $id): RedirectResponse
     {
         $user = User::withTrashed()->findOrFail($id);
@@ -129,6 +169,14 @@ class AdminController extends Controller
         return redirect()->route('admin.user.show', $id);
     }
 
+    /**
+     * Update the password of the user.
+     *
+     * @param Request $request
+     * @param         $id
+     *
+     * @return RedirectResponse
+     */
     public function userUpdatePassword(Request $request, $id): RedirectResponse
     {
         $user = User::withTrashed()->findOrFail($id);
@@ -148,6 +196,13 @@ class AdminController extends Controller
         return redirect()->route('admin.user.show', $id);
     }
 
+    /**
+     * Soft Delete the user.
+     *
+     * @param $id
+     *
+     * @return void
+     */
     public function userDestroy($id): void
     {
         User::withTrashed()->findOrFail($id)->delete();
@@ -158,6 +213,13 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Restore the user.
+     *
+     * @param $id
+     *
+     * @return void
+     */
     public function userRestore($id): void
     {
         User::withTrashed()->findOrFail($id)->restore();
@@ -168,6 +230,14 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Force Delete the user.
+     *
+     * @param Request $request
+     * @param         $id
+     *
+     * @return RedirectResponse
+     */
     public function userForceDelete(Request $request, $id): RedirectResponse
     {
         $request->validate([
