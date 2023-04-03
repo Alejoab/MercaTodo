@@ -18,8 +18,21 @@ const user = usePage().props.auth.user;
 
 const form = useForm({
     name: user.name,
+    surname: user.surname,
+    document_type: user.document_type,
+    document: user.document,
     email: user.email,
+    phone: user.phone,
 });
+
+const isNumber = (evt) => {
+    const keysAllowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const keyPressed = evt.key;
+
+    if (!keysAllowed.includes(keyPressed)) {
+        evt.preventDefault()
+    }
+}
 </script>
 
 <template>
@@ -50,6 +63,46 @@ const form = useForm({
             </div>
 
             <div>
+                <InputLabel for="surname" value="Surname" />
+
+                <TextInput
+                    id="surname"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.surname"
+                    autocomplete="surname"
+                />
+
+                <InputError class="mt-2" :message="form.errors.surname" />
+            </div>
+
+            <div>
+                <InputLabel for="document_type" value="Document Type" />
+
+                <TextInput
+                    id="document_type"
+                    type="text"
+                    class="mt-1 block w-full cursor-not-allowed bg-gray-100"
+                    disabled
+                    v-model="form.document_type"
+                    autocomplete="document_type"
+                />
+            </div>
+
+            <div>
+                <InputLabel for="document" value="Document" />
+
+                <TextInput
+                    id="document"
+                    type="text"
+                    class="mt-1 block w-full cursor-not-allowed bg-gray-100"
+                    disabled
+                    v-model="form.document"
+                    autocomplete="document"
+                />
+            </div>
+
+            <div>
                 <InputLabel for="email" value="Email" />
 
                 <TextInput
@@ -62,6 +115,22 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="phone" value="Phone" />
+
+                <TextInput
+                    id="phone"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.phone"
+                    autocomplete="phone"
+                    maxlength="10"
+                    v-on:keypress="isNumber($event)"
+                />
+
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">

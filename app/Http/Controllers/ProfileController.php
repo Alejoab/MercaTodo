@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Department;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -21,6 +23,8 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'departments' => Department::all(),
+            'department_id' => $request->user()->city->department_id,
         ]);
     }
 
@@ -32,9 +36,27 @@ class ProfileController extends Controller
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
+            Log::info('[EMAIL]', [
+                'user_id' => $request->user()->id,
+                'old_email' => $request->user()->getOriginal('email'),
+                'new_email' => $request->user()->email,
+            ]);
+
             $request->user()->email_verified_at = null;
         }
 
+        $request->user()->save();
+
+        return Redirect::route('profile.edit');
+    }
+
+    /**
+     * Update the user's address information.
+     */
+    public function updateAddress(Request $request): RedirectResponse
+    {
+        $request->user()->city_id = $request->city_id;
+        $request->user()->address = $request->address;
         $request->user()->save();
 
         return Redirect::route('profile.edit');
@@ -54,6 +76,10 @@ class ProfileController extends Controller
         Auth::logout();
 
         $user->delete();
+
+        Log::info('[DELETE]', [
+            'user_id' => $user->id,
+        ]);
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
