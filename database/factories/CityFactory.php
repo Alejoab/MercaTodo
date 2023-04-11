@@ -21,7 +21,7 @@ class CityFactory extends Factory
         return [
             'name' => fake()->city(),
             'department_id' => fake()->randomElement(
-                Department::select('id')->get()
+                Department::all()
             )->id,
         ];
     }

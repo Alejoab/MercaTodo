@@ -2,8 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\DocumentType;
-use App\Models\City;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -24,15 +22,7 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'surname' => fake()->lastName(),
-            'document' => fake()->unique()->numberBetween(
-                1000000000,
-                9999999999
-            ),
-            'document_type' => fake()->randomElement(DocumentType::cases()),
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->numberBetween(1000000000, 9999999999),
-            'address' => fake()->address(),
-            'city_id' => fake()->randomElement(City::select('id')->get())->id,
             'email_verified_at' => now(),
             'password' => Hash::make('password'), // password
             'remember_token' => Str::random(10),
