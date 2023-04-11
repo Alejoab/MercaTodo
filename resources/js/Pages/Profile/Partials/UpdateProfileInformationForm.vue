@@ -22,18 +22,18 @@ defineProps({
 });
 
 const user = usePage().props.user;
-const department_id = ref(user.city.department_id);
+const department_id = ref(user.customer.city.department_id);
 const cities = ref({});
 
 const form = useForm({
-    name: user.name,
-    surname: user.surname,
-    document_type: user.document_type,
-    document: user.document,
-    email: user.user.email,
-    phone: user.phone,
-    city_id: user.city_id,
-    address: user.address
+    name: user.customer.name,
+    surname: user.customer.surname,
+    document_type: user.customer.document_type,
+    document: user.customer.document,
+    email: user.email,
+    phone: user.customer.phone,
+    city_id: user.customer.city_id,
+    address: user.customer.address
 });
 
 const isNumber = (evt) => {

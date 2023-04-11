@@ -24,9 +24,7 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
-            'user' => Customer::with('user')->with('city')->find(
-                $request->user()->customer_id
-            ),
+            'user' => $request->user()->load('customer.city'),
             'departments' => Department::all(),
         ]);
     }
