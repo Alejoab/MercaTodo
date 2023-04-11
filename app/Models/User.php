@@ -3,10 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\DocumentType;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,13 +30,9 @@ class User extends Authenticatable implements MustVerifyEmail
         = [
             'name',
             'surname',
-            'document',
-            'document_type',
             'email',
-            'phone',
-            'address',
             'password',
-            'city_id',
+            'customer_id',
         ];
 
     /**
@@ -59,11 +54,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts
         = [
             'email_verified_at' => 'datetime',
-            'document_type' => DocumentType::class
+            'deleted_at' => 'boolean',
+
         ];
 
-    public function city(): BelongsTo
+    public function customer(): HasOne
     {
-        return $this->belongsTo(City::class, 'city_id', 'id');
+        return $this->HasOne(Customer::class);
     }
 }
