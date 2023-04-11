@@ -29,6 +29,8 @@ class RegisteredUserController extends Controller
         $validated = $request->validated();
 
         $customer = Customer::create([
+            'name' => $validated['name'],
+            'surname' => $validated['surname'],
             'document' => $validated['document'],
             'document_type' => $validated['document_type'],
             'phone' => $validated['phone'],
@@ -37,8 +39,6 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $validated['name'],
-            'surname' => $validated['surname'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'customer_id' => $customer->id,

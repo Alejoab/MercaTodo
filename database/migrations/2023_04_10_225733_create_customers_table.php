@@ -14,6 +14,8 @@ return new class extends Migration {
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('surname');
             $table->enum(
                 'document_type',
                 array_column(DocumentType::cases(), 'value')
@@ -23,6 +25,9 @@ return new class extends Migration {
             $table->string('address');
             $table->foreignIdFor(City::class);
             $table->timestamps();
+
+            $table->index('name');
+            $table->index('surname');
         });
     }
 

@@ -20,6 +20,8 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
+            'name' => fake()->name(),
+            'surname' => fake()->lastName(),
             'document_type' => fake()->randomElement(DocumentType::cases()),
             'document' => fake()->unique()->numberBetween(
                 1000000000,

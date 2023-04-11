@@ -18,6 +18,8 @@ class UserSeeder extends Seeder
          * Create the initial admin user in the database.
          */
         $adminCustomer = Customer::factory()->create([
+            'name' => env('ADMIN_NAME'),
+            'surname' => env('ADMIN_SURNAME'),
             'document_type' => env('ADMIN_DOCUMENT_TYPE'),
             'document' => env('ADMIN_DOCUMENT'),
             'phone' => env('ADMIN_PHONE'),
@@ -26,8 +28,6 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => env('ADMIN_NAME'),
-            'surname' => env('ADMIN_SURNAME'),
             'email' => env('ADMIN_EMAIL'),
             'password' => Hash::make(env('ADMIN_PASSWORD')),
             'customer_id' => $adminCustomer->id,
