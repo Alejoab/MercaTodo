@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\ProfileController;
 use App\Models\City;
 use App\Models\User;
@@ -25,17 +26,17 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/profile-address', [ProfileController::class, 'updateAddress'])->name('profile.update.address');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::get('cities/{state_id}', function ($state_id) {
-    return City::where('department_id', $state_id)->get();
+    return City::query()->where('department_id', $state_id)->get();
 })->name('cities');
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
+
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/users/{id}', [AdminController::class, 'userShow'])->name('admin.user.show');
     Route::patch('/users/{id}', [AdminController::class, 'userUpdate'])->name('admin.user.update');
@@ -45,6 +46,9 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::put('/users/{id}', [AdminController::class, 'userRestore'])->name('admin.user.restore');
     Route::delete('/users-force-delete/{id}', [AdminController::class, 'userForceDelete'])->name('admin.user.force-delete');
     Route::get('/list-users', [AdminController::class, 'listUsers'])->name('admin.list-users');
+
+    Route::get('/customers', [AdminCustomerController::class, 'index'])->name('admin.customers');
+    Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
 });
 
 require __DIR__.'/auth.php';

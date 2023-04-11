@@ -26,8 +26,8 @@ const department_id = ref(user.city.department_id);
 const cities = ref({});
 
 const form = useForm({
-    name: user.user.name,
-    surname: user.user.surname,
+    name: user.name,
+    surname: user.surname,
     document_type: user.document_type,
     document: user.document,
     email: user.user.email,
@@ -63,7 +63,7 @@ getCities();
             </p>
         </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
+        <form @submit.prevent="form.put(route('profile.update'))" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" value="Name" />
 
