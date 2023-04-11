@@ -4,6 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import {ref} from "vue";
 
 defineProps({
     mustVerifyEmail: {
@@ -12,17 +13,27 @@ defineProps({
     status: {
         type: String,
     },
+    user: {
+        type: Object,
+    },
+    departments: {
+        type: Object
+    },
 });
 
-const user = usePage().props.auth.user;
+const user = usePage().props.user;
+const department_id = ref(user.city.department_id);
+const cities = ref({});
 
 const form = useForm({
-    name: user.name,
-    surname: user.surname,
+    name: user.user.name,
+    surname: user.user.surname,
     document_type: user.document_type,
     document: user.document,
-    email: user.email,
+    email: user.user.email,
     phone: user.phone,
+    city_id: user.city_id,
+    address: user.address
 });
 
 const isNumber = (evt) => {
@@ -33,6 +44,13 @@ const isNumber = (evt) => {
         evt.preventDefault()
     }
 }
+
+const getCities = async () => {
+    const response = await fetch(route('cities', department_id.value));
+    cities.value = await response.json();
+};
+
+getCities();
 </script>
 
 <template>
@@ -131,6 +149,52 @@ const isNumber = (evt) => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.phone" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="department" value="Department" />
+
+                <select
+                    id="department"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model="department_id"
+                    required
+                    @change="getCities()"
+                >
+                    <option v-for="department in departments" :value="department.id">{{department.name}}</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="city_id" value="City" />
+
+                <select
+                    id="city_id"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model.number="form.city_id"
+
+                    required
+                    autocomplete="city_id"
+                >
+                    <option v-for="city in cities" :value="city.id">{{city.name}}</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.city_id" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="address" value="Address" />
+
+                <TextInput
+                    id="address"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.address"
+                    required
+                    autocomplete="adress"
+                />
+
+                <InputError class="mt-2" :message="form.errors.address" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">

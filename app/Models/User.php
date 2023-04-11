@@ -3,9 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
-    use \Illuminate\Auth\MustVerifyEmail;
+    use MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
@@ -58,8 +58,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         ];
 
-    public function customer(): HasOne
+    public function customer(): BelongsTo
     {
-        return $this->HasOne(Customer::class);
+        return $this->belongsTo(Customer::class);
     }
 }
