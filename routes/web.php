@@ -48,6 +48,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/list-users', [AdminController::class, 'listUsers'])->name('admin.list-users');
 
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('admin.customers');
+    Route::get('/customers/{id}', [AdminCustomerController::class, 'customerShow'])->name('admin.customer.show');
+    Route::put('/customers/{id}', [AdminCustomerController::class, 'customerUpdate'])->name('admin.customer.update');
     Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
 });
 

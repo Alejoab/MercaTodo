@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\DocumentType;
+use App\Http\Requests\CustomerUpdateRequest;
+use App\Models\Department;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,7 +19,8 @@ class AdminCustomerController extends Controller
         return Inertia::render('Administrator/Customers/Index');
     }
 
-    public function listCustomers(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
+    public function listCustomers(Request $request): LengthAwarePaginator
+    {
         return User::withTrashed()
             ->join(
                 'customers',
@@ -36,21 +40,37 @@ class AdminCustomerController extends Controller
                     ->orWhere('users.email', 'like', '%' . $search . '%');
             })
             ->select(
-                'users.id as user_id',
-                'users.email as user_email',
-                'customers.id as id',
+                'users.id',
+                'users.email',
                 'customers.name',
                 'customers.surname',
                 'customers.document_type',
                 'customers.document',
-                'users.email',
                 'customers.phone',
                 'cities.name as city',
                 'departments.name as department',
-                DB::raw(
-                    '(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS status'
-                )
+                'customers.address'
             )
             ->paginate(50);
+    }
+
+    public function customerShow($id): Response
+    {
+        $user = User::withTrashed()->findOrFail($id)->load('customer.city');
+        return Inertia::render('Administrator/Customers/EditCustomer', [
+            'user' => $user,
+            'document_types' => DocumentType::cases(),
+            'departments' => Department::all(),
+        ]);
+    }
+
+    public function customerUpdate(CustomerUpdateRequest $request, $id): RedirectResponse {
+        $user = User::withTrashed()->findOrFail($id);
+
+        $user->customer->fill($request->validated());
+
+        $user->customer->save();
+
+        return redirect()->route('admin.customer.show', $id);
     }
 }

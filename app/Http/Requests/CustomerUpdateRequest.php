@@ -17,6 +17,8 @@ class CustomerUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id')?: $this->user()->id;
+        $user = User::withTrashed()->find($id);
         return [
             'name' => [
                 'required',
@@ -35,7 +37,7 @@ class CustomerUpdateRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id)
+                Rule::unique(User::class)->ignore($user->id)
             ],
 
             'document_type' => [
@@ -47,7 +49,7 @@ class CustomerUpdateRequest extends FormRequest
                 'required',
                 'digits_between:8,11',
                 Rule::unique(Customer::class)->ignore(
-                    $this->user()->customer_id
+                    $user->customer_id
                 )
             ],
 
