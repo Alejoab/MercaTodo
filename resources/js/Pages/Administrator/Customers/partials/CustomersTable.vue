@@ -1,34 +1,20 @@
 <script setup>
 import { TailwindPagination } from "laravel-vue-pagination";
-import { Link } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 
-const customers = ref({});
+const users = ref({});
 const search = ref('');
 let pageT = 1;
-const destroyUserId = ref('');
-const restoreUserId = ref('');
 
 const getResults = async (page = 1, search = '') => {
     pageT = page;
     const response = await fetch(route('admin.list-customers', {page: page, search: search}));
-    customers.value = await response.json();
-}
-
-const destroyUser = async (id) => {
-    destroyUserId.value = '';
-    await axios.delete(route('admin.user.destroy', id))
-    await getResults(pageT, search.value);
-}
-
-const restoreUser = async (id) => {
-    restoreUserId.value = '';
-    await axios.put(route('admin.user.restore', id))
-    await getResults(pageT, search.value);
+    users.value = await response.json();
 }
 
 getResults();
@@ -54,7 +40,7 @@ getResults();
         <div class="overflow-auto">
             <table class="w-full text-xs md:text-sm text-left">
                 <thead class="text-xs uppercase bg-gray-50">
-                <th scope="col" class="px-6 py-3"> ID </th>
+                <th scope="col" class="px-6 py-3"> User ID </th>
                 <th scope="col" class="px-6 py-3"> Email </th>
                 <th scope="col" class="px-6 py-3"> Name </th>
                 <th scope="col" class="px-6 py-3"> Surname </th>
@@ -62,86 +48,34 @@ getResults();
                 <th scope="col" class="px-6 py-3"> Document </th>
                 <th scope="col" class="px-6 py-3"> City </th>
                 <th scope="col" class="px-6 py-3"> Department </th>
-                <th scope="col" class="px-6 py-3"> Status </th>
-                <th scope="col" class="px-6 py-3"> Action </th>
+                <th scope="col" class="px-6 py-3"> Address </th>
+                <th scope="col" class="px-6 py-3">  </th>
                 </thead>
                 <tbody>
-                <tr v-for="customer in customers.data" class="bg-white border-b">
+                <tr v-for="user in users.data" class="bg-white border-b">
 
-                    <th scope="row" class="px-6 py-1.5 font-medium whitespace-nowrap"> {{ customer.id }} </th>
-                    <td class="px-1 py-1.5"> {{customer.user_email}} </td>
-                    <td class="px-4 py-1.5"> {{customer.name}} </td>
-                    <td class="px-4 py-1.5"> {{customer.surname}} </td>
-                    <td class="px-4 py-1.5"> {{customer.document_type}} </td>
-                    <td class="px-4 py-1.5"> {{customer.document}} </td>
-                    <td class="px-4 py-1.5"> {{customer.city}} </td>
-                    <td class="px-4 py-1.5"> {{customer.department}} </td>
-                    <td class="px-4 py-1.5"> {{customer.status}} </td>
+                    <th scope="row" class="px-6 py-1.5 font-medium whitespace-nowrap"> {{ user.id }} </th>
+                    <td class="px-1 py-1.5"> {{user.email}} </td>
+                    <td class="px-4 py-1.5"> {{user.name}} </td>
+                    <td class="px-4 py-1.5"> {{user.surname}} </td>
+                    <td class="px-4 py-1.5"> {{user.document_type}} </td>
+                    <td class="px-4 py-1.5"> {{user.document}} </td>
+                    <td class="px-4 py-1.5"> {{user.city}} </td>
+                    <td class="px-4 py-1.5"> {{user.department}} </td>
+                    <td class="px-4 py-1.5"> {{user.address}} </td>
                     <td class="px-4 py-1.5 text-center">
                         <div class="inline-flex space-x-1">
-                            <Link :href="route('admin.user.show', customer.id)">
+                            <Link :href="route('admin.customer.show', user.id)">
                                 <svg class="h-6 w-6 text-black"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>
                             </Link>
-                            <button v-if="customer.status === 'Active'" @click="destroyUserId = customer.user_id">
-                                <svg class="h-6 w-6 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="4" y1="7" x2="20" y2="7" />  <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-                            </button>
-                            <button v-else @click="restoreUserId = customer.user_id">
-                                <svg class="h-6 w-6 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />  <circle cx="8.5" cy="7" r="4" />  <line x1="20" y1="8" x2="20" y2="14" />  <line x1="23" y1="11" x2="17" y2="11" /></svg>
-                            </button>
                         </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <div class="mt-7 flex justify-center">
-                <TailwindPagination :data="customers" @pagination-change-page="getResults" :limit="1"></TailwindPagination>
+                <TailwindPagination :data="users" @pagination-change-page="getResults" :limit="1"></TailwindPagination>
             </div>
         </div>
     </div>
-
-    <Modal :show="!! destroyUserId" @close="destroyUserId = ''">
-        <div class="p-6">
-            <h2 class="text-lg font-medium text-gray-900">
-                Are you sure you want to delete the account?
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Once you delete this account, it will only be disabled for the customer, but the information will still be stored.
-            </p>
-
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="destroyUserId = ''"> Cancel </SecondaryButton>
-
-                <DangerButton
-                    class="ml-3"
-                    @click="destroyUser(destroyUserId)"
-                >
-                    Delete Account
-                </DangerButton>
-            </div>
-        </div>
-    </Modal>
-
-    <Modal :show="!! restoreUserId" @close="restoreUserId = ''">
-        <div class="p-6">
-            <h2 class="text-lg font-medium text-gray-900">
-                Are you sure you want to restore the account?
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Once you restore the account the customer will have access to it again.
-            </p>
-
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="restoreUserId = ''"> Cancel </SecondaryButton>
-
-                <SuccessButton
-                    class="ml-3"
-                    @click="restoreUser(restoreUserId)"
-                >
-                    Restore Account
-                </SuccessButton>
-            </div>
-        </div>
-    </Modal>
 </template>
