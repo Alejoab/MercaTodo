@@ -39,16 +39,13 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/', [AdminController::class, 'index'])->name('admin');
 
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
+    Route::get('/users/{id}', [AdminUserController::class, 'userShow'])->name('admin.user.show');
+    Route::put('/users/{id}', [AdminUserController::class, 'userUpdate'])->name('admin.user.update');
+    Route::put('/users/{id}/password', [AdminUserController::class, 'userUpdatePassword'])->name('admin.user.update.password');
+    Route::delete('/users/{id}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
+    Route::put('/users/{id}/restore', [AdminUserController::class, 'userRestore'])->name('admin.user.restore');
+    Route::delete('/users/{id}/force-delete', [AdminUserController::class, 'userForceDelete'])->name('admin.user.force-delete');
     Route::get('/list-users', [AdminUserController::class, 'listUsers'])->name('admin.list-users');
-
-
-    Route::get('/users/{id}', [AdminController::class, 'userShow'])->name('admin.user.show');
-    Route::patch('/users/{id}', [AdminController::class, 'userUpdate'])->name('admin.user.update');
-    Route::patch('/users-address/{id}', [AdminController::class, 'userUpdateAddress'])->name('admin.user.update.address');
-    Route::put('/users-password/{id}', [AdminController::class, 'userUpdatePassword'])->name('admin.user.update.password');
-    Route::delete('/users/{id}', [AdminController::class, 'userDestroy'])->name('admin.user.destroy');
-    Route::put('/users/{id}', [AdminController::class, 'userRestore'])->name('admin.user.restore');
-    Route::delete('/users-force-delete/{id}', [AdminController::class, 'userForceDelete'])->name('admin.user.force-delete');
 
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('admin.customers');
     Route::get('/customers/{id}', [AdminCustomerController::class, 'customerShow'])->name('admin.customer.show');

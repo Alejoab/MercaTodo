@@ -71,11 +71,7 @@ class CustomerRequest extends FormRequest
             'password' => [
                 'required',
                 'confirmed',
-                Password::min(8)
-                    ->letters()
-                    ->numbers()
-                    //->symbols()
-                    //->uncompromised()
+                Password::defaults()
             ]
         ];
     }

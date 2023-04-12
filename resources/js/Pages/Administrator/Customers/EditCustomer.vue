@@ -1,8 +1,8 @@
 <script setup>
-import ActionsAdmin from "@/Pages/Administrator/partials/ActionsAdmin.vue";
+import ActionsAdmin from "@/Pages/Administrator/Users/partials/ActionsAdmin.vue";
 import BackButton from "@/Components/BackButton.vue";
 import UserLayout from "@/Layouts/UserLayout.vue";
-import UpdatePasswordAdmin from "@/Pages/Administrator/partials/UpdatePasswordAdmin.vue";
+import UpdatePasswordAdmin from "@/Pages/Administrator/Users/partials/UpdatePasswordAdmin.vue";
 import UpdateCustomerInformation from "@/Pages/Administrator/Customers/partials/UpdateCustomerInformation.vue";
 import {Head} from "@inertiajs/vue3";
 
