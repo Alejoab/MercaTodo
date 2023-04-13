@@ -49,7 +49,7 @@ class CustomerUpdateRequest extends FormRequest
                 'required',
                 'digits_between:8,11',
                 Rule::unique(Customer::class)->ignore(
-                    $user->customer_id
+                    $user->customer->id
                 )
             ],
 

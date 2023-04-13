@@ -20,7 +20,8 @@ class Customer extends Model
             'document_type',
             'phone',
             'address',
-            'city_id'
+            'city_id',
+            'user_id',
         ];
 
     protected $casts
