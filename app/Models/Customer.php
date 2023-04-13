@@ -33,8 +33,8 @@ class Customer extends Model
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
-    public function user(): HasOne
+    public function user(): belongsTo
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 }

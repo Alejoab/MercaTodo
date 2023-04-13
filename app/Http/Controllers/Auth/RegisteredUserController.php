@@ -28,7 +28,12 @@ class RegisteredUserController extends Controller
     {
         $validated = $request->validated();
 
-        $customer = Customer::create([
+        $user = User::create([
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        Customer::create([
             'name' => $validated['name'],
             'surname' => $validated['surname'],
             'document' => $validated['document'],
@@ -36,13 +41,9 @@ class RegisteredUserController extends Controller
             'phone' => $validated['phone'],
             'address' => $validated['address'],
             'city_id' => $validated['city_id'],
+            'user_id' => $user->id,
         ]);
 
-        $user = User::create([
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'customer_id' => $customer->id,
-        ]);
 
         $user->assignRole('Customer');
 

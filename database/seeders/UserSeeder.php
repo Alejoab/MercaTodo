@@ -17,7 +17,12 @@ class UserSeeder extends Seeder
         /**
          * Create the initial admin user in the database.
          */
-        $adminCustomer = Customer::factory()->create([
+        $adminUser = User::factory()->create([
+            'email' => env('ADMIN_EMAIL'),
+            'password' => Hash::make(env('ADMIN_PASSWORD')),
+        ])->assignRole('Administrator');
+
+        Customer::factory()->create([
             'name' => env('ADMIN_NAME'),
             'surname' => env('ADMIN_SURNAME'),
             'document_type' => env('ADMIN_DOCUMENT_TYPE'),
@@ -25,22 +30,16 @@ class UserSeeder extends Seeder
             'phone' => env('ADMIN_PHONE'),
             'address' => env('ADMIN_ADDRESS'),
             'city_id' => env('ADMIN_CITY_ID'),
+            'user_id' => $adminUser->id,
         ]);
 
-        User::factory()->create([
-            'email' => env('ADMIN_EMAIL'),
-            'password' => Hash::make(env('ADMIN_PASSWORD')),
-            'customer_id' => $adminCustomer->id,
-        ])->assignRole('Administrator');
 
         /**
          * Create a random users in the database with the role of customer.
          */
         for ($i = 0; $i < 200; $i++) {
-            $customer = Customer::factory()->create();
             $user = User::factory()->create();
-            $user->customer_id = $customer->id;
-            $user->save();
+            Customer::factory()->create(['user_id' => $user->id]);
             $user->assignRole('Customer');
         }
     }

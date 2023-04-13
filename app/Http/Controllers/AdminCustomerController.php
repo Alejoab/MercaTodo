@@ -24,9 +24,9 @@ class AdminCustomerController extends Controller
         return User::withTrashed()
             ->join(
                 'customers',
-                'users.customer_id',
+                'customers.user_id',
                 '=',
-                'customers.id'
+                'users.id'
             )->join('cities', 'customers.city_id', '=', 'cities.id')->join(
                 'departments',
                 'cities.department_id',
