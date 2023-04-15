@@ -10,7 +10,10 @@ class CustomersService
     {
         $service = new UsersService();
 
-        $user = $service->store($data['email'], $data['password']);
+        $user = $service->store([
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
 
         return Customer::create([
             'name' => $data['name'],
@@ -22,5 +25,19 @@ class CustomersService
             'city_id' => $data['city_id'],
             'user_id' => $user->id,
         ]);
+    }
+
+    public function update(int $id, array $data): Customer
+    {
+        $service = new UsersService();
+        $customer = Customer::findOrFail($id);
+
+        $service->update($customer->user_id, ['email' => $data['email']]);
+
+        $customer->fill($data);
+
+        $customer->save();
+
+        return $customer;
     }
 }

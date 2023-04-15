@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerUpdateRequest;
-use App\Models\Customer;
 use App\Models\Department;
+use App\Services\CustomersService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,24 +32,9 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(CustomerUpdateRequest $request): RedirectResponse
+    public function update(CustomerUpdateRequest $request, CustomersService $service): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            Log::info('[EMAIL]', [
-                'user_id' => $request->user()->id,
-                'old_email' => $request->user()->getOriginal('email'),
-                'new_email' => $request->user()->email,
-            ]);
-
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        $request->user()->customer->fill($request->validated());
-        $request->user()->customer->save();
+        $service->update($request->user()->customer->id, $request->validated());
 
         return Redirect::route('profile.edit');
     }
