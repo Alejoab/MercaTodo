@@ -1,25 +1,49 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use App\Enums\DocumentType;
-use App\Http\Requests\CustomerUpdateRequest;
-use App\Models\Department;
+use App\Models\Customer;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Inertia\Inertia;
-use Inertia\Response;
 
-class AdminCustomerController extends Controller
+class CustomersService
 {
-    public function index(): Response
+    public function store(array $data): Customer
     {
-        return Inertia::render('Administrator/Customers/Index');
+        $service = new UsersService();
+
+        $user = $service->store([
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
+
+        return Customer::create([
+            'name' => $data['name'],
+            'surname' => $data['surname'],
+            'document' => $data['document'],
+            'document_type' => $data['document_type'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'city_id' => $data['city_id'],
+            'user_id' => $user->id,
+        ]);
     }
 
-    public function listCustomers(Request $request): LengthAwarePaginator
+    public function update(int $id, array $data): Customer
+    {
+        $service = new UsersService();
+        $customer = Customer::findOrFail($id);
+
+        $service->update($customer->user_id, ['email' => $data['email']]);
+
+        $customer->fill($data);
+
+        $customer->save();
+
+        return $customer;
+    }
+
+    public function listCustomersToTable(string|null $search): LengthAwarePaginator
     {
         return User::withTrashed()
             ->join(
@@ -40,7 +64,7 @@ class AdminCustomerController extends Controller
                 '=',
                 'departments.id'
             )
-            ->when($request->input('search'), function ($query, $search) {
+            ->when($search, function ($query, $search) {
                 $query->where('customers.name', 'like', '%' . $search . '%')
                     ->orWhere('customers.document', 'like', '%' . $search . '%')
                     ->orWhere('customers.surname', 'like', '%' . $search . '%')
@@ -58,28 +82,8 @@ class AdminCustomerController extends Controller
                 'departments.name as department',
                 'customers.address'
             )
-            ->get
+            ->where('users.id', '!=', auth()->user()->id)
             ->orderBy('users.id')
             ->paginate(50);
-    }
-
-    public function customerShow($id): Response
-    {
-        $user = User::withTrashed()->findOrFail($id)->load('customer.city');
-        return Inertia::render('Administrator/Customers/EditCustomer', [
-            'user' => $user,
-            'document_types' => DocumentType::cases(),
-            'departments' => Department::all(),
-        ]);
-    }
-
-    public function customerUpdate(CustomerUpdateRequest $request, $id): RedirectResponse {
-        $user = User::withTrashed()->findOrFail($id);
-
-        $user->customer->fill($request->validated());
-
-        $user->customer->save();
-
-        return redirect()->route('admin.customer.show', $id);
     }
 }

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerUpdateRequest;
-use App\Models\Customer;
 use App\Models\Department;
+use App\Services\CustomersService;
+use App\Services\UsersService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -32,24 +32,9 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(CustomerUpdateRequest $request): RedirectResponse
+    public function update(CustomerUpdateRequest $request, CustomersService $service): RedirectResponse
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            Log::info('[EMAIL]', [
-                'user_id' => $request->user()->id,
-                'old_email' => $request->user()->getOriginal('email'),
-                'new_email' => $request->user()->email,
-            ]);
-
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        $request->user()->customer->fill($request->validated());
-        $request->user()->customer->save();
+        $service->update($request->user()->customer->id, $request->validated());
 
         return Redirect::route('profile.edit');
     }
@@ -57,21 +42,15 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, UsersService $service): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current-password'],
         ]);
 
-        $user = $request->user();
+        $service->destroy($request->user()->id);
 
         Auth::logout();
-
-        $user->delete();
-
-        Log::info('[DELETE]', [
-            'user_id' => $user->id,
-        ]);
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
