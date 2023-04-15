@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminCustomerController;
-use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\Administrator\AdminController;
+use App\Http\Controllers\Administrator\AdminCustomerController;
+use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\ProfileController;
 use App\Models\City;
-use App\Models\User;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -53,4 +51,4 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

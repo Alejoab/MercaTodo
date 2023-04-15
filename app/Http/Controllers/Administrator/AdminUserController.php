@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administrator;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\UsersService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

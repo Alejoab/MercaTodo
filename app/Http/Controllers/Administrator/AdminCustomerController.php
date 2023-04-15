@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Administrator;
 
 use App\Enums\DocumentType;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Department;
 use App\Models\User;
