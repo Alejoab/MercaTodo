@@ -27,7 +27,14 @@ class AdminCustomerController extends Controller
                 'customers.user_id',
                 '=',
                 'users.id'
-            )->join('cities', 'customers.city_id', '=', 'cities.id')->join(
+            )
+            ->join(
+                'cities',
+                'customers.city_id',
+                '=',
+                'cities.id'
+            )
+            ->join(
                 'departments',
                 'cities.department_id',
                 '=',
@@ -51,6 +58,8 @@ class AdminCustomerController extends Controller
                 'departments.name as department',
                 'customers.address'
             )
+            ->get
+            ->orderBy('users.id')
             ->paginate(50);
     }
 

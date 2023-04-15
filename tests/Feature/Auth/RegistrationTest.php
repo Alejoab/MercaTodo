@@ -43,8 +43,8 @@ class RegistrationTest extends TestCase
             'phone' => '1234567890',
             'address' => 'Test Address',
             'city_id' => '1',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'Test_Password_0',
+            'password_confirmation' => 'Test_Password_0',
         ]);
 
         $this->assertAuthenticated();

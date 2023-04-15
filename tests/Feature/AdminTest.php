@@ -57,7 +57,7 @@ class AdminTest extends TestCase
 
     public function test_admin_can_update_a_user_information(): void
     {
-        $response = $this->actingAs($this->admin)->patch(
+        $response = $this->actingAs($this->admin)->put(
             route('admin.user.update', $this->user->id),
             [
                 'name' => 'Test User',
@@ -67,6 +67,7 @@ class AdminTest extends TestCase
                 'email' => 'test@test.com',
                 'phone' => '1234567890',
                 'address' => 'Test Address',
+                'city_id' => 1,
                 'role' => 'Customer',
             ]
         );
@@ -80,29 +81,14 @@ class AdminTest extends TestCase
         $response = $this->actingAs($this->admin)->put(
             route('admin.user.update.password', $this->user->id),
             [
-                'password' => 'password',
-                'password_confirmation' => 'password',
+                'password' => 'Test_Password_0',
+                'password_confirmation' => 'Test_Password_0',
             ]
         );
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(route('admin.user.show', $this->user->id));
     }
-
-    public function test_admin_can_update_a_user_address(): void
-    {
-        $response = $this->actingAs($this->admin)->patch(
-            route('admin.user.update.address', $this->user->id),
-            [
-                'address' => 'Test Address',
-                'city_id' => 1,
-            ]
-        );
-
-        $response->assertSessionHasNoErrors();
-        $response->assertRedirect(route('admin.user.show', $this->user->id));
-    }
-
 
     public function test_admin_can_disable_and_enable_a_user(): void
     {

@@ -126,6 +126,7 @@ class AdminUserController extends Controller
                     '(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'
                 )
             )
+            ->orderBy('users.id')
             ->paginate(50);
     }
 }

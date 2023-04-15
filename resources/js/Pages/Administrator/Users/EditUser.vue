@@ -17,21 +17,21 @@ defineProps({
 </script>
 
 <template>
-<UserLayout>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="text-end pb-3 md:pb-0">
-                <BackButton :href="route('admin.users')" ></BackButton>
+    <UserLayout>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="text-end pb-3 md:pb-0">
+                    <BackButton :href="route('admin.users')" ></BackButton>
+                </div>
+                <UpdateInformation :user="user" :roles="roles" class="max-w-xl mt-5 sm:mt-0 mt-16"/>
             </div>
-            <UpdateInformation :user="user" :roles="roles" class="max-w-xl mt-5 sm:mt-0 mt-16"/>
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg" >
+                <UpdatePasswordAdmin :user="user" class="max-w-xl"/>
+            </div>
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg" >
+                <ActionsAdmin :user="user" class="max-w-xl"/>
+            </div>
         </div>
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg" >
-            <UpdatePasswordAdmin :user="user" class="max-w-xl"/>
-        </div>
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg" >
-            <ActionsAdmin :user="user" class="max-w-xl"/>
-        </div>
-    </div>
-</UserLayout>
+    </UserLayout>
 </template>
 
