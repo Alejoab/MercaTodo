@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import UsersTable from "@/Pages/Administrator/partials/UsersTable.vue";
+import UsersTable from "@/Pages/Administrator/Users/partials/UsersTable.vue";
 import UserLayout from "@/Layouts/UserLayout.vue";
 import BackButton from "@/Components/BackButton.vue";
 

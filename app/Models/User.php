@@ -3,24 +3,24 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\DocumentType;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
-    use \Illuminate\Auth\MustVerifyEmail;
+    use MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
@@ -29,15 +29,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable
         = [
-            'name',
-            'surname',
-            'document',
-            'document_type',
             'email',
-            'phone',
-            'address',
             'password',
-            'city_id',
         ];
 
     /**
@@ -59,11 +52,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts
         = [
             'email_verified_at' => 'datetime',
-            'document_type' => DocumentType::class
+            'deleted_at' => 'boolean',
+
         ];
 
-    public function city(): BelongsTo
+    public function customer(): hasOne
     {
-        return $this->belongsTo(City::class, 'city_id', 'id');
+        return $this->hasOne(Customer::class);
     }
 }

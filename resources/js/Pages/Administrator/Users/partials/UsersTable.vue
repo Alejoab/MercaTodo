@@ -53,28 +53,20 @@ getResults();
         <div class="overflow-auto">
             <table class="w-full text-xs md:text-sm text-left">
                 <thead class="text-xs uppercase bg-gray-50">
-                    <th scope="col" class="px-6 py-3"> ID </th>
-                    <th scope="col" class="px-6 py-3"> Name </th>
-                    <th scope="col" class="px-6 py-3"> Surname </th>
-                    <th scope="col" class="px-6 py-3"> Document Type </th>
-                    <th scope="col" class="px-6 py-3"> Document </th>
+                    <th scope="col" class="px-6 py-3"> User ID </th>
                     <th scope="col" class="px-6 py-3"> Email </th>
                     <th scope="col" class="px-6 py-3"> Role </th>
                     <th scope="col" class="px-6 py-3"> Status </th>
-                    <th scope="col" class="px-6 py-3"> Action </th>
+                    <th scope="col" class="px-6 py-3"> Actions </th>
                 </thead>
                 <tbody>
                     <tr v-for="user in users.data" class="bg-white border-b">
 
                         <th scope="row" class="px-6 py-1.5 font-medium whitespace-nowrap"> {{ user.id }} </th>
-                        <td class="px-1 py-1.5"> {{user.name}} </td>
-                        <td class="px-6 py-1.5"> {{user.surname}} </td>
-                        <td class="px-6 py-1.5"> {{user.document_type}} </td>
-                        <td class="px-6 py-1.5"> {{user.document}} </td>
                         <td class="px-6 py-1.5"> {{user.email}} </td>
                         <td class="px-6 py-1.5"> {{user.role}} </td>
                         <td class="px-6 py-1.5"> {{user.deleted}} </td>
-                        <td class="px-6 py-1.5 text-center">
+                        <td class="px-6 py-1.5">
                             <div class="inline-flex space-x-1">
                                 <Link :href="route('admin.user.show', user.id)">
                                     <svg class="h-6 w-6 text-black"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>

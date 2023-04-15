@@ -4,7 +4,6 @@ import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import UpdateAddressInformation from "@/Pages/Profile/Partials/UpdateAddressInformation.vue";
 import BackButton from "@/Components/BackButton.vue";
 
 defineProps({
@@ -17,8 +16,8 @@ defineProps({
     departments: {
         type: Object
     },
-    department_id: {
-        type: Number
+    user: {
+        type: Object,
     },
 });
 </script>
@@ -36,15 +35,9 @@ defineProps({
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
-                        class="max-w-xl mt-5 sm:mt-0"
-                    />
-                </div>
-
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <UpdateAddressInformation
+                        :user="user"
                         :departments="departments"
-                        :department_id="department_id"
-                        class="max-w-xl"
+                        class="max-w-xl mt-5 sm:mt-0"
                     />
                 </div>
 

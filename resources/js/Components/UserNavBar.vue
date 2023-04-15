@@ -37,7 +37,7 @@ const showingNavigationDropdown = ref(false);
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {{ $page.props.auth.user.name }}
+                                                {{ $page.props.auth.user.email }}
 
                                                 <svg class="ml-2 h-8 w-8 text-black"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="7" r="4" />  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
 
@@ -59,8 +59,9 @@ const showingNavigationDropdown = ref(false);
 
                             <template #content>
                                 <div v-if="$page.props.isAdmin">
-                                    <DropdownLink v-if="$page.props.isAdmin" :href="route('admin')"> Administrator </DropdownLink>
+                                    <DropdownLink :href="route('admin')"> Administrator </DropdownLink>
                                     <DropdownLink :href="route('admin.users')" class="pl-8 flex"> <div class="border border-indigo-100 mr-3"></div> Users </DropdownLink>
+                                    <DropdownLink :href="route('admin.customers')" class="pl-8 flex"> <div class="border border-indigo-100 mr-3"></div> Customers </DropdownLink>
                                 </div>
                                 <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
                                 <DropdownLink :href="route('logout')" method="post" as="button">
@@ -128,7 +129,7 @@ const showingNavigationDropdown = ref(false);
             <div v-if="$page.props.auth.user" class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4">
                     <div class="font-medium text-base text-gray-800">
-                        {{ $page.props.auth.user.name }}
+                        {{ $page.props.auth.user.email }}
                     </div>
                     <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
                 </div>

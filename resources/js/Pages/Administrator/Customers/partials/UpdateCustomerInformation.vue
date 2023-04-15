@@ -1,5 +1,6 @@
 <script setup>
-import {useForm, usePage, Link} from "@inertiajs/vue3";
+import {Link, useForm, usePage} from "@inertiajs/vue3";
+import {ref} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -9,24 +10,27 @@ defineProps({
     user: {
         type: Object
     },
-    role: {
+    departments: {
         type: Object
     },
     document_types: {
         type: Object
-    },
-});
+    }
+})
 
 const user = usePage().props.user;
+const department_id = ref(user.customer.city.department_id);
+const cities = ref({});
 
 const form = useForm({
-    name: user.name,
-    surname: user.surname,
-    document_type: user.document_type,
-    document: user.document,
+    name: user.customer.name,
+    surname: user.customer.surname,
+    document_type: user.customer.document_type,
+    document: user.customer.document,
     email: user.email,
-    phone: user.phone,
-    role: usePage().props.role[0],
+    phone: user.customer.phone,
+    city_id: user.customer.city_id,
+    address: user.customer.address
 });
 
 const isNumber = (evt) => {
@@ -37,17 +41,28 @@ const isNumber = (evt) => {
         evt.preventDefault()
     }
 }
+
+const getCities = async () => {
+    const response = await fetch(route('cities', department_id.value));
+    cities.value = await response.json();
+};
+
+getCities();
 </script>
 
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">Profile Information of {{ user.email }}</h2>
+            <h2 class="text-lg font-medium text-gray-900">Customer Profile Information</h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Update the customer's profile information
+            </p>
         </header>
 
-        <form @submit.prevent="form.patch(route('admin.user.update', user.id))" class="mt-6 space-y-6">
+        <form @submit.prevent="form.put(route('admin.customer.update', user.id))" class="mt-6 space-y-6">
             <div>
-                <InputLabel for="name" value="Name"/>
+                <InputLabel for="name" value="Name" />
 
                 <TextInput
                     id="name"
@@ -59,11 +74,11 @@ const isNumber = (evt) => {
                     autocomplete="name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name"/>
+                <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
             <div>
-                <InputLabel for="surname" value="Surname"/>
+                <InputLabel for="surname" value="Surname" />
 
                 <TextInput
                     id="surname"
@@ -73,10 +88,10 @@ const isNumber = (evt) => {
                     autocomplete="surname"
                 />
 
-                <InputError class="mt-2" :message="form.errors.surname"/>
+                <InputError class="mt-2" :message="form.errors.surname" />
             </div>
 
-            <div class="mt-4">
+            <div>
                 <InputLabel for="document_type" value="Document Type"/>
 
                 <select
@@ -93,7 +108,7 @@ const isNumber = (evt) => {
             </div>
 
             <div>
-                <InputLabel for="document" value="Document"/>
+                <InputLabel for="document" value="Document" />
 
                 <TextInput
                     id="document"
@@ -101,30 +116,29 @@ const isNumber = (evt) => {
                     class="mt-1 block w-full"
                     v-model="form.document"
                     autocomplete="document"
-                    maxlength="10"
-                    v-on:keypress="isNumber($event)"
                 />
 
                 <InputError class="mt-2" :message="form.errors.document"/>
             </div>
 
             <div>
-                <InputLabel for="email" value="Email"/>
+                <InputLabel for="email" value="Email" />
 
                 <TextInput
                     id="email"
                     type="email"
                     class="mt-1 block w-full cursor-not-allowed bg-gray-100"
-                    v-model="form.email"
                     disabled
+                    v-model="form.email"
+                    required
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email"/>
+                <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div>
-                <InputLabel for="phone" value="Phone"/>
+                <InputLabel for="phone" value="Phone" />
 
                 <TextInput
                     id="phone"
@@ -136,22 +150,53 @@ const isNumber = (evt) => {
                     v-on:keypress="isNumber($event)"
                 />
 
-                <InputError class="mt-2" :message="form.errors.phone"/>
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
-            <div>
-                <InputLabel value="Rol" class="mb-2"/>
+            <div class="mt-4">
+                <InputLabel for="department" value="Department" />
 
-                <div class="flex items-center mb-4">
-                    <input v-model="form.role" id="roleAdministrator" type="radio" value="Administrator" name="roleAdministrator" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2 ">
-                    <label for="roleAdministrator" class="ml-2 text-sm font-medium">Administrator</label>
-                </div>
-                <div class="flex items-center">
-                    <input v-model="form.role" id="roleCustomer" type="radio" value="Customer" name="roleCustomer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2">
-                    <label for="roleCustomer" class="ml-2 text-sm font-medium ">Customer</label>
-                </div>
+                <select
+                    id="department"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model="department_id"
+                    required
+                    @change="getCities()"
+                >
+                    <option v-for="department in departments" :value="department.id">{{department.name}}</option>
+                </select>
+            </div>
 
-                <InputError class="mt-2" :message="form.errors.roles" />
+            <div class="mt-4">
+                <InputLabel for="city_id" value="City" />
+
+                <select
+                    id="city_id"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model.number="form.city_id"
+
+                    required
+                    autocomplete="city_id"
+                >
+                    <option v-for="city in cities" :value="city.id">{{city.name}}</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.city_id" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="address" value="Address" />
+
+                <TextInput
+                    id="address"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.address"
+                    required
+                    autocomplete="adress"
+                />
+
+                <InputError class="mt-2" :message="form.errors.address" />
             </div>
 
             <div class="flex items-center gap-4">
