@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Providers\RouteServiceProvider;
 use App\Services\CustomersService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,7 +23,9 @@ class RegisteredUserController extends Controller
      */
     public function store(CustomerRequest $request, CustomersService $service): RedirectResponse
     {
-        $service->store($request->validated());
+        $customer = $service->store($request->validated());
+
+        Auth::login($customer->user);
 
         return redirect(RouteServiceProvider::HOME);
     }

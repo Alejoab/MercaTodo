@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -20,8 +19,6 @@ class UsersService
         $user->assignRole('Customer');
 
         event(new Registered($user));
-
-        Auth::login($user);
 
         return $user;
     }
@@ -45,5 +42,16 @@ class UsersService
         $user->save();
 
         return $user;
+    }
+
+    public function destroy(int $id): void
+    {
+        $user = User::findOrFail($id);
+
+        $user->delete();
+
+        Log::info('[DELETE]', [
+            'user_id' => $user->id,
+        ]);
     }
 }
