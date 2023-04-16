@@ -37,10 +37,9 @@ class UserSeeder extends Seeder
         /**
          * Create a random users in the database with the role of customer.
          */
-        for ($i = 0; $i < 200; $i++) {
-            $user = User::factory()->create();
-            Customer::factory()->create(['user_id' => $user->id]);
+        User::factory(10)->create()->each(function ($user) {
             $user->assignRole('Customer');
-        }
+            Customer::factory()->create(['user_id' => $user->id]);
+        });
     }
 }
