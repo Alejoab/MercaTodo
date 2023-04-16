@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image_path');
-            $table->decimal('price', 10);
-            $table->integer('stock');
+            $table->decimal('price', 10)->unsigned();
+            $table->integer('stock')->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });
