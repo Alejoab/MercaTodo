@@ -2,24 +2,32 @@
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import {useForm} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import {ref} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
+const props = defineProps({
+    product: {
+        type: Object,
+        required: true,
+    },
+});
+
+let product = usePage().props.product;
 const categories = ref([]);
 const brands = ref([]);
-const image = ref(null);
+const image = ref('/product_images/' + product.image);
 let delayTimer = null;
 
 const form = useForm({
-    code: '',
-    name: '',
-    description: '',
-    price: '',
-    stock: '',
+    code: product.code,
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    stock: product.stock,
 
-    category_name: '',
-    brand_name: '',
+    category_name: product.category.name,
+    brand_name: product.brand.name,
 
     image: null,
 });
@@ -85,10 +93,10 @@ const isNumber = (evt) => {
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">Create New Product</h2>
+            <h2 class="text-lg font-medium text-gray-900">Update Product</h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Complete the product information
+                Edit the product information
             </p>
         </header>
 
@@ -237,15 +245,32 @@ const isNumber = (evt) => {
 
                 <div>
                     <InputLabel for="image" value="Please select an image"/>
-                    <input id="image" accept="image/x-png, image/jpeg" class="mt-2.5" name="Product Image"
-                           type="file" @input="uploadImage">
+
+                    <input
+                        id="image"
+                        accept="image/x-png, image/jpeg"
+                        class="mt-2.5 "
+                        name="Product Image"
+                        type="file"
+                        @input="uploadImage"
+                    >
+
                     <InputError :message="form.errors.image" class="mt-2"/>
+
                     <div v-show="image" class="mt-5">
-                        <img :src="image" alt="Product Image"/>
+                        <img
+                            :src="image"
+                            alt="Product Image"
+                        />
                     </div>
                 </div>
+
                 <div class="grid-cols-2">
                     <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+
+                    <Transition class="transition ease-in-out" enter-from-class="opacity-0" leave-to-class="opacity-0">
+                        <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
+                    </Transition>
                 </div>
             </div>
         </form>

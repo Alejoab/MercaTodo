@@ -54,8 +54,9 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/products', [AdminProductController::class, 'index'])->name('admin.products');
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products/create', [AdminProductController::class, 'store'])->name('admin.products.create');
-    Route::get('/products/categories', [AdminProductController::class, 'searchCategories'])->name('admin.products.categories.search');
-    Route::get('/products/brands', [AdminProductController::class, 'searchBrands'])->name('admin.products.brands.search');
+    Route::get('/products/{id}', [AdminProductController::class, 'productShow'])->name('admin.product.show');
+    Route::get('/categories', [AdminProductController::class, 'searchCategories'])->name('admin.categories.search');
+    Route::get('/brands', [AdminProductController::class, 'searchBrands'])->name('admin.brands.search');
 });
 
 require __DIR__ . '/auth.php';
