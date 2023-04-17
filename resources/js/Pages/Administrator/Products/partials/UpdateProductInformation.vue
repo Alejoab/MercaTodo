@@ -16,7 +16,7 @@ const props = defineProps({
 let product = usePage().props.product;
 const categories = ref([]);
 const brands = ref([]);
-const image = ref('/product_images/' + product.image);
+const image = ref('/storage/product_images/' + product.image);
 let delayTimer = null;
 
 const form = useForm({
