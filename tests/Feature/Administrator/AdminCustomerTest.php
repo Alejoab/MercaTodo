@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Administrator;
 
 use App\Enums\DocumentType;
 use App\Models\City;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class AdminTest extends TestCase
+class AdminCustomerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -117,8 +117,7 @@ class AdminTest extends TestCase
         $this->assertNull(User::find($this->user->id));
     }
 
-    public function test_the_admin_password_is_required_when_force_deleting_a_user(
-    ): void
+    public function test_the_admin_password_is_required_when_force_deleting_a_user(): void
     {
         $response = $this->actingAs($this->admin)->delete(
             route('admin.user.force-delete', $this->user->id)

@@ -14,15 +14,12 @@ return new class extends Migration {
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('surname');
-            $table->enum(
-                'document_type',
-                array_column(DocumentType::cases(), 'value')
-            );
+            $table->string('name', 255);
+            $table->string('surname', 255);
+            $table->enum('document_type', array_column(DocumentType::cases(), 'value'));
             $table->string('document', 11)->unique();
             $table->string('phone', 10)->nullable();
-            $table->string('address');
+            $table->string('address', 255);
             $table->foreignIdFor(City::class);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

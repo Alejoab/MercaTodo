@@ -50,38 +50,63 @@ getResults();
                 </button>
             </div>
         </div>
-        <div class="overflow-auto">
-            <table class="w-full text-xs md:text-sm text-left">
-                <thead class="text-xs uppercase bg-gray-50">
-                    <th scope="col" class="px-6 py-3"> User ID </th>
-                    <th scope="col" class="px-6 py-3"> Email </th>
-                    <th scope="col" class="px-6 py-3"> Role </th>
-                    <th scope="col" class="px-6 py-3"> Status </th>
-                    <th scope="col" class="px-6 py-3"> Actions </th>
-                </thead>
-                <tbody>
+        <div>
+            <div class="overflow-auto">
+                <table class="w-full text-xs md:text-sm text-left">
+                    <thead class="text-xs uppercase bg-gray-50">
+                    <th scope="col" class="px-6 py-3"> User ID</th>
+                    <th scope="col" class="px-6 py-3"> Email</th>
+                    <th scope="col" class="px-6 py-3"> Role</th>
+                    <th scope="col" class="px-6 py-3"> Status</th>
+                    <th scope="col" class="px-6 py-3"> Actions</th>
+                    </thead>
+                    <tbody>
                     <tr v-for="user in users.data" class="bg-white border-b">
 
-                        <th scope="row" class="px-6 py-1.5 font-medium whitespace-nowrap"> {{ user.id }} </th>
-                        <td class="px-6 py-1.5"> {{user.email}} </td>
-                        <td class="px-6 py-1.5"> {{user.role}} </td>
-                        <td class="px-6 py-1.5"> {{user.deleted}} </td>
+                        <th scope="row" class="px-6 py-1.5 font-medium whitespace-nowrap"> {{ user.id }}</th>
+                        <td class="px-6 py-1.5"> {{ user.email }}</td>
+                        <td class="px-6 py-1.5"> {{ user.role }}</td>
+                        <td class="px-6 py-1.5"> {{ user.deleted }}</td>
                         <td class="px-6 py-1.5">
                             <div class="inline-flex space-x-1">
                                 <Link :href="route('admin.user.show', user.id)">
-                                    <svg class="h-6 w-6 text-black"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg>
+                                    <svg class="h-6 w-6 text-black" viewBox="0 0 24 24" stroke-width="2"
+                                         stroke="currentColor" fill="none" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z"/>
+                                        <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"/>
+                                        <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"/>
+                                        <line x1="16" y1="5" x2="19" y2="8"/>
+                                    </svg>
                                 </Link>
                                 <button v-if="user.deleted === 'Active'" @click="destroyUserId = user.id">
-                                    <svg class="h-6 w-6 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <line x1="4" y1="7" x2="20" y2="7" />  <line x1="10" y1="11" x2="10" y2="17" />  <line x1="14" y1="11" x2="14" y2="17" />  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                                    <svg class="h-6 w-6 text-red-500" width="24" height="24" viewBox="0 0 24 24"
+                                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z"/>
+                                        <line x1="4" y1="7" x2="20" y2="7"/>
+                                        <line x1="10" y1="11" x2="10" y2="17"/>
+                                        <line x1="14" y1="11" x2="14" y2="17"/>
+                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                    </svg>
                                 </button>
                                 <button v-else @click="restoreUserId = user.id">
-                                    <svg class="h-6 w-6 text-green-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />  <circle cx="8.5" cy="7" r="4" />  <line x1="20" y1="8" x2="20" y2="14" />  <line x1="23" y1="11" x2="17" y2="11" /></svg>
+                                    <svg class="h-6 w-6 text-green-500" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="8.5" cy="7" r="4"/>
+                                        <line x1="20" y1="8" x2="20" y2="14"/>
+                                        <line x1="23" y1="11" x2="17" y2="11"/>
+                                    </svg>
                                 </button>
                             </div>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
             <div class="mt-7 flex justify-center">
                 <TailwindPagination :data="users" @pagination-change-page="getResults" :limit="1"></TailwindPagination>
             </div>
