@@ -2,25 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
 
 //use Intervention\Image\Facades\Image;
 
 class ProductsService
 {
-    public function store(array $data)
+    public function store(array $data): Product
     {
-        $category = Category::query()->where('name', $data['category_name'])->first() ?: Category::create(['name' => $data['category_name']]);
-        $brand = Brand::query()->where('name', $data['brand_name'])->first() ?: Brand::create(['name' => $data['brand_name']]);
+        $brandService = new BrandsService();
+        $categoryService = new CategoriesService();
 
-        $file_name = null;
-        if ($data['image'] !== null) {
-            $file_name = time() . '.' . $data['image']->extension();
-            $data['image']->move(storage_path('app\public\product_images'), $file_name);
-        }
+        $brand = $brandService->store($data['brand_name']);
+        $category = $categoryService->store($data['category_name']);
+
+        $file_name = $data['image'] !== null ? $this->storeImage($data['image']) : null;
 
         return Product::create([
             'code' => $data['code'],
@@ -34,17 +30,10 @@ class ProductsService
         ]);
     }
 
-    public function searchCategories($search): array|Collection
+    public function storeImage($image): string
     {
-        return Category::query()
-            ->where('name', 'like', "%" . $search . "%")
-            ->get('name');
-    }
-
-    public function searchBrands($search): array|Collection
-    {
-        return Brand::query()
-            ->where('name', 'like', "%" . $search . "%")
-            ->get('name');
+        $file_name = time() . '.' . $image->extension();
+        $image->move(storage_path('app\public\product_images'), $file_name);
+        return $file_name;
     }
 }
