@@ -8,7 +8,7 @@ use App\Models\Product;
 
 class ProductsService
 {
-    public function store(array $data): Product
+    public function store(array $data, $image): Product
     {
         $brandService = new BrandsService();
         $categoryService = new CategoriesService();
@@ -16,7 +16,7 @@ class ProductsService
         $brand = $brandService->store($data['brand_name']);
         $category = $categoryService->store($data['category_name']);
 
-        $file_name = $data['image'] !== null ? $this->storeImage($data['image']) : null;
+        $file_name = $image !== null ? $this->storeImage($image) : null;
 
         return Product::create([
             'code' => $data['code'],
