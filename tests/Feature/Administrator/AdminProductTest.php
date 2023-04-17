@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -121,5 +122,102 @@ class AdminProductTest extends TestCase
         $brand = Brand::first();
         $this->assertDatabaseCount('brands', 1);
         $this->assertEquals('Brand Test', $brand->name);
+    }
+
+    public function test_only_admin_can_update_a_product(): void
+    {
+        Brand::factory(1)->create();
+        Category::factory(1)->create();
+        $product = Product::factory(1)->create();
+
+        $response = $this->actingAs($this->admin)->get(route('admin.products.update', $product->id));
+        $response->assertStatus(200);
+
+        $response = $this->actingAs($this->customer)->get(route('admin.products.update', $product->id));
+        $response->assertStatus(403);
+    }
+
+    public function test_only_created_products_can_be_rendered(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.products.update', -1));
+        $response->assertStatus(404);
+    }
+
+    public function test_admin_can_update_a_product(): void
+    {
+        Brand::factory(1)->create();
+        Category::factory(1)->create();
+        $product = Product::factory(1)->create();
+
+        $response = $this->actingAs($this->admin)->post(route('admin.products.update', $product->id), [
+            'code' => '000001',
+            'category_name' => 'Category Update Test',
+            'brand_name' => 'Brand Update Test',
+            'name' => 'Product 1 Updated',
+            'description' => 'Product 1 description Updated',
+            'image' => null,
+            'price' => 5.1,
+            'stock' => 1000,
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('admin.products'));
+
+        $product->refresh();
+
+        $this->assertEquals('000001', $product->code);
+        $this->assertEquals('Category Update Test', $product->category->name);
+        $this->assertEquals('Brand Update Test', $product->brand->name);
+        $this->assertEquals('Product 1 Updated', $product->name);
+        $this->assertEquals('Product 1 description Updated', $product->description);
+        $this->assertEquals(5.1, $product->price);
+        $this->assertEquals(1000, $product->stock);
+    }
+
+    public function test_admin_can_delete_a_product(): void
+    {
+        Brand::factory(1)->create();
+        Category::factory(1)->create();
+        $product = Product::factory(1)->create();
+
+        $response = $this->actingAs($this->admin)->delete(route('admin.products.delete', $product->id));
+
+        $this->assertNotNull($product->fresh()->deleted_at);
+    }
+
+    public function test_admin_can_restore_a_product(): void
+    {
+        Brand::factory(1)->create();
+        Category::factory(1)->create();
+        $product = Product::factory(1)->create();
+        $product->delete();
+
+        $response = $this->actingAs($this->admin)->put(route('admin.products.restore', $product->id));
+
+        $this->assertNull($product->fresh()->deleted_at);
+    }
+
+    public function test_admin_can_forcedelete_a_product(): void
+    {
+        Brand::factory(1)->create();
+        Category::factory(1)->create();
+        $product = Product::factory(1)->create();
+        $product->delete();
+
+        $response = $this->actingAs($this->admin)->delete(route('admin.products.force-delete', $product->id));
+
+        $this->assertDatabaseCount('products', 0);
+    }
+
+    public function test_when_forcedelete_a_product_its_image_are_deleted(): void
+    {
+        Brand::factory(1)->create();
+        Category::factory(1)->create();
+        $product = Product::factory(1)->create();
+
+        $product->forceDelete();
+
+        $this->assertDatabaseCount('images', 0);
+        $this->assertNotTrue(Storage::exists(storage_path('app/public/product_images/' . $product->image)));
     }
 }

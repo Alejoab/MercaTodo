@@ -2,10 +2,17 @@
 
 namespace Tests\Unit\Administrator;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\City;
 use App\Models\Department;
+use App\Models\Product;
 use App\Models\User;
+use App\Services\BrandsService;
+use App\Services\CategoriesService;
+use App\Services\ProductsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -41,5 +48,36 @@ class AdminProductUnitTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors();
+    }
+
+    public function test_a_brand_is_not_store_twice(): void
+    {
+        $brandService = new BrandsService();
+        $brandService->store('Brand 1');
+        $this->assertDatabaseCount('brands', 1);
+
+        $brandService->store('Brand 1');
+        $this->assertDatabaseCount('brands', 1);
+    }
+
+    public function test_a_category_is_not_stored_twice(): void
+    {
+        $categoryService = new CategoriesService();
+        $categoryService->store('Category 1');
+        $this->assertDatabaseCount('categories', 1);
+
+        $categoryService->store('Category 1');
+        $this->assertDatabaseCount('categories', 1);
+    }
+
+    public function test_delete_an_image_from_the_storage(): void
+    {
+        $productService = new ProductsService();
+        Category::factory(1)->create();
+        Brand::factory(1)->create();
+        $product = Product::factory(1)->create();
+
+        $productService->deleteImage($product->image);
+        $this->assertNotTrue(Storage::exists(storage_path('app/public/product_images/' . $product->image)));
     }
 }

@@ -25,7 +25,7 @@ class ProductFactory extends Factory
             'brand_id' => $this->faker->randomElement(Brand::all())->id,
             'name' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
-            'image_path' => $this->faker->image(storage_path('app\public\product_images'), 640, 480, null, false),
+            'image' => $this->faker->image(storage_path('app\public\product_images'), 640, 480, null, false),
             'price' => $this->faker->randomFloat(2, 1, 1000),
             'stock' => $this->faker->numberBetween(0, 1000),
         ];
