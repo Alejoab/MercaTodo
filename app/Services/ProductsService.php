@@ -58,13 +58,13 @@ class ProductsService
     public function storeImage($image): string
     {
         $file_name = time() . '.' . $image->extension();
-        $image->move(public_path('\product_images'), $file_name);
+        $image->move(public_path('product_images'), $file_name);
         return $file_name;
     }
 
     public function deleteImage($image_path): void
     {
-        File::delete(public_path('/product_images/' . $image_path));
+        File::delete(public_path('product_images/' . $image_path));
     }
 
     public function destroy(int $id): void
