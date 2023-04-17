@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image_path');
+            $table->string('image')->nullable();
             $table->decimal('price', 10)->unsigned();
             $table->integer('stock')->unsigned();
             $table->softDeletes();
