@@ -41,6 +41,29 @@ class AdminProductController extends Controller
         return redirect()->route('admin.products');
     }
 
+    public function update(ProductRequest $request, int $id, ProductsService $service): RedirectResponse
+    {
+        $file = $request->hasFile('image') ? $request->file('image') : null;
+        $service->update($id, $request->validated(), $file);
+
+        return redirect()->route('admin.products.update', $id);
+    }
+
+    public function destroy(int $id, ProductsService $service): void
+    {
+        $service->destroy($id);
+    }
+
+    public function restore(int $id, ProductsService $service): void
+    {
+        $service->restore($id);
+    }
+
+    public function forceDelete(int $id, ProductsService $service): void
+    {
+        $service->forceDelete($id);
+    }
+
     public function searchCategories(Request $request, CategoriesService $service): Collection|array
     {
         return $service->searchCategories($request->search);

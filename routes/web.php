@@ -55,6 +55,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products/create', [AdminProductController::class, 'store'])->name('admin.products.create');
     Route::get('/products/{id}', [AdminProductController::class, 'productShow'])->name('admin.products.show');
+    Route::post('/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/products/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+    Route::put('/products/{id}/restore', [AdminProductController::class, 'restore'])->name('admin.products.restore');
+    Route::delete('/products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('admin.products.force-delete');
     Route::get('/categories', [AdminProductController::class, 'searchCategories'])->name('admin.categories.search');
     Route::get('/brands', [AdminProductController::class, 'searchBrands'])->name('admin.brands.search');
 });

@@ -100,7 +100,7 @@ const isNumber = (evt) => {
             </p>
         </header>
 
-        <form @submit.prevent="form.post(route('admin.products.create'))">
+        <form @submit.prevent="form.post(route('admin.products.update', product.id))">
             <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 mt-6">
                 <div class="space-y-6">
                     <div>
@@ -265,7 +265,7 @@ const isNumber = (evt) => {
                     </div>
                 </div>
 
-                <div class="grid-cols-2">
+                <div class="grid-cols-2 flex items-center gap-4">
                     <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
 
                     <Transition class="transition ease-in-out" enter-from-class="opacity-0" leave-to-class="opacity-0">

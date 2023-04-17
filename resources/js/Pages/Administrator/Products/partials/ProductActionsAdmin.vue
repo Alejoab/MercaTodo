@@ -14,33 +14,26 @@ defineProps({
 })
 
 const product = usePage().props.product;
-const confirmProductDelete = ref(false);
+const forceDeleteProduct = ref('');
 const destroyProductId = ref('');
 const restoreProductId = ref('');
 
 const destroyProduct = async (id) => {
     destroyProductId.value = '';
-    // await axios.delete(route('admin.product.destroy', id));
-    // window.location.href = route('admin.products');
+    await axios.delete(route('admin.products.destroy', id));
+    window.location.href = route('admin.products');
 }
 
 const restoreProduct = async (id) => {
     restoreProductId.value = '';
-    // await axios.put(route('admin.product.restore', id));
-    // window.location.href = route('admin.products');
+    await axios.put(route('admin.products.restore', id));
+    window.location.href = route('admin.products');
 }
 
-const confirmProductDeletion = () => {
-    confirmProductDelete.value = true;
-};
-
-const deleteProduct = () => {
-    // await axios.put(route('admin.product.restore', id));
-    // window.location.href = route('admin.products');
-};
-
-const closeModal = () => {
-    confirmProductDelete.value = false;
+const deleteProduct = async ($id) => {
+    forceDeleteProduct.value = '';
+    await axios.delete(route('admin.products.force-delete', $id));
+    window.location.href = route('admin.products');
 };
 </script>
 
@@ -52,12 +45,12 @@ const closeModal = () => {
         <div class="mt-4">
             <div v-if="product.deleted_at">
                 <SuccessButton class="mr-5" @click="restoreProductId = product.id">Restore Product</SuccessButton>
-                <DangerButton @click="confirmProductDeletion"> Force Delete Product</DangerButton>
+                <DangerButton @click="forceDeleteProduct = product.id"> Force Delete Product</DangerButton>
             </div>
             <DangerButton v-else @click="destroyProductId = product.id">Delete Product</DangerButton>
         </div>
 
-        <Modal :show="confirmProductDelete" @close="closeModal">
+        <Modal :show="!! forceDeleteProduct" @close="forceDeleteProduct = ''">
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900">
                     Are you sure you want to delete this Product?
@@ -73,7 +66,7 @@ const closeModal = () => {
 
                     <DangerButton
                         class="ml-3"
-                        @click="deleteProduct"
+                        @click="deleteProduct(forceDeleteProduct)"
                     >
                         Delete Product
                     </DangerButton>
