@@ -6,8 +6,8 @@ use App\Models\City;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class AdminProductUnitTest extends TestCase
 {
@@ -17,6 +17,7 @@ class AdminProductUnitTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $roleAdmin = Role::create(['name' => 'Administrator']);
 
         Department::factory(1)->create();
@@ -34,12 +35,11 @@ class AdminProductUnitTest extends TestCase
             'brand_name' => '$brand->name',
             'name' => '',
             'description' => '',
-            'image_path' => '',
+            'image_path' => 'a',
             'price' => -1,
             'stock' => -1,
         ]);
 
         $response->assertSessionHasErrors();
-        $response->assertStatus(200);
     }
 }

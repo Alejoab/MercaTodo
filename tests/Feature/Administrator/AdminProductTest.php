@@ -5,7 +5,6 @@ namespace Tests\Feature\Administrator;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\City;
-use App\Models\Customer;
 use App\Models\Department;
 use App\Models\Product;
 use App\Models\User;
@@ -22,6 +21,7 @@ class AdminProductTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $roleAdmin = Role::create(['name' => 'Administrator']);
         $roleCustomer = Role::create(['name' => 'Customer']);
 
@@ -31,7 +31,7 @@ class AdminProductTest extends TestCase
         $this->admin = User::factory()->create();
         $this->admin->assignRole($roleAdmin);
 
-        $this->customer = Customer::factory()->create();
+        $this->customer = User::factory()->create();
         $this->customer->assignRole($roleCustomer);
     }
 
@@ -58,7 +58,7 @@ class AdminProductTest extends TestCase
             'brand_name' => $brand->name,
             'name' => 'Product 1',
             'description' => 'Product 1 description',
-            'image_path' => 'Product 1 image path',
+            'image' => null,
             'price' => 10.02,
             'stock' => 10,
         ]);
@@ -73,7 +73,6 @@ class AdminProductTest extends TestCase
         $this->assertEquals($brand->id, $product->brand_id);
         $this->assertEquals('Product 1', $product->name);
         $this->assertEquals('Product 1 description', $product->description);
-        $this->assertEquals('Product 1 image path', $product->image_path);
         $this->assertEquals(10.02, $product->price);
         $this->assertEquals(10, $product->stock);
     }
@@ -88,7 +87,7 @@ class AdminProductTest extends TestCase
             'brand_name' => $brand->name,
             'name' => 'Product 1',
             'description' => 'Product 1 description',
-            'image_path' => 'Product 1 image path',
+            'image' => null,
             'price' => 10.02,
             'stock' => 10,
         ]);
@@ -96,7 +95,7 @@ class AdminProductTest extends TestCase
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(route('admin.products'));
 
-        $category = Product::first();
+        $category = Category::first();
         $this->assertDatabaseCount('categories', 1);
         $this->assertEquals('Category Test', $category->name);
     }
@@ -111,7 +110,7 @@ class AdminProductTest extends TestCase
             'brand_name' => 'Brand Test',
             'name' => 'Product 1',
             'description' => 'Product 1 description',
-            'image_path' => 'Product 1 image path',
+            'image' => null,
             'price' => 10.02,
             'stock' => 10,
         ]);
@@ -119,7 +118,7 @@ class AdminProductTest extends TestCase
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(route('admin.products'));
 
-        $brand = Product::first();
+        $brand = Brand::first();
         $this->assertDatabaseCount('brands', 1);
         $this->assertEquals('Brand Test', $brand->name);
     }
