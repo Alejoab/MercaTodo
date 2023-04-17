@@ -130,16 +130,18 @@ class AdminProductTest extends TestCase
         Category::factory(1)->create();
         $product = Product::factory(1)->create();
 
-        $response = $this->actingAs($this->admin)->get(route('admin.products.update', $product->id));
+        dump($product);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.products.show', $product->id));
         $response->assertStatus(200);
 
-        $response = $this->actingAs($this->customer)->get(route('admin.products.update', $product->id));
+        $response = $this->actingAs($this->customer)->get(route('admin.products.show', $product->id));
         $response->assertStatus(403);
     }
 
     public function test_only_created_products_can_be_rendered(): void
     {
-        $response = $this->actingAs($this->admin)->get(route('admin.products.update', -1));
+        $response = $this->actingAs($this->admin)->get(route('admin.products.show', -1));
         $response->assertStatus(404);
     }
 
@@ -147,7 +149,7 @@ class AdminProductTest extends TestCase
     {
         Brand::factory(1)->create();
         Category::factory(1)->create();
-        $product = Product::factory(1)->create();
+        $product = Product::factory()->create();
 
         $response = $this->actingAs($this->admin)->post(route('admin.products.update', $product->id), [
             'code' => '000001',
@@ -178,7 +180,7 @@ class AdminProductTest extends TestCase
     {
         Brand::factory(1)->create();
         Category::factory(1)->create();
-        $product = Product::factory(1)->create();
+        $product = Product::factory()->create();
 
         $response = $this->actingAs($this->admin)->delete(route('admin.products.delete', $product->id));
 
@@ -189,7 +191,7 @@ class AdminProductTest extends TestCase
     {
         Brand::factory(1)->create();
         Category::factory(1)->create();
-        $product = Product::factory(1)->create();
+        $product = Product::factory()->create();
         $product->delete();
 
         $response = $this->actingAs($this->admin)->put(route('admin.products.restore', $product->id));
@@ -201,7 +203,7 @@ class AdminProductTest extends TestCase
     {
         Brand::factory(1)->create();
         Category::factory(1)->create();
-        $product = Product::factory(1)->create();
+        $product = Product::factory()->create();
         $product->delete();
 
         $response = $this->actingAs($this->admin)->delete(route('admin.products.force-delete', $product->id));
@@ -213,7 +215,7 @@ class AdminProductTest extends TestCase
     {
         Brand::factory(1)->create();
         Category::factory(1)->create();
-        $product = Product::factory(1)->create();
+        $product = Product::factory()->create();
 
         $product->forceDelete();
 

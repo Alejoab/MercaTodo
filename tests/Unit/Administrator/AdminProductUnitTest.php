@@ -75,7 +75,7 @@ class AdminProductUnitTest extends TestCase
         $productService = new ProductsService();
         Category::factory(1)->create();
         Brand::factory(1)->create();
-        $product = Product::factory(1)->create();
+        $product = Product::factory()->create();
 
         $productService->deleteImage($product->image);
         $this->assertNotTrue(Storage::exists(storage_path('app/public/product_images/' . $product->image)));
