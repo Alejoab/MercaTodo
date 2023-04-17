@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\AdminCustomerController;
+use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\ProfileController;
 use App\Models\City;
@@ -49,6 +50,12 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/customers/{id}', [AdminCustomerController::class, 'customerShow'])->name('admin.customer.show');
     Route::put('/customers/{id}', [AdminCustomerController::class, 'customerUpdate'])->name('admin.customer.update');
     Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
+
+    Route::get('/products', [AdminProductController::class, 'index'])->name('admin.products');
+    Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/products/create', [AdminProductController::class, 'store'])->name('admin.products.create');
+    Route::get('/products/categories', [AdminProductController::class, 'searchCategories'])->name('admin.products.categories.search');
+    Route::get('/products/brands', [AdminProductController::class, 'searchBrands'])->name('admin.products.brands.search');
 });
 
 require __DIR__ . '/auth.php';

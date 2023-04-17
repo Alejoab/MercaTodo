@@ -55,7 +55,7 @@ const generatePassword = () => {
             <h2 class="text-lg font-medium text-gray-900">Update Password</h2>
         </header>
 
-        <div class="mt-6 space-y-6">
+        <div class="mt-6 space-y-6 max-w-xl">
             <div>
                 <InputLabel for="password" value="New Password" />
 
