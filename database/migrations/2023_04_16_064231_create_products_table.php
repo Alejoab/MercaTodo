@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->decimal('price', 10)->unsigned();
+            $table->decimal('price')->unsigned();
             $table->integer('stock')->unsigned();
             $table->softDeletes();
             $table->timestamps();
