@@ -9,7 +9,7 @@ use App\Models\Department;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -128,15 +128,15 @@ class AdminProductTest extends TestCase
     {
         Brand::factory(1)->create();
         Category::factory(1)->create();
-        $product = Product::factory(1)->create();
-
-        dump($product);
+        $product = Product::factory()->create();
 
         $response = $this->actingAs($this->admin)->get(route('admin.products.show', $product->id));
         $response->assertStatus(200);
 
         $response = $this->actingAs($this->customer)->get(route('admin.products.show', $product->id));
         $response->assertStatus(403);
+
+        File::delete(File::allFiles(public_path('product_images')));
     }
 
     public function test_only_created_products_can_be_rendered(): void
@@ -163,7 +163,7 @@ class AdminProductTest extends TestCase
         ]);
 
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect(route('admin.products'));
+        $response->assertRedirect(route('admin.products.show', $product->id));
 
         $product->refresh();
 
@@ -174,6 +174,8 @@ class AdminProductTest extends TestCase
         $this->assertEquals('Product 1 description Updated', $product->description);
         $this->assertEquals(5.1, $product->price);
         $this->assertEquals(1000, $product->stock);
+
+        File::delete(File::allFiles(public_path('product_images')));
     }
 
     public function test_admin_can_delete_a_product(): void
@@ -182,9 +184,11 @@ class AdminProductTest extends TestCase
         Category::factory(1)->create();
         $product = Product::factory()->create();
 
-        $response = $this->actingAs($this->admin)->delete(route('admin.products.delete', $product->id));
+        $response = $this->actingAs($this->admin)->delete(route('admin.products.destroy', $product->id));
 
         $this->assertNotNull($product->fresh()->deleted_at);
+
+        File::delete(File::allFiles(public_path('product_images')));
     }
 
     public function test_admin_can_restore_a_product(): void
@@ -217,9 +221,9 @@ class AdminProductTest extends TestCase
         Category::factory(1)->create();
         $product = Product::factory()->create();
 
-        $product->forceDelete();
+        $this->actingAs($this->admin)->delete(route('admin.products.force-delete', $product->id));
 
-        $this->assertDatabaseCount('images', 0);
-        $this->assertNotTrue(Storage::exists(storage_path('app/public/product_images/' . $product->image)));
+        $this->assertDatabaseCount('products', 0);
+        $this->assertNotTrue(File::exists($product->image));
     }
 }

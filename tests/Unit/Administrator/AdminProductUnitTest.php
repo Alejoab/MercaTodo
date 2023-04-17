@@ -12,7 +12,7 @@ use App\Services\BrandsService;
 use App\Services\CategoriesService;
 use App\Services\ProductsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -78,6 +78,6 @@ class AdminProductUnitTest extends TestCase
         $product = Product::factory()->create();
 
         $productService->deleteImage($product->image);
-        $this->assertNotTrue(Storage::exists(storage_path('app/public/product_images/' . $product->image)));
+        $this->assertNotTrue(File::exists($product->image));
     }
 }
