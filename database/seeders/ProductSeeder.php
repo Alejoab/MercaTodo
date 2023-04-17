@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ProductSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Storage::delete(Storage::allFiles('public\product_images'));
+        File::delete(File::allFiles(public_path('product_images')));
 
         Product::factory(10)->create();
     }

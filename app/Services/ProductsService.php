@@ -33,7 +33,7 @@ class ProductsService
     public function storeImage($image): string
     {
         $file_name = time() . '.' . $image->extension();
-        $image->move(storage_path('app\public\product_images'), $file_name);
+        $image->move(public_path('\product_images'), $file_name);
         return $file_name;
     }
 }
