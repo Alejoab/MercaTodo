@@ -18,7 +18,7 @@ class AdminProductController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Administrator/Products/CreateProduct');
+        return Inertia::render('Administrator/Products/Index');
     }
 
     public function create(): Response
