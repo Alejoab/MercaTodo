@@ -30,9 +30,9 @@ const restoreProduct = async (id) => {
     window.location.href = route('admin.products');
 }
 
-const deleteProduct = async ($id) => {
+const deleteProduct = async (id) => {
     forceDeleteProduct.value = '';
-    await axios.delete(route('admin.products.force-delete', $id));
+    await axios.delete(route('admin.products.force-delete', id));
     window.location.href = route('admin.products');
 };
 </script>

@@ -2,6 +2,7 @@
 import {Head} from "@inertiajs/vue3";
 import BackButton from "@/Components/BackButton.vue";
 import UserLayout from "@/Layouts/UserLayout.vue";
+import ProductsTable from "@/Pages/Administrator/Products/partials/ProductsTable.vue";
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import UserLayout from "@/Layouts/UserLayout.vue";
             <div class="text-end pb-3 md:pb-0">
                 <BackButton :href="route('admin')"></BackButton>
             </div>
+            <ProductsTable></ProductsTable>
         </div>
     </UserLayout>
 </template>
