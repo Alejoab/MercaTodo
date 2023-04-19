@@ -62,6 +62,7 @@ const showingNavigationDropdown = ref(false);
                                     <DropdownLink :href="route('admin')"> Administrator </DropdownLink>
                                     <DropdownLink :href="route('admin.users')" class="pl-8 flex"> <div class="border border-indigo-100 mr-3"></div> Users </DropdownLink>
                                     <DropdownLink :href="route('admin.customers')" class="pl-8 flex"> <div class="border border-indigo-100 mr-3"></div> Customers </DropdownLink>
+                                    <DropdownLink :href="route('admin.products')" class="pl-8 flex"> <div class="border border-indigo-100 mr-3"></div> Products </DropdownLink>
                                 </div>
                                 <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
                                 <DropdownLink :href="route('logout')" method="post" as="button">

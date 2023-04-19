@@ -32,4 +32,9 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
+    public function getStatusAttribute($value): string
+    {
+        return !$value ? 'Active' : 'Inactive';
+    }
 }

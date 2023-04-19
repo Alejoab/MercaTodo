@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -137,9 +136,7 @@ class UsersService
                 'users.id',
                 'users.email',
                 'roles.name as role',
-                DB::raw(
-                    '(CASE WHEN users.deleted_at IS NULL THEN "Active" ELSE "Inactive" END) AS deleted'
-                )
+                'users.deleted_at as deleted'
             )
             ->where('users.id', '!=', auth()->user()->id)
             ->orderBy('users.id')

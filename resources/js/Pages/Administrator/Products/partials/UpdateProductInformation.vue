@@ -249,7 +249,7 @@ const isNumber = (evt) => {
                     <input
                         id="image"
                         accept="image/x-png, image/jpeg"
-                        class="mt-2.5 "
+                        class="mt-2.5"
                         name="Product Image"
                         type="file"
                         @input="uploadImage"

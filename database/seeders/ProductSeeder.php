@@ -15,6 +15,6 @@ class ProductSeeder extends Seeder
     {
         File::delete(File::allFiles(public_path('product_images')));
 
-        Product::factory(10)->create();
+        Product::factory(200)->create();
     }
 }

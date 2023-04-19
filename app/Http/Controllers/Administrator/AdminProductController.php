@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Services\BrandsService;
 use App\Services\CategoriesService;
 use App\Services\ProductsService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class AdminProductController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Administrator/Products/CreateProduct');
+        return Inertia::render('Administrator/Products/Index');
     }
 
     public function create(): Response
@@ -72,5 +73,14 @@ class AdminProductController extends Controller
     public function searchBrands(Request $request, BrandsService $service): Collection|array
     {
         return $service->searchBrands($request->search);
+    }
+
+    public function listProducts(Request $request, ProductsService $service): LengthAwarePaginator
+    {
+        $search = $request->get('search');
+        $category = $request->get('category');
+        $brand = $request->get('brand');
+
+        return $service->listProductsAdmin($search, $category, $brand);
     }
 }
