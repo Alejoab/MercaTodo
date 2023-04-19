@@ -5,6 +5,7 @@ use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Category;
 use App\Models\City;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,6 +35,14 @@ Route::get('cities/{state_id}', function ($state_id) {
     return City::query()->where('department_id', $state_id)->get();
 })->name('cities');
 
+Route::get('categories', function () {
+    return Category::all('name', 'id');
+})->name('categories');
+
+Route::get('brands/{id?}', function ($id = null) {
+    return Category::getBrands($id);
+})->name('brands');
+
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
 
@@ -61,6 +70,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::delete('/products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('admin.products.force-delete');
     Route::get('/categories', [AdminProductController::class, 'searchCategories'])->name('admin.categories.search');
     Route::get('/brands', [AdminProductController::class, 'searchBrands'])->name('admin.brands.search');
+    Route::get('/list-products', [AdminProductController::class, 'listProducts'])->name('admin.list-products');
 });
 
 require __DIR__ . '/auth.php';

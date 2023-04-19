@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -52,12 +51,15 @@ class User extends Authenticatable
     protected $casts
         = [
             'email_verified_at' => 'datetime',
-            'deleted_at' => 'boolean',
-
         ];
 
     public function customer(): hasOne
     {
         return $this->hasOne(Customer::class);
+    }
+
+    public function getDeletedAttribute($value): string
+    {
+        return !$value ? 'Active' : 'Inactive';
     }
 }
