@@ -106,18 +106,22 @@ class ProductsService
                 '=',
                 'categories.id'
             )
-            ->when($search, function ($query, $search) {
-                $query->where('products.name', 'like', '%' . $search . '%')
-                    ->orWhere('products.code', 'like', '%' . $search . '%');
-            })
             ->when($category, function ($query, $category) {
                 $query->where('products.category_id', '=', $category);
             })
             ->when($brand, function ($query, $brand) {
                 $query->where('products.brand_id', '=', $brand);
             })
+            ->when($search, function ($query, $search) {
+                $query->where('products.name', 'like', '%' . $search . '%')
+                ->orWhere('products.code', 'like', '%' . $search . '%');
+            })
             ->select(
-                'products.*',
+                'products.id',
+                'products.code',
+                'products.name',
+                'products.price',
+                'products.stock',
                 'brands.name as brand_name',
                 'categories.name as category_name',
                 'products.deleted_at as status'
