@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CategoriesService
 {
+    public function list(): Collection
+    {
+        return Category::all('id', 'name');
+    }
+
     public function store($name): Category
     {
         return Category::firstOrCreate(['name' => $name], ['name' => $name]);

@@ -4,11 +4,12 @@ use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Category;
-use App\Models\City;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,27 +22,18 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-})->name('home');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('cities/{state_id}', function ($state_id) {
-    return City::query()->where('department_id', $state_id)->get();
-})->name('cities');
-
-Route::get('categories', function () {
-    return Category::all('name', 'id');
-})->name('categories');
-
-Route::get('brands/{id?}', function ($id = null) {
-    return Category::getBrands($id);
-})->name('brands');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('', [UserController::class, 'index'])->name('home');
+    Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
+    Route::get('categories', [CategoryController::class, 'list'])->name('categories');
+    Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
+});
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');

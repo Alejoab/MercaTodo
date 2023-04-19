@@ -18,4 +18,13 @@ class BrandsService
             ->where('name', 'like', "%" . $search . "%")
             ->get('name');
     }
+
+    public function brandsByCategory(int|null $id): Collection|array
+    {
+        return Brand::query()->whereHas('products', function ($query) use ($id) {
+            $query->withTrashed()->when($id, function ($query, $id) {
+                $query->where('category_id', $id);
+            });
+        })->get(['name', 'id']);
+    }
 }
