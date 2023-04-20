@@ -236,7 +236,8 @@ const isNumber = (evt) => {
                             autofocus
                             class="mt-1 block w-full"
                             required
-                            type="number"
+                            type="text"
+                            @keypress="isNumber"
                         />
 
                         <InputError :message="form.errors.stock" class="mt-2"/>
