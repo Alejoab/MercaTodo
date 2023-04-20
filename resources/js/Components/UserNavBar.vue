@@ -5,6 +5,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import {Link} from "@inertiajs/vue3";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {ref} from "vue";
+import SearchBox from "@/Components/SearchBox.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -14,7 +15,7 @@ const showingNavigationDropdown = ref(false);
         <!-- Primary Navigation Menu -->
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex">
+                <div class="flex w-full">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <Link :href="route('home')">
@@ -25,9 +26,12 @@ const showingNavigationDropdown = ref(false);
                     </div>
 
                     <!-- SearchBox in the future -->
+                    <div class="w-[60%] flex m-auto">
+                        <search-box class="fle"></search-box>
+                    </div>
                 </div>
 
-                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="hidden lg:flex lg:items-center lg:ml-6">
                     <!-- Settings Dropdown -->
                     <div class="ml-3 relative">
                         <Dropdown align="right" width="48">
@@ -40,7 +44,8 @@ const showingNavigationDropdown = ref(false);
                                                 {{ $page.props.auth.user.email }}
 
                                                 <svg class="ml-2 h-8 w-8 text-black" fill="none" height="24"
-                                                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                     stroke="currentColor" stroke-linecap="round"
+                                                     stroke-linejoin="round"
                                                      stroke-width="2" viewBox="0 0 24 24" width="24">  <path
                                                     d="M0 0h24v24H0z" stroke="none"/>  <circle cx="12" cy="7" r="4"/>  <path
                                                     d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
@@ -87,7 +92,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-mr-2 flex items-center sm:hidden">
+                <div class="-mr-2 flex items-center lg:hidden">
                     <button
                         class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                         @click="showingNavigationDropdown = !showingNavigationDropdown"
