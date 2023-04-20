@@ -9,6 +9,6 @@ class UserController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('Home');
+        return Inertia::render('User/Home');
     }
 }
