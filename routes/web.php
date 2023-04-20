@@ -7,6 +7,7 @@ use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('categories', [CategoryController::class, 'list'])->name('categories');
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
+    Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
+    Route::get('products/{id}', [ProductController::class, 'show'])->name('products.show');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
