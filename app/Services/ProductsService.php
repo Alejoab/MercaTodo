@@ -42,7 +42,7 @@ class ProductsService
 
         $file_name = $image !== null ? $this->storeImage($image) : null;
 
-        return Product::create([
+        $product = Product::create([
             'code' => $data['code'],
             'name' => $data['name'],
             'description' => $data['description'],
@@ -52,6 +52,11 @@ class ProductsService
             'brand_id' => $brand->id,
             'image' => $file_name,
         ]);
+
+        $product->image = $file_name;
+        $product->save();
+
+        return $product;
     }
 
     public function storeImage($image): string
