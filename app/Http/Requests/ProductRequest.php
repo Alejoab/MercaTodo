@@ -27,7 +27,7 @@ class ProductRequest extends FormRequest
             'stock' => ['required', 'integer', 'min:0'],
             'category_name' => ['required', 'string', 'max:255'],
             'brand_name' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'image'],
+            'image' => [Rule::requiredIf(Product::query()->where('id', $id)->doesntExist()), 'nullable', 'image'],
         ];
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 
 class ProductsService
 {
-    public function update(int $id, array $data, $image): Product
+    public function update(int $id, array $data): Product
     {
         $product = Product::findOrFail($id);
 
@@ -20,19 +20,20 @@ class ProductsService
         $data['brand_id'] = $brand->id;
         $data['category_id'] = $category->id;
 
-        $product->fill($data);
-
-        if ($image !== null) {
+        if ($data['image'] !== null) {
             $this->deleteImage($product->image);
-            $product->image = $this->storeImage($image);
+            $data['image'] = $this->storeImage($data['image']);
+        } else {
+            unset($data['image']);
         }
 
+        $product->fill($data);
         $product->save();
 
         return $product;
     }
 
-    public function store(array $data, $image): Product
+    public function store(array $data): Product
     {
         $brandService = new BrandsService();
         $categoryService = new CategoriesService();
@@ -40,7 +41,7 @@ class ProductsService
         $brand = $brandService->store($data['brand_name']);
         $category = $categoryService->store($data['category_name']);
 
-        $file_name = $image !== null ? $this->storeImage($image) : null;
+        $data['image'] = $this->storeImage($data['image']);
 
         $product = Product::create([
             'code' => $data['code'],
@@ -50,11 +51,8 @@ class ProductsService
             'stock' => $data['stock'],
             'category_id' => $category->id,
             'brand_id' => $brand->id,
-            'image' => $file_name,
+            'image' => $data['image'],
         ]);
-
-        $product->image = $file_name;
-        $product->save();
 
         return $product;
     }
@@ -62,13 +60,13 @@ class ProductsService
     public function storeImage($image): string
     {
         $file_name = time() . '.' . $image->extension();
-        $image->move(public_path('product_images'), $file_name);
+        $image->move(storage_path('app/public/product_images'), $file_name);
         return $file_name;
     }
 
     public function deleteImage($image_path): void
     {
-        File::delete(public_path('product_images/' . $image_path));
+        File::delete(storage_path('app/public/product_images/' . $image_path));
     }
 
     public function destroy(int $id): void
@@ -117,6 +115,12 @@ class ProductsService
             ->when($brand, function ($query, $brand) {
                 $query->where('products.brand_id', '=', $brand);
             })
+//            ->when($search, function ($query, $search) {
+//                $query->where(function ($query) use ($search) {
+//                    $query->where('products.name', 'like', '%' . $search . '%')
+//                        ->orWhere('products.code', 'like', '%' . $search . '%');
+//                });
+//            })
             ->when($search, function ($query, $search) {
                 $query->where('products.name', 'like', '%' . $search . '%')
                     ->orWhere('products.code', 'like', '%' . $search . '%');
@@ -162,7 +166,7 @@ class ProductsService
             ->when($search, function ($query, $search) {
                 $query->where('products.name', 'like', '%' . $search . '%')
                     ->orWhere('products.code', 'like', '%' . $search . '%')
-                    ->orWhere('products.description', 'like', '%' . $search . '%')
+//                    ->orWhere('products.description', 'like', '%' . $search . '%')
                     ->orWhere('brands.name', 'like', '%' . $search . '%')
                     ->orWhere('categories.name', 'like', '%' . $search . '%');
             })

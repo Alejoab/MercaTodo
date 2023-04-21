@@ -36,16 +36,14 @@ class AdminProductController extends Controller
 
     public function store(ProductRequest $request, ProductsService $service): RedirectResponse
     {
-        $file = $request->hasFile('image') ? $request->file('image') : null;
-        $service->store($request->validated(), $file);
+        $service->store($request->validated());
 
         return redirect()->route('admin.products');
     }
 
     public function update(ProductRequest $request, int $id, ProductsService $service): RedirectResponse
     {
-        $file = $request->hasFile('image') ? $request->file('image') : null;
-        $service->update($id, $request->validated(), $file);
+        $service->update($id, $request->validated());
 
         return redirect()->route('admin.products.update', $id);
     }
