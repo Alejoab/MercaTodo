@@ -12,7 +12,7 @@ const props = defineProps({
 <template>
     <div class="w-full bg-white max-w-xs rounded-2xl">
         <a :href="route('products.show', product.id)">
-            <img :alt="product.name" :src="'/product_images/' + product.image" class="p-8 rounded-t-lg"/>
+            <img :alt="product.name" :src="'/storage/product_images/' + product.image" class="p-8 rounded-t-lg"/>
         </a>
         <div class="px-5 pb-5">
             <a :href="route('products.show', product.id)">
