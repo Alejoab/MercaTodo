@@ -30,7 +30,7 @@ class AdminProductController extends Controller
     public function productShow(int $id): Response
     {
         return Inertia::render('Administrator/Products/EditProduct', [
-            'product' => Product::withTrashed()->findOrFail($id)->load('category:id,name', 'brand:id,name'),
+            'product' => Product::withTrashed()->findOrFail($id)->load(['category:id,name', 'brand:id,name']),
         ]);
     }
 
@@ -65,12 +65,12 @@ class AdminProductController extends Controller
 
     public function searchCategories(Request $request, CategoriesService $service): Collection|array
     {
-        return $service->searchCategories($request->search);
+        return $service->searchCategories($request->get('search'));
     }
 
     public function searchBrands(Request $request, BrandsService $service): Collection|array
     {
-        return $service->searchBrands($request->search);
+        return $service->searchBrands($request->get('search'));
     }
 
     public function listProducts(Request $request, ProductsService $service): LengthAwarePaginator

@@ -31,7 +31,7 @@ class AdminUserController extends Controller
 
     public function userUpdate(Request $request, int $id, UsersService $service): RedirectResponse
     {
-        $service->roleUpdate($id, $request->role);
+        $service->roleUpdate($id, $request['role']);
 
         return redirect()->route('admin.user.show', $id);
     }
@@ -42,7 +42,7 @@ class AdminUserController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        $service->passwordUpdate($id, $request->password);
+        $service->passwordUpdate($id, $request['password']);
 
         return redirect()->route('admin.user.show', $id);
     }
@@ -70,6 +70,6 @@ class AdminUserController extends Controller
 
     public function listUsers(Request $request, UsersService $service): LengthAwarePaginator
     {
-        return $service->listUsersToTable($request->search);
+        return $service->listUsersToTable($request->get('search'));
     }
 }

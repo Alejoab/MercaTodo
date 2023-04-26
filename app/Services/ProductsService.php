@@ -4,24 +4,27 @@ namespace App\Services;
 
 use App\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 class ProductsService
 {
-    public function update(int $id, array $data): Product
+    public function update(int $id, array $data): Builder|array|Collection|Model
     {
-        $product = Product::findOrFail($id);
+        $product = Product::query()->findOrFail($id);
 
         $brandService = new BrandsService();
         $categoryService = new CategoriesService();
 
         $brand = $brandService->store($data['brand_name']);
         $category = $categoryService->store($data['category_name']);
-        $data['brand_id'] = $brand->id;
-        $data['category_id'] = $category->id;
+        $data['brand_id'] = $brand->getAttribute('id');
+        $data['category_id'] = $category->getAttribute('id');
 
         if ($data['image'] !== null) {
-            $this->deleteImage($product->image);
+            $this->deleteImage($product->getAttribute('image'));
             $data['image'] = $this->storeImage($data['image']);
         } else {
             unset($data['image']);
@@ -33,7 +36,7 @@ class ProductsService
         return $product;
     }
 
-    public function store(array $data): Product
+    public function store(array $data): Builder|Model
     {
         $brandService = new BrandsService();
         $categoryService = new CategoriesService();
@@ -43,14 +46,14 @@ class ProductsService
 
         $data['image'] = $this->storeImage($data['image']);
 
-        $product = Product::create([
+        $product = Product::query()->create([
             'code' => $data['code'],
             'name' => $data['name'],
             'description' => $data['description'],
             'price' => $data['price'],
             'stock' => $data['stock'],
-            'category_id' => $category->id,
-            'brand_id' => $brand->id,
+            'category_id' => $category->getAttribute('id'),
+            'brand_id' => $brand->getAttribute('id'),
             'image' => $data['image'],
         ]);
 
@@ -72,7 +75,7 @@ class ProductsService
 
     public function destroy(int $id): void
     {
-        $product = Product::findOrFail($id);
+        $product = Product::query()->findOrFail($id);
 
         $product->delete();
     }
@@ -80,7 +83,7 @@ class ProductsService
     public function restore(int $id): void
     {
         $product = Product::withTrashed()->findOrFail($id);
-
+        /** @phpstan-ignore-next-line */
         $product->restore();
     }
 
@@ -88,8 +91,8 @@ class ProductsService
     {
         $product = Product::withTrashed()->findOrFail($id);
 
-        if ($product->image !== null) {
-            $this->deleteImage($product->image);
+        if ($product->getAttribute('image') !== null) {
+            $this->deleteImage($product->getAttribute('image'));
         }
 
         $product->forceDelete();
@@ -123,14 +126,16 @@ class ProductsService
                 });
             })
             ->select(
-                'products.id',
-                'products.code',
-                'products.name',
-                'products.price',
-                'products.stock',
-                'brands.name as brand_name',
-                'categories.name as category_name',
-                'products.deleted_at as status'
+                [
+                    'products.id',
+                    'products.code',
+                    'products.name',
+                    'products.price',
+                    'products.stock',
+                    'brands.name as brand_name',
+                    'categories.name as category_name',
+                    'products.deleted_at as status',
+                ]
             )
             ->orderBy('products.code', 'desc')
             ->paginate(50);

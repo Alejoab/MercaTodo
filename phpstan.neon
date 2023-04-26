@@ -1,0 +1,11 @@
+parameters:
+    paths:
+        - app
+    level: 3
+    excludePaths:
+        - app/Http/Controllers/Auth
+        - app/Http/Request/Auth
+        - app/Http/Middleware
+        - app/Http/Kernel.php
+        - app/Exceptions/Handler.php
+        - app/Services/UsersService.php

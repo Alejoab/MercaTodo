@@ -5,18 +5,23 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class UsersService
 {
-    public function store(array $data): User
+    // TODO: Add this file to phpstan
+    public function store(array $data): Builder|Model
     {
-        $user = User::create([
+        $user = User::query()->create([
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
+        /** @phpstan-ignore-next-line */
         $user->assignRole('Customer');
 
         event(new Registered($user));
@@ -24,7 +29,7 @@ class UsersService
         return $user;
     }
 
-    public function update(int $id, array $data): User
+    public function update(int $id, array $data): Builder|array|Collection|Model|\Illuminate\Database\Query\Builder
     {
         $user = User::withTrashed()->findOrFail($id);
 
@@ -34,7 +39,7 @@ class UsersService
             Log::info('[EMAIL]', [
                 'user_id' => $user->id,
                 'old_email' => $user->getOriginal('email'),
-                'new_email' => $user->email,
+                'new_email' => $user->getAttribute('email'),
             ]);
 
             $user->email_verified_at = null;
@@ -45,7 +50,7 @@ class UsersService
         return $user;
     }
 
-    public function roleUpdate(int $id, string $role): User
+    public function roleUpdate(int $id, string $role): Builder|array|Collection|Model|\Illuminate\Database\Query\Builder
     {
         $user = User::withTrashed()->findOrFail($id);
 
@@ -64,7 +69,7 @@ class UsersService
         return $user;
     }
 
-    public function passwordUpdate(int $id, string $password): User
+    public function passwordUpdate(int $id, string $password): Builder|array|Collection|Model|\Illuminate\Database\Query\Builder
     {
         $user = User::withTrashed()->findOrFail($id);
 
@@ -130,7 +135,7 @@ class UsersService
                 'model_has_roles.role_id'
             )
             ->when($search, function ($query, $search) {
-                $query->where('users.email', 'like', '%' . $search . '%');
+                $query->where('users.email', 'like', '%'.$search.'%');
             })
             ->select(
                 'users.id',
