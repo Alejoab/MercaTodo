@@ -8,3 +8,4 @@ parameters:
         - app/Http/Middleware
         - app/Http/Kernel.php
         - app/Exceptions/Handler.php
+        - app/Services/UsersService.php
