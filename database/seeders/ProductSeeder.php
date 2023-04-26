@@ -15,6 +15,6 @@ class ProductSeeder extends Seeder
     {
         File::delete(File::allFiles(storage_path('app/public/product_images')));
 
-        Product::factory(200)->create();
+        Product::factory(env('PRODUCT_SEEDER'))->create();
     }
 }
