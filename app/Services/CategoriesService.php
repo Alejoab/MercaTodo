@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class CategoriesService
 {
@@ -12,15 +14,15 @@ class CategoriesService
         return Category::all('id', 'name');
     }
 
-    public function store($name): Category
+    public function store($name): Builder|Model
     {
-        return Category::firstOrCreate(['name' => $name], ['name' => $name]);
+        return Category::query()->firstOrCreate(['name' => $name], ['name' => $name]);
     }
 
     public function searchCategories($search): array|Collection
     {
         return Category::query()
-            ->where('name', 'like', "%" . $search . "%")
+            ->where('name', 'like', "%".$search."%")
             ->get('name');
     }
 }
