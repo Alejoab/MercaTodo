@@ -59,14 +59,15 @@ class ProductsService
 
     public function storeImage($image): string
     {
-        $file_name = time() . '.' . $image->extension();
+        $file_name = time().'.'.$image->extension();
         $image->move(storage_path('app/public/product_images'), $file_name);
+
         return $file_name;
     }
 
     public function deleteImage($image_path): void
     {
-        File::delete(storage_path('app/public/product_images/' . $image_path));
+        File::delete(storage_path('app/public/product_images/'.$image_path));
     }
 
     public function destroy(int $id): void
@@ -115,15 +116,11 @@ class ProductsService
             ->when($brand, function ($query, $brand) {
                 $query->where('products.brand_id', '=', $brand);
             })
-//            ->when($search, function ($query, $search) {
-//                $query->where(function ($query) use ($search) {
-//                    $query->where('products.name', 'like', '%' . $search . '%')
-//                        ->orWhere('products.code', 'like', '%' . $search . '%');
-//                });
-//            })
             ->when($search, function ($query, $search) {
-                $query->where('products.name', 'like', '%' . $search . '%')
-                    ->orWhere('products.code', 'like', '%' . $search . '%');
+                $query->where(function ($query) use ($search) {
+                    $query->where('products.name', 'like', '%'.$search.'%')
+                        ->orWhere('products.code', 'like', '%'.$search.'%');
+                });
             })
             ->select(
                 'products.id',
@@ -164,11 +161,12 @@ class ProductsService
                 $query->whereIn('products.brand_id', $brands);
             })
             ->when($search, function ($query, $search) {
-                $query->where('products.name', 'like', '%' . $search . '%')
-                    ->orWhere('products.code', 'like', '%' . $search . '%')
-//                    ->orWhere('products.description', 'like', '%' . $search . '%')
-                    ->orWhere('brands.name', 'like', '%' . $search . '%')
-                    ->orWhere('categories.name', 'like', '%' . $search . '%');
+                $query->where(function ($query) use ($search) {
+                    $query->where('products.name', 'like', '%'.$search.'%')
+                        ->orWhere('products.code', 'like', '%'.$search.'%')
+                        ->orWhere('brands.name', 'like', '%'.$search.'%')
+                        ->orWhere('categories.name', 'like', '%'.$search.'%');
+                });
             })
             ->select(
                 'products.id',
