@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,11 +17,13 @@ return new class extends Migration
             $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
+            $table->string('image');
             $table->decimal('price')->unsigned();
             $table->integer('stock')->unsigned();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('name');
         });
     }
 

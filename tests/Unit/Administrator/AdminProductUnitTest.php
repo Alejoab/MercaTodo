@@ -42,7 +42,7 @@ class AdminProductUnitTest extends TestCase
             'brand_name' => '$brand->name',
             'name' => '',
             'description' => '',
-            'image_path' => 'a',
+            'image' => 'a',
             'price' => -1,
             'stock' => -1,
         ]);
@@ -77,7 +77,15 @@ class AdminProductUnitTest extends TestCase
         Brand::factory(1)->create();
         $product = Product::factory()->create();
 
+        $this->assertFileExists(storage_path('app/public/product_images/'.$product->image));
+
         $productService->deleteImage($product->image);
-        $this->assertNotTrue(File::exists($product->image));
+        $this->assertFileDoesNotExist(storage_path('app/public/product_images/'.$product->image));
+    }
+
+    public function tearDown(): void
+    {
+        File::delete(File::allFiles(storage_path('app/public/product_images')));
+        parent::tearDown();
     }
 }

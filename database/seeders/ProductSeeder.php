@@ -13,8 +13,8 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        File::delete(File::allFiles(public_path('product_images')));
+        File::delete(File::allFiles(storage_path('app/public/product_images')));
 
-        Product::factory(200)->create();
+        Product::factory(env('PRODUCT_SEEDER'))->create();
     }
 }

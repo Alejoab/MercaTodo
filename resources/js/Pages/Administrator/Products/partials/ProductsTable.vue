@@ -20,7 +20,6 @@ const query = ref({
     brand: usePage().props.ziggy.query['brand'] ? usePage().props.ziggy.query['brand'] : '',
 })
 
-console.log(usePage().props.ziggy.query);
 const clearQuery = () => {
     query.value = {
         page: 1,

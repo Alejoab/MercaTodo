@@ -16,7 +16,7 @@ const props = defineProps({
 let product = usePage().props.product;
 const categories = ref([]);
 const brands = ref([]);
-const image = ref(product.image ? '/product_images/' + product.image : null);
+const image = ref('/storage/product_images/' + product.image);
 let delayTimer = null;
 
 const form = useForm({
@@ -236,7 +236,8 @@ const isNumber = (evt) => {
                             autofocus
                             class="mt-1 block w-full"
                             required
-                            type="number"
+                            type="text"
+                            @keypress="isNumber"
                         />
 
                         <InputError :message="form.errors.stock" class="mt-2"/>

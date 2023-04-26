@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -59,7 +60,7 @@ class AdminProductTest extends TestCase
             'brand_name' => $brand->name,
             'name' => 'Product 1',
             'description' => 'Product 1 description',
-            'image' => null,
+            'image' => UploadedFile::fake()->image('image.jpg'),
             'price' => 10.02,
             'stock' => 10,
         ]);
@@ -76,6 +77,7 @@ class AdminProductTest extends TestCase
         $this->assertEquals('Product 1 description', $product->description);
         $this->assertEquals(10.02, $product->price);
         $this->assertEquals(10, $product->stock);
+        $this->assertFileExists(storage_path('app/public/product_images/'.$product->image));
     }
 
     public function test_admin_can_create_new_categories(): void
@@ -88,7 +90,7 @@ class AdminProductTest extends TestCase
             'brand_name' => $brand->name,
             'name' => 'Product 1',
             'description' => 'Product 1 description',
-            'image' => null,
+            'image' => UploadedFile::fake()->image('image.png'),
             'price' => 10.02,
             'stock' => 10,
         ]);
@@ -111,7 +113,7 @@ class AdminProductTest extends TestCase
             'brand_name' => 'Brand Test',
             'name' => 'Product 1',
             'description' => 'Product 1 description',
-            'image' => null,
+            'image' => UploadedFile::fake()->image('image.jpg'),
             'price' => 10.02,
             'stock' => 10,
         ]);
@@ -135,8 +137,6 @@ class AdminProductTest extends TestCase
 
         $response = $this->actingAs($this->customer)->get(route('admin.products.show', $product->id));
         $response->assertStatus(403);
-
-        File::delete(File::allFiles(public_path('product_images')));
     }
 
     public function test_only_created_products_can_be_rendered(): void
@@ -174,8 +174,6 @@ class AdminProductTest extends TestCase
         $this->assertEquals('Product 1 description Updated', $product->description);
         $this->assertEquals(5.1, $product->price);
         $this->assertEquals(1000, $product->stock);
-
-        File::delete(File::allFiles(public_path('product_images')));
     }
 
     public function test_admin_can_delete_a_product(): void
@@ -187,8 +185,6 @@ class AdminProductTest extends TestCase
         $response = $this->actingAs($this->admin)->delete(route('admin.products.destroy', $product->id));
 
         $this->assertNotNull($product->fresh()->deleted_at);
-
-        File::delete(File::allFiles(public_path('product_images')));
     }
 
     public function test_admin_can_restore_a_product(): void
@@ -224,6 +220,12 @@ class AdminProductTest extends TestCase
         $this->actingAs($this->admin)->delete(route('admin.products.force-delete', $product->id));
 
         $this->assertDatabaseCount('products', 0);
-        $this->assertNotTrue(File::exists($product->image));
+        $this->assertNotTrue(File::exists($product->name));
+    }
+
+    public function tearDown(): void
+    {
+        //File::delete(File::allFiles(storage_path('app/public/product_images')));
+        parent::tearDown();
     }
 }
