@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Actions\Customers\UpdateCustomer;
 use App\Contracts\Actions\Users\DeleteUser;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Department;
-use App\Services\CustomersService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,9 +32,9 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(CustomerUpdateRequest $request, CustomersService $service): RedirectResponse
+    public function update(CustomerUpdateRequest $request, UpdateCustomer $action): RedirectResponse
     {
-        $service->update($request->user()->customer->id, $request->validated());
+        $action->execute($request->user()->customer->id, $request->validated());
 
         return Redirect::route('profile.edit');
     }

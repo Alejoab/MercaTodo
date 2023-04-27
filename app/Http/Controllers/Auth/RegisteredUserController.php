@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\Actions\Customers\CreateCustomer;
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Department;
 use App\Providers\RouteServiceProvider;
-use App\Services\CustomersService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -21,9 +21,9 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(CustomerRequest $request, CustomersService $service): RedirectResponse
+    public function store(CustomerRequest $request, CreateCustomer $action): RedirectResponse
     {
-        $customer = $service->store($request->validated());
+        $customer = $action->execute($request->validated());
 
         Auth::login($customer->user);
 
