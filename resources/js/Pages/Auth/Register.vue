@@ -116,7 +116,7 @@ const isNumber = (evt) => {
                     v-model="form.document"
                     required
                     autocomplete="document"
-                    maxlength="10"
+                    maxlength="11"
                     v-on:keypress="isNumber($event)"
                 />
 
