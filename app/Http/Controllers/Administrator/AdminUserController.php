@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Contracts\Actions\Users\DeleteUser;
+use App\Contracts\Actions\Users\ForceDeleteUser;
+use App\Contracts\Actions\Users\RestoreUser;
+use App\Contracts\Actions\Users\UpdateUserPassword;
+use App\Contracts\Actions\Users\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\UsersService;
@@ -29,41 +34,41 @@ class AdminUserController extends Controller
         ]);
     }
 
-    public function userUpdate(Request $request, int $id, UsersService $service): RedirectResponse
+    public function userUpdate(Request $request, int $id, UpdateUserRole $action): RedirectResponse
     {
-        $service->roleUpdate($id, $request['role']);
+        $action->execute($id, $request['role']);
 
         return redirect()->route('admin.user.show', $id);
     }
 
-    public function userUpdatePassword(Request $request, int $id, UsersService $service): RedirectResponse
+    public function userUpdatePassword(Request $request, int $id, UpdateUserPassword $action): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        $service->passwordUpdate($id, $request['password']);
+        $action->execute($id, $request['password']);
 
         return redirect()->route('admin.user.show', $id);
     }
 
-    public function userDestroy(int $id, UsersService $service): void
+    public function userDestroy(int $id, DeleteUser $action): void
     {
-        $service->destroy($id);
+        $action->execute($id);
     }
 
-    public function userRestore(int $id, UsersService $service): void
+    public function userRestore(int $id, RestoreUser $action): void
     {
-        $service->restore($id);
+        $action->execute($id);
     }
 
-    public function userForceDelete(Request $request, int $id, UsersService $service): RedirectResponse
+    public function userForceDelete(Request $request, int $id, ForceDeleteUser $action): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current-password'],
         ]);
 
-        $service->forceDelete($id);
+        $action->execute($id);
 
         return Redirect::to(route('admin.users'));
     }

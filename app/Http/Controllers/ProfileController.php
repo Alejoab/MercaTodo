@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Actions\Users\DeleteUser;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Department;
 use App\Services\CustomersService;
-use App\Services\UsersService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,13 +42,13 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request, UsersService $service): RedirectResponse
+    public function destroy(Request $request, DeleteUser $action): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current-password'],
         ]);
 
-        $service->destroy($request->user()->id);
+        $action->execute($request->user()->id);
 
         Auth::logout();
 
