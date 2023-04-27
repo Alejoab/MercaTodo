@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Contracts\Actions\Products\CreateProduct;
+use App\Contracts\Actions\Products\DeleteProduct;
+use App\Contracts\Actions\Products\ForceDeleteProduct;
+use App\Contracts\Actions\Products\RestoreProduct;
+use App\Contracts\Actions\Products\UpdateProduct;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
@@ -34,33 +39,33 @@ class AdminProductController extends Controller
         ]);
     }
 
-    public function store(ProductRequest $request, ProductsService $service): RedirectResponse
+    public function store(ProductRequest $request, CreateProduct $action): RedirectResponse
     {
-        $service->store($request->validated());
+        $action->execute($request->validated());
 
         return redirect()->route('admin.products');
     }
 
-    public function update(ProductRequest $request, int $id, ProductsService $service): RedirectResponse
+    public function update(ProductRequest $request, int $id, UpdateProduct $action): RedirectResponse
     {
-        $service->update($id, $request->validated());
+        $action->execute($id, $request->validated());
 
         return redirect()->route('admin.products.update', $id);
     }
 
-    public function destroy(int $id, ProductsService $service): void
+    public function destroy(int $id, DeleteProduct $action): void
     {
-        $service->destroy($id);
+        $action->execute($id);
     }
 
-    public function restore(int $id, ProductsService $service): void
+    public function restore(int $id, RestoreProduct $action): void
     {
-        $service->restore($id);
+        $action->execute($id);
     }
 
-    public function forceDelete(int $id, ProductsService $service): void
+    public function forceDelete(int $id, ForceDeleteProduct $action): void
     {
-        $service->forceDelete($id);
+        $action->execute($id);
     }
 
     public function searchCategories(Request $request, CategoriesService $service): Collection|array

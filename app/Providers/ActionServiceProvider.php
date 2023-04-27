@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use App\Actions\Customers\CreateCustomerAction;
 use App\Actions\Customers\UpdateCustomerAction;
+use App\Actions\Products\CreateProductAction;
+use App\Actions\Products\DeleteProductAction;
+use App\Actions\Products\ForceDeleteProductAction;
+use App\Actions\Products\RestoreProductAction;
+use App\Actions\Products\UpdateProductAction;
 use App\Actions\Users\CreateUserAction;
 use App\Actions\Users\DeleteUserAction;
 use App\Actions\Users\ForceDeleteUserAction;
@@ -13,6 +18,11 @@ use App\Actions\Users\UpdateUserPasswordAction;
 use App\Actions\Users\UpdateUserRoleAction;
 use App\Contracts\Actions\Customers\CreateCustomer;
 use App\Contracts\Actions\Customers\UpdateCustomer;
+use App\Contracts\Actions\Products\CreateProduct;
+use App\Contracts\Actions\Products\DeleteProduct;
+use App\Contracts\Actions\Products\ForceDeleteProduct;
+use App\Contracts\Actions\Products\RestoreProduct;
+use App\Contracts\Actions\Products\UpdateProduct;
 use App\Contracts\Actions\Users\CreateUser;
 use App\Contracts\Actions\Users\DeleteUser;
 use App\Contracts\Actions\Users\ForceDeleteUser;
@@ -36,5 +46,11 @@ class ActionServiceProvider extends ServiceProvider
 
             CreateCustomer::class => CreateCustomerAction::class,
             UpdateCustomer::class => UpdateCustomerAction::class,
+
+            CreateProduct::class => CreateProductAction::class,
+            UpdateProduct::class => UpdateProductAction::class,
+            DeleteProduct::class => DeleteProductAction::class,
+            RestoreProduct::class => RestoreProductAction::class,
+            ForceDeleteProduct::class => ForceDeleteProductAction::class,
         ];
 }
