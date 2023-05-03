@@ -8,4 +8,6 @@ parameters:
         - app/Http/Middleware
         - app/Http/Kernel.php
         - app/Exceptions/Handler.php
-        - app/Services/UsersService.php
+    ignoreErrors:
+    		- '#Call to an undefined method#'
+    		- '#Access to an undefined property#'

@@ -116,6 +116,8 @@ getCities();
                     class="mt-1 block w-full"
                     v-model="form.document"
                     autocomplete="document"
+                    maxlength="11"
+                    v-on:keypress="isNumber($event)"
                 />
 
                 <InputError class="mt-2" :message="form.errors.document"/>

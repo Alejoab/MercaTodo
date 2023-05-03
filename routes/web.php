@@ -29,9 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('', [UserController::class, 'index'])->name('home');
-    Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('categories', [CategoryController::class, 'list'])->name('categories');
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
     Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
@@ -68,4 +69,4 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/list-products', [AdminProductController::class, 'listProducts'])->name('admin.list-products');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

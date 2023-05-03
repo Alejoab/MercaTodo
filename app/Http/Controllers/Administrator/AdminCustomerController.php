@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Contracts\Actions\Customers\UpdateCustomer;
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
@@ -37,13 +38,9 @@ class AdminCustomerController extends Controller
         return $service->listCustomersToTable($request->get('search'));
     }
 
-    public
-    function customerUpdate(
-        CustomerUpdateRequest $request,
-        int $id,
-        CustomersService $service
-    ): RedirectResponse {
-        $service->update($id, $request->validated());
+    public function customerUpdate(CustomerUpdateRequest $request, int $id, UpdateCustomer $action): RedirectResponse
+    {
+        $action->execute($id, $request->validated());
 
         return redirect()->route('admin.customer.show', $id);
     }

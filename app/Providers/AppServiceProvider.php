@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use PHPStan\Rules\Rule;
 
 class AppServiceProvider extends ServiceProvider
 {
