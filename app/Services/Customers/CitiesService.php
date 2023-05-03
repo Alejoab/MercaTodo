@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Customers;
 
 use App\Models\City;
 use App\Models\Department;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\BrandsService;
+use App\Services\Products\BrandsService;
 use Illuminate\Database\Eloquent\Collection;
 
 class BrandController extends Controller

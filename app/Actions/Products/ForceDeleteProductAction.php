@@ -4,7 +4,7 @@ namespace App\Actions\Products;
 
 use App\Contracts\Actions\Products\ForceDeleteProduct;
 use App\Models\Product;
-use App\Services\ProductImagesService;
+use App\Services\Products\ProductImagesService;
 
 class ForceDeleteProductAction implements ForceDeleteProduct
 {

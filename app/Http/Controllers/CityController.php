@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CitiesService;
+use App\Services\Customers\CitiesService;
 use Illuminate\Database\Eloquent\Collection;
 
 class CityController extends Controller

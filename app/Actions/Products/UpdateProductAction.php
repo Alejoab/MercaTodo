@@ -4,9 +4,9 @@ namespace App\Actions\Products;
 
 use App\Contracts\Actions\Products\UpdateProduct;
 use App\Models\Product;
-use App\Services\BrandsService;
-use App\Services\CategoriesService;
-use App\Services\ProductImagesService;
+use App\Services\Products\BrandsService;
+use App\Services\Products\CategoriesService;
+use App\Services\Products\ProductImagesService;
 
 class UpdateProductAction implements UpdateProduct
 {
