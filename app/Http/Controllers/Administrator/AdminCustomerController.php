@@ -29,7 +29,6 @@ class AdminCustomerController extends Controller
         return Inertia::render('Administrator/Customers/EditCustomer', [
             'user' => $user,
             'document_types' => DocumentType::cases(),
-            'departments' => Department::all(),
         ]);
     }
 

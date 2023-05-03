@@ -11,4 +11,9 @@ class CityController extends Controller
     {
         return $service->citiesByDepartment($id);
     }
+
+    public function departments(CitiesService $service): Collection|array
+    {
+        return $service->departments();
+    }
 }
