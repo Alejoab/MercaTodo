@@ -16,6 +16,8 @@ class CategoriesService
 
     public function store($name): Builder|Model
     {
+        $name = ucwords(strtolower($name));
+
         return Category::query()->firstOrCreate(['name' => $name], ['name' => $name]);
     }
 

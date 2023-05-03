@@ -11,6 +11,8 @@ class BrandsService
 {
     public function store($name): Builder|Model
     {
+        $name = ucwords(strtolower($name));
+
         return Brand::query()->firstOrCreate(['name' => $name], ['name' => $name]);
     }
 
