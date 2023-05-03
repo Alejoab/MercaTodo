@@ -11,6 +11,7 @@ class RestoreUserAction implements RestoreUser
 
     public function execute(int $id): void
     {
+        // TODO: Call undefined method restore
         $user = User::withTrashed()->findOrFail($id);
 
         $user->restore();

@@ -7,8 +7,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UsersService
 {
-    // TODO: Add this file to phpstan
-
     public function listUsersToTable(string|null $search): LengthAwarePaginator
     {
         return User::withTrashed()
@@ -28,12 +26,12 @@ class UsersService
                 $query->where('users.email', 'like', '%'.$search.'%');
             })
             ->select(
-                'users.id',
+                ['users.id',
                 'users.email',
                 'roles.name as role',
-                'users.deleted_at as deleted'
+                'users.deleted_at as deleted']
             )
-            ->where('users.id', '!=', auth()->user()->id)
+            ->where('users.id', '!=', auth()->user()->getAuthIdentifier())
             ->orderBy('users.id')
             ->paginate(50);
     }

@@ -11,6 +11,7 @@ class UpdateUserAction implements UpdateUser
 
     public function execute(int $id, array $data): void
     {
+        // TODO: Access undefinded property email_verified_at
         $user = User::withTrashed()->findOrFail($id);
 
         $user->fill($data);

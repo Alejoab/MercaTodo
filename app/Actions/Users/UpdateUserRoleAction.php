@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateUserRoleAction implements UpdateUserRole
 {
-
+    // TODO: Call undefined method hasRole and syncRoles
     public function execute(int $id, string $role): void
     {
         $user = User::withTrashed()->findOrFail($id);
