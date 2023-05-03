@@ -14,7 +14,7 @@ const replaceRoute = () => {
     <div class="relative flex items-center w-full">
         <input id="default-search" v-model="search"
                class="block w-full p-3 pl-5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500"
-               placeholder="Search Products ..." type="search">
+               placeholder="Search Products ..." type="text">
         <button class="-ml-10" type="submit" @click="replaceRoute">
             <svg class="h-8 w-8 text-gray-600" fill="none" height="24" stroke="currentColor" stroke-linecap="round"
                  stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24">
