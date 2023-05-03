@@ -9,7 +9,7 @@ use App\Contracts\Actions\Users\UpdateUserPassword;
 use App\Contracts\Actions\Users\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\UsersService;
+use App\Services\Users\UsersService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

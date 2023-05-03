@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Services\ProductsService;
+use App\Services\Products\ProductsService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

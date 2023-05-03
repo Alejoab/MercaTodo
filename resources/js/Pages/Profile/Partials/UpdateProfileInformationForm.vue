@@ -16,14 +16,12 @@ defineProps({
     user: {
         type: Object,
     },
-    departments: {
-        type: Object
-    },
 });
 
 const user = usePage().props.user;
 const department_id = ref(user.customer.city.department_id);
 const cities = ref({});
+const departments = ref({});
 
 const form = useForm({
     name: user.customer.name,
@@ -50,6 +48,12 @@ const getCities = async () => {
     cities.value = await response.json();
 };
 
+const getDepartments = async () => {
+    const response = await fetch(route('departments'));
+    departments.value = await response.json();
+};
+
+getDepartments();
 getCities();
 </script>
 

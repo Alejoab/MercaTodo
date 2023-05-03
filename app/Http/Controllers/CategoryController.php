@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CategoriesService;
+use App\Services\Products\CategoriesService;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoryController extends Controller

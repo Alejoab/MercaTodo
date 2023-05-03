@@ -13,9 +13,6 @@ defineProps({
     status: {
         type: String,
     },
-    departments: {
-        type: Object
-    },
     user: {
         type: Object,
     },
@@ -36,7 +33,6 @@ defineProps({
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
                         :user="user"
-                        :departments="departments"
                         class="max-w-xl mt-5 sm:mt-0"
                     />
                 </div>

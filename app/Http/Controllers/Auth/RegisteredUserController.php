@@ -37,7 +37,6 @@ class RegisteredUserController extends Controller
     {
         return Inertia::render('Auth/Register', [
             'document_types' => DocumentType::cases(),
-            'departments' => Department::all(),
         ]);
     }
 }

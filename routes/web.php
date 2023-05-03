@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
+Route::get('departments', [CityController::class, 'departments'])->name('departments');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('', [UserController::class, 'index'])->name('home');

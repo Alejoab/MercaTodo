@@ -2,7 +2,7 @@
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import {Link} from "@inertiajs/vue3";
+import {Link, usePage} from "@inertiajs/vue3";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {ref} from "vue";
 import SearchBox from "@/Components/SearchBox.vue";
@@ -26,7 +26,7 @@ const showingNavigationDropdown = ref(false);
                     </div>
 
                     <!-- SearchBox in the future -->
-                    <div class="w-[60%] flex m-auto">
+                    <div class="w-[60%] flex m-auto" v-if="!usePage().props.ziggy.location.includes('admin')">
                         <search-box class="fle"></search-box>
                     </div>
                 </div>

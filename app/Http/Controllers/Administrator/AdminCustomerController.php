@@ -6,9 +6,8 @@ use App\Contracts\Actions\Customers\UpdateCustomer;
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
-use App\Models\Department;
 use App\Models\User;
-use App\Services\CustomersService;
+use App\Services\Customers\CustomersService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +28,6 @@ class AdminCustomerController extends Controller
         return Inertia::render('Administrator/Customers/EditCustomer', [
             'user' => $user,
             'document_types' => DocumentType::cases(),
-            'departments' => Department::all(),
         ]);
     }
 
