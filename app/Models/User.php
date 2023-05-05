@@ -15,6 +15,13 @@ use Spatie\Permission\Traits\HasRoles;
 
 
 /**
+ * @property int      id
+ * @property string   email
+ * @property string   password
+ * @property ?string  email_verified_at
+ *
+ * @property Customer customer
+ *
  * @method static UserQueryBuilder query()
  */
 class User extends Authenticatable

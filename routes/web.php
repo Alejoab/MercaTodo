@@ -44,17 +44,17 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->
     Route::get('/', [AdminController::class, 'index'])->name('admin');
 
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/users/{id}', [AdminUserController::class, 'userShow'])->name('admin.user.show');
-    Route::put('/users/{id}', [AdminUserController::class, 'userUpdate'])->name('admin.user.update');
-    Route::put('/users/{id}/password', [AdminUserController::class, 'userUpdatePassword'])->name('admin.user.update.password');
-    Route::delete('/users/{id}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
-    Route::put('/users/{id}/restore', [AdminUserController::class, 'userRestore'])->name('admin.user.restore');
-    Route::delete('/users/{id}/force-delete', [AdminUserController::class, 'userForceDelete'])->name('admin.user.force-delete');
+    Route::get('/users/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
+    Route::put('/users/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
+    Route::put('/users/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name('admin.user.update.password');
+    Route::delete('/users/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
+    Route::put('/users/{user}/restore', [AdminUserController::class, 'userRestore'])->withTrashed()->name('admin.user.restore');
+    Route::delete('/users/{user}/force-delete', [AdminUserController::class, 'userForceDelete'])->withTrashed()->name('admin.user.force-delete');
     Route::get('/list-users', [AdminUserController::class, 'listUsers'])->name('admin.list-users');
 
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('admin.customers');
-    Route::get('/customers/{id}', [AdminCustomerController::class, 'customerShow'])->name('admin.customer.show');
-    Route::put('/customers/{id}', [AdminCustomerController::class, 'customerUpdate'])->name('admin.customer.update');
+    Route::get('/customers/{user}', [AdminCustomerController::class, 'customerShow'])->withTrashed()->name('admin.customer.show');
+    Route::put('/customers/{user}', [AdminCustomerController::class, 'customerUpdate'])->withTrashed()->name('admin.customer.update');
     Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
 
     Route::get('/products', [AdminProductController::class, 'index'])->name('admin.products');

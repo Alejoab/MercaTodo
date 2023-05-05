@@ -21,12 +21,10 @@ class AdminCustomerController extends Controller
         return Inertia::render('Administrator/Customers/Index');
     }
 
-    public function customerShow($id): Response
+    public function customerShow(User $user): Response
     {
-        $user = User::withTrashed()->findOrFail($id)->load('customer.city');
-
         return Inertia::render('Administrator/Customers/EditCustomer', [
-            'user' => $user,
+            'user' => $user->load('customer.city'),
             'document_types' => DocumentType::cases(),
         ]);
     }
@@ -36,10 +34,10 @@ class AdminCustomerController extends Controller
         return $service->listCustomersToTable($request->get('search'));
     }
 
-    public function customerUpdate(CustomerUpdateRequest $request, int $id, UpdateCustomer $action): RedirectResponse
+    public function customerUpdate(CustomerUpdateRequest $request, User $user, UpdateCustomer $action): RedirectResponse
     {
-        $action->execute($id, $request->validated());
+        $action->execute($user, $request->validated());
 
-        return redirect()->route('admin.customer.show', $id);
+        return redirect()->route('admin.customer.show', $user->id);
     }
 }

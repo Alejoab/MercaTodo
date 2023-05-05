@@ -17,19 +17,19 @@ class CustomerUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id')?: $this->user()->id;
-        $user = User::withTrashed()->find($id);
+        $user = $this->route('user') ?: $this->user();
+
         return [
             'name' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
 
             'surname' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
 
             'email' => [
@@ -37,37 +37,37 @@ class CustomerUpdateRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($user->id)
+                Rule::unique(User::class)->ignore($user->id),
             ],
 
             'document_type' => [
                 'required',
-                Rule::enum(DocumentType::class)
+                Rule::enum(DocumentType::class),
             ],
 
             'document' => [
                 'required',
                 'digits_between:8,11',
                 Rule::unique(Customer::class)->ignore(
-                    $user->customer->id
-                )
+                    $user->customer->id,
+                ),
             ],
 
             'phone' => [
                 'nullable',
                 'string',
-                'digits:10'
+                'digits:10',
             ],
 
             'city_id' => [
                 'required',
-                Rule::exists('cities', 'id')
+                Rule::exists('cities', 'id'),
             ],
 
             'address' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
         ];
     }

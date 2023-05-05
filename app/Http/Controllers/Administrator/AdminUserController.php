@@ -26,49 +26,49 @@ class AdminUserController extends Controller
         return Inertia::render('Administrator/Users/Index');
     }
 
-    public function userShow($id): Response
+    public function userShow(User $user): Response
     {
         return Inertia::render('Administrator/Users/EditUser', [
-            'user' => User::withTrashed()->findOrFail($id)->load('roles:name'),
+            'user' => $user->load('roles:name'),
             'roles' => Role::all()->pluck('name'),
         ]);
     }
 
-    public function userUpdate(Request $request, int $id, UpdateUserRole $action): RedirectResponse
+    public function userUpdate(Request $request, User $user, UpdateUserRole $action): RedirectResponse
     {
-        $action->execute($id, $request['role']);
+        $action->execute($user, $request['role']);
 
-        return redirect()->route('admin.user.show', $id);
+        return redirect()->route('admin.user.show', $user->id);
     }
 
-    public function userUpdatePassword(Request $request, int $id, UpdateUserPassword $action): RedirectResponse
+    public function userUpdatePassword(Request $request, User $user, UpdateUserPassword $action): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        $action->execute($id, $request['password']);
+        $action->execute($user, $request['password']);
 
-        return redirect()->route('admin.user.show', $id);
+        return redirect()->route('admin.user.show', $user->id);
     }
 
-    public function userDestroy(int $id, DeleteUser $action): void
+    public function userDestroy(User $user, DeleteUser $action): void
     {
-        $action->execute($id);
+        $action->execute($user);
     }
 
-    public function userRestore(int $id, RestoreUser $action): void
+    public function userRestore(User $user, RestoreUser $action): void
     {
-        $action->execute($id);
+        $action->execute($user);
     }
 
-    public function userForceDelete(Request $request, int $id, ForceDeleteUser $action): RedirectResponse
+    public function userForceDelete(Request $request, User $user, ForceDeleteUser $action): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current-password'],
         ]);
 
-        $action->execute($id);
+        $action->execute($user);
 
         return Redirect::to(route('admin.users'));
     }

@@ -34,7 +34,7 @@ class ProfileController extends Controller
      */
     public function update(CustomerUpdateRequest $request, UpdateCustomer $action): RedirectResponse
     {
-        $action->execute($request->user()->customer->id, $request->validated());
+        $action->execute($request->user(), $request->validated());
 
         return Redirect::route('profile.edit');
     }
@@ -48,7 +48,7 @@ class ProfileController extends Controller
             'password' => ['required', 'current-password'],
         ]);
 
-        $action->execute($request->user()->id);
+        $action->execute($request->user());
 
         Auth::logout();
 

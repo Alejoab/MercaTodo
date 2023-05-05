@@ -8,17 +8,14 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateUserRoleAction implements UpdateUserRole
 {
-    // TODO: Call undefined method hasRole and syncRoles
-    public function execute(int $id, string $role): void
+    public function execute(User $user, string $role): void
     {
-        $user = User::withTrashed()->findOrFail($id);
-
         if (!$user->hasRole($role)) {
             $user->syncRoles($role);
 
             Log::warning('[ROLE]', [
                 'admin_id' => auth()->user()->getAuthIdentifier(),
-                'user_id' => $id,
+                'user_id' => $user->id,
                 'role' => $role,
             ]);
         }

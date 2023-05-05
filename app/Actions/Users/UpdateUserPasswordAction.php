@@ -9,17 +9,14 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateUserPasswordAction implements UpdateUserPassword
 {
-    // TODO: Access undefined propery password
-    public function execute(int $id, string $password): void
+    public function execute(User $user, string $password): void
     {
-        $user = User::withTrashed()->findOrFail($id);
-
         $user->password = Hash::make($password);
         $user->save();
 
         Log::warning('[PASSWORD]', [
             'admin_id' => auth()->user()->getAuthIdentifier(),
-            'user_id' => $id,
+            'user_id' => $user->id,
         ]);
     }
 }
