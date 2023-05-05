@@ -7,36 +7,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CustomersService
 {
-    public function listCustomersToTable(string|null $search): LengthAwarePaginator
+    public function listCustomersToTable(?string $search): LengthAwarePaginator
     {
         return User::withTrashed()
-            ->join(
-                'customers',
-                'customers.user_id',
-                '=',
-                'users.id'
-            )
-            ->join(
-                'cities',
-                'customers.city_id',
-                '=',
-                'cities.id'
-            )
-            ->join(
-                'departments',
-                'cities.department_id',
-                '=',
-                'departments.id'
-            )
-            ->where('users.id', '!=', auth()->user()->getAuthIdentifier())
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('customers.name', 'like', '%'.$search.'%')
-                        ->orWhere('customers.document', 'like', '%'.$search.'%')
-                        ->orWhere('customers.surname', 'like', '%'.$search.'%')
-                        ->orWhere('users.email', 'like', '%'.$search.'%');
-                });
-            })
+            ->withCustomers(true)
+            ->withoutUser(auth()->user()->getAuthIdentifier())
+            ->contains($search, ['customers.name', 'customers.document', 'customers.surname', 'users.email'])
             ->select(
                 [
                     'users.id',

@@ -28,4 +28,13 @@ class UserQueryBuilder extends Builder
         return $this->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
             ->join('roles', 'roles.id', '=', 'model_has_roles.role_id');
     }
+
+    public function withCustomers($withCities = false): self
+    {
+        return $this->join('customers', 'customers.user_id', '=', 'users.id')
+            ->when($withCities, function ($query) {
+                $query->join('cities', 'customers.city_id', '=', 'cities.id')
+                    ->join('departments', 'cities.department_id', '=', 'departments.id');
+            });
+    }
 }
