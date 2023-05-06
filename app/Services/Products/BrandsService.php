@@ -3,31 +3,11 @@
 namespace App\Services\Products;
 
 use App\Models\Brand;
-use App\Services\Cache\CacheDeleteService;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class BrandsService
 {
-    public function store($name): Builder|Model
-    {
-        $name = ucwords(strtolower($name));
-
-        $brand = Brand::query()->where('name', '=', $name)->first();
-
-        if (!is_null($brand)) {
-            return $brand;
-        }
-
-        (new CacheDeleteService())->deleteBrandsCache();
-
-        return Brand::query()->create([
-            'name' => $name,
-        ]);
-    }
-
     public function searchBrands($search): array|Collection
     {
         return Brand::query()

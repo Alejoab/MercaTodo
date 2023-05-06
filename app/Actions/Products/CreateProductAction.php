@@ -4,8 +4,6 @@ namespace App\Actions\Products;
 
 use App\Contracts\Actions\Products\CreateProduct;
 use App\Models\Product;
-use App\Services\Products\BrandsService;
-use App\Services\Products\CategoriesService;
 use App\Services\Products\ProductImagesService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -14,12 +12,12 @@ class CreateProductAction implements CreateProduct
 {
     public function execute(array $data): Builder|Model
     {
-        $brandService = new BrandsService();
-        $categoryService = new CategoriesService();
+        $brandAction = new CreateBrandAction();
+        $categoryAction = new CreateCategoryAction();
         $imageService = new ProductImagesService();
 
-        $brand = $brandService->store($data['brand_name']);
-        $category = $categoryService->store($data['category_name']);
+        $brand = $brandAction->execute($data['brand_name']);
+        $category = $categoryAction->execute($data['category_name']);
 
         $data['image'] = $imageService->storeImage($data['image']);
 

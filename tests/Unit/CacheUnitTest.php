@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Actions\Products\CreateBrandAction;
+use App\Actions\Products\CreateCategoryAction;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Services\Products\BrandsService;
@@ -17,12 +19,13 @@ class CacheUnitTest extends TestCase
     public function test_brand_cache_is_actualized_when_a_new_brand_is_stored(): void
     {
         $brandCount = Brand::query()->count();
+        $brandAction = new CreateBrandAction();
         $brandService = new BrandsService();
 
         $this->assertCount($brandCount, $brandService->brandsByCategory(null));
         $this->assertTrue(Cache::has('brands_by_category_all'));
 
-        $brandService->store('Brand Cache Test');
+        $brandAction->execute('Brand Cache Test');
         $this->assertEquals('Brand Cache Test', Brand::query()->first()->name);
         $this->assertNotTrue(Cache::has('brands_by_category_all'));
 
@@ -33,12 +36,13 @@ class CacheUnitTest extends TestCase
     public function test_category_cache_is_actualized_when_a_new_category_is_stored(): void
     {
         $categoryCount = Category::query()->count();
+        $categoryAction = new CreateCategoryAction();
         $categoryService = new CategoriesService();
 
         $this->assertCount($categoryCount, $categoryService->list());
         $this->assertTrue(Cache::has('categories'));
 
-        $categoryService->store('Category Cache Test');
+        $categoryAction->execute('Category Cache Test');
         $this->assertEquals('Category Cache Test', Category::query()->first()->name);
         $this->assertNotTrue(Cache::has('categories'));
 
