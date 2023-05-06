@@ -100,7 +100,7 @@ const isNumber = (evt) => {
             </p>
         </header>
 
-        <form @submit.prevent="form.post(route('admin.products.update', product.id))">
+        <form @submit.prevent="form.post(route('admin.products.update', product.id), {preserveScroll: true})">
             <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 mt-6">
                 <div class="space-y-6">
                     <div>

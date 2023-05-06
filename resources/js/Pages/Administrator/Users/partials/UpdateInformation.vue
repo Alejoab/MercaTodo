@@ -29,7 +29,7 @@ const form = useForm({
             <h2 class="text-lg font-medium text-gray-900">Change Role</h2>
         </header>
 
-        <form @submit.prevent="form.put(route('admin.user.update', user.id))" class="mt-6 space-y-6">
+        <form @submit.prevent="form.put(route('admin.user.update', user.id), {preserveScroll: true})" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="email" value="Email"/>
 

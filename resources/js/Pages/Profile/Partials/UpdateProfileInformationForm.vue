@@ -67,7 +67,7 @@ getCities();
             </p>
         </header>
 
-        <form @submit.prevent="form.put(route('profile.update'))" class="mt-6 space-y-6">
+        <form @submit.prevent="form.put(route('profile.update'), {preserveScroll: true})" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" value="Name" />
 
