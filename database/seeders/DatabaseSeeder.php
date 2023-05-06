@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,8 +15,7 @@ class DatabaseSeeder extends Seeder
         /**
          * Insert the cities, states and roles in the database
          */
-        File::delete(File::allFiles(storage_path('app/public/product_images')));
-        Cache::flush();
+        Storage::disk('product_images')->deleteDirectory('') && Storage::disk('product_images')->makeDirectory('');
 
         $this->call([
             DepartmentCitySeeder::class,

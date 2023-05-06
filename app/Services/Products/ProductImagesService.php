@@ -2,20 +2,22 @@
 
 namespace App\Services\Products;
 
-use Illuminate\Support\Facades\File;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ProductImagesService
 {
-    public function storeImage($image): string
+    public function storeImage(UploadedFile $image): string
     {
-        $file_name = time().'.'.$image->extension();
-        $image->move(storage_path('app/public/product_images'), $file_name);
+        $file_name = md5($image->getFilename().microtime());
+        $file_name .= '.'.$image->extension();
+        Storage::disk('product_images')->put($file_name, $image->getContent());
 
         return $file_name;
     }
 
-    public function deleteImage($image_path): void
+    public function deleteImage(string $image_path): void
     {
-        File::delete(storage_path('app/public/product_images/'.$image_path));
+        Storage::disk('product_images')->delete($image_path);
     }
 }
