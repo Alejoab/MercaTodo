@@ -38,6 +38,6 @@ class AdminCustomerController extends Controller
     {
         $action->execute($user, $request->validated());
 
-        return redirect()->route('admin.customer.show', $user->id);
+        return redirect()->route('admin.customer.show', $user->getKey());
     }
 }

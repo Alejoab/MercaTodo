@@ -50,7 +50,7 @@ class AdminProductController extends Controller
     {
         $action->execute($product, $request->validated());
 
-        return redirect()->route('admin.products.update', $product->id);
+        return redirect()->route('admin.products.update', $product->getKey());
     }
 
     public function destroy(Product $product, DeleteProduct $action): void

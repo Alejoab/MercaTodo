@@ -14,7 +14,7 @@ class DeleteUserAction implements DeleteUser
         $user->delete();
 
         Log::info('[DELETE]', [
-            'user_id' => $user->id,
+            'user_id' => $user->getKey(),
         ]);
     }
 }

@@ -13,14 +13,14 @@ class CreateUserAction implements CreateUser
 {
     public function execute(array $data): Builder|Model
     {
+        /** @var User $user */
+
         $user = User::query()->create([
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
-        /** @phpstan-ignore-next-line */
         $user->assignRole('Customer');
-
         event(new Registered($user));
 
         return $user;

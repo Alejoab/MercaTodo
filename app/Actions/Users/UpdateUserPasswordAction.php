@@ -16,7 +16,7 @@ class UpdateUserPasswordAction implements UpdateUserPassword
 
         Log::warning('[PASSWORD]', [
             'admin_id' => auth()->user()->getAuthIdentifier(),
-            'user_id' => $user->id,
+            'user_id' => $user->getKey(),
         ]);
     }
 }

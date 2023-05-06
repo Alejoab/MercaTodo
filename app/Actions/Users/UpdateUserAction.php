@@ -14,9 +14,9 @@ class UpdateUserAction implements UpdateUser
 
         if ($user->isDirty('email')) {
             Log::info('[EMAIL]', [
-                'user_id' => $user->id,
+                'user_id' => $user->getKey(),
                 'old_email' => $user->getOriginal('email'),
-                'new_email' => $user->email,
+                'new_email' => $user->getAttribute('email'),
             ]);
 
             $user->email_verified_at = null;

@@ -10,17 +10,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 
 /**
- * @property int      id
- * @property string   email
- * @property string   password
- * @property ?string  email_verified_at
- *
- * @property Customer customer
+ * @property ?Carbon  $email_verified_at
+ * @property string   $password
+ * @property Customer $customer
  *
  * @method static UserQueryBuilder query()
  */

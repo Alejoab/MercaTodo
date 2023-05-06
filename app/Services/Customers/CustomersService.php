@@ -9,8 +9,15 @@ class CustomersService
 {
     public function listCustomersToTable(?string $search): LengthAwarePaginator
     {
-        return User::withTrashed()
-            ->withCustomers(true)
+        /**
+         * @var User $users
+         */
+        $users = User::withTrashed()
+            ->join('customers', 'customers.user_id', '=', 'users.id')
+            ->join('cities', 'customers.city_id', '=', 'cities.id')
+            ->join('departments', 'cities.department_id', '=', 'departments.id');
+
+        return $users::query()
             ->withoutUser(auth()->user()->getAuthIdentifier())
             ->contains($search, ['customers.name', 'customers.document', 'customers.surname', 'users.email'])
             ->select(

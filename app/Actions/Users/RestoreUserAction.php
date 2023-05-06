@@ -14,7 +14,7 @@ class RestoreUserAction implements RestoreUser
 
         Log::warning('[RESTORE]', [
             'admin_id' => auth()->user()->getAuthIdentifier(),
-            'user_id' => $user->id,
+            'user_id' => $user->getKey(),
         ]);
     }
 }

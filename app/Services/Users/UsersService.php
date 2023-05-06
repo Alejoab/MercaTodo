@@ -10,9 +10,15 @@ class UsersService
 {
     public function listUsersToTable(?string $search): LengthAwarePaginator
     {
-        // TODO: withTrashed()
-        return User::withTrashed()
-            ->withRoles()
+        /**
+         * @var User $users
+         */
+
+        $users = User::withTrashed()
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id');
+
+        return $users::query()
             ->withoutUser(auth()->user()->getAuthIdentifier())
             ->contains($search, ['users.email'])
             ->select(

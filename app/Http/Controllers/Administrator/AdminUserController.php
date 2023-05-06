@@ -38,7 +38,7 @@ class AdminUserController extends Controller
     {
         $action->execute($user, $request['role']);
 
-        return redirect()->route('admin.user.show', $user->id);
+        return redirect()->route('admin.user.show', $user->getKey());
     }
 
     public function userUpdatePassword(Request $request, User $user, UpdateUserPassword $action): RedirectResponse
@@ -49,7 +49,7 @@ class AdminUserController extends Controller
 
         $action->execute($user, $request['password']);
 
-        return redirect()->route('admin.user.show', $user->id);
+        return redirect()->route('admin.user.show', $user->getKey());
     }
 
     public function userDestroy(User $user, DeleteUser $action): void

@@ -15,7 +15,7 @@ class UpdateUserRoleAction implements UpdateUserRole
 
             Log::warning('[ROLE]', [
                 'admin_id' => auth()->user()->getAuthIdentifier(),
-                'user_id' => $user->id,
+                'user_id' => $user->getKey(),
                 'role' => $role,
             ]);
         }

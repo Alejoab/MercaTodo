@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Builders;
+namespace Tests\Unit;
 
 use App\Models\Brand;
 use App\Models\Category;
@@ -59,7 +59,7 @@ class QueryBuilderUnitTest extends TestCase
         $product = Product::query()->first();
 
         $expected = Product::query()->where('products.brand_id', '=', $product->brand_id)->get();
-        $test = Product::query()->filterBrand($product->brand_id)->get();
+        $test = Product::query()->filterBrand([$product->brand_id])->get();
         for ($i = 0; $i < count($expected); $i++) {
             $this->assertEquals($expected[$i]->brand_id, $test[$i]->brand_id);
         }

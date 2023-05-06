@@ -9,11 +9,17 @@ class ProductsService
 {
     public function listProductsAdmin(?string $search, ?int $category, ?int $brand): LengthAwarePaginator
     {
-        return Product::withTrashed()
-            ->withBrands()
-            ->withCategories()
+        /**
+         * @var Product $products
+         */
+
+        $products = Product::withTrashed()
+            ->join('brands', 'products.brand_id', '=', 'brands.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id');
+
+        return $products::query()
             ->filterCategory($category)
-            ->filterBrand($brand)
+            ->filterBrand([$brand])
             ->contains($search, ['products.name', 'products.code'])
             ->select(
                 [
@@ -41,9 +47,14 @@ class ProductsService
             3 => ['products.updated_at', 'asc'],
         ];
 
-        return Product::query()
-            ->withBrands()
-            ->withCategories()
+        /**
+         * @var Product $products
+         */
+        $products = Product::query()
+            ->join('brands', 'products.brand_id', '=', 'brands.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id');
+
+        return $products::query()
             ->filterCategory($category)
             ->filterBrand($brands)
             ->contains($search, ['products.name', 'products.code', 'brands.name', 'categories.name'])

@@ -14,7 +14,7 @@ class ForceDeleteUserAction implements ForceDeleteUser
 
         Log::warning('[FORCE DELETE]', [
             'admin_id' => auth()->user()->getAuthIdentifier(),
-            'user_id' => $user->id,
+            'user_id' => $user->getKey(),
         ]);
     }
 }

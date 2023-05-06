@@ -16,10 +16,11 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var ?Product $product */
         $product = $this->route('product') ?: null;
 
         return [
-            'code' => ['required', 'digits:6', Rule::unique(Product::class)->ignore($product?->id)],
+            'code' => ['required', 'digits:6', Rule::unique(Product::class)->ignore($product?->getKey())],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],

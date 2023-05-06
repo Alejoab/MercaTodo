@@ -17,21 +17,11 @@ class ProductQueryBuilder extends Builder
         });
     }
 
-    public function withBrands(): self
+    public function filterBrand(?array $brandIds): self
     {
-        return $this->join('brands', 'products.brand_id', '=', 'brands.id');
-    }
-
-    public function filterBrand(?int $brandId): self
-    {
-        return $this->when($brandId, function ($query, $brandID) {
-            $query->where('products.brand_id', '=', $brandID);
+        return $this->when($brandIds, function ($query, $brandIds) {
+            $query->where('products.brand_id', $brandIds);
         });
-    }
-
-    public function withCategories(): self
-    {
-        return $this->join('categories', 'products.category_id', '=', 'categories.id');
     }
 
     public function filterCategory(?int $CategoryId): self
