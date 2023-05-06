@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -77,7 +77,7 @@ class AdminProductTest extends TestCase
         $this->assertEquals('Product 1 description', $product->description);
         $this->assertEquals(10.02, $product->price);
         $this->assertEquals(10, $product->stock);
-        $this->assertFileExists(storage_path('app/public/product_images/'.$product->image));
+        Storage::disk('product_images')->assertExists($product->image);
     }
 
     public function test_admin_can_create_new_categories(): void
@@ -174,6 +174,7 @@ class AdminProductTest extends TestCase
         $this->assertEquals('Product 1 description Updated', $product->description);
         $this->assertEquals(5.1, $product->price);
         $this->assertEquals(1000, $product->stock);
+        $this->assertNotNull($product->image);
     }
 
     public function test_admin_can_delete_a_product(): void
@@ -220,12 +221,6 @@ class AdminProductTest extends TestCase
         $this->actingAs($this->admin)->delete(route('admin.products.force-delete', $product->id));
 
         $this->assertDatabaseCount('products', 0);
-        $this->assertNotTrue(File::exists($product->name));
-    }
-
-    public function tearDown(): void
-    {
-        File::delete(File::allFiles(storage_path('app/public/product_images')));
-        parent::tearDown();
+        Storage::disk('product_images')->assertMissing($product->image);
     }
 }

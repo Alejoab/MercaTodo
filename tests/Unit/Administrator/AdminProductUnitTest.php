@@ -12,7 +12,7 @@ use App\Services\Products\BrandsService;
 use App\Services\Products\CategoriesService;
 use App\Services\Products\ProductImagesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -77,15 +77,9 @@ class AdminProductUnitTest extends TestCase
         Brand::factory(1)->create();
         $product = Product::factory()->create();
 
-        $this->assertFileExists(storage_path('app/public/product_images/'.$product->image));
+        Storage::disk('product_images')->assertExists($product->image);
 
         $imageService->deleteImage($product->image);
-        $this->assertFileDoesNotExist(storage_path('app/public/product_images/'.$product->image));
-    }
-
-    public function tearDown(): void
-    {
-        File::delete(File::allFiles(storage_path('app/public/product_images')));
-        parent::tearDown();
+        Storage::disk('product_images')->assertMissing($product->image);
     }
 }
