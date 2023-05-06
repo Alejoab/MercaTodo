@@ -8,10 +8,8 @@ use App\Models\Product;
 class RestoreProductAction implements RestoreProduct
 {
 
-    public function execute(int $id): void
+    public function execute(Product $product): void
     {
-        // TODO: Call undefined method restore
-        $product = Product::withTrashed()->findOrFail($id);
         $product->restore();
     }
 }

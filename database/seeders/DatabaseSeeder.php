@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +16,9 @@ class DatabaseSeeder extends Seeder
         /**
          * Insert the cities, states and roles in the database
          */
+        File::delete(File::allFiles(storage_path('app/public/product_images')));
+        Cache::flush();
+
         $this->call([
             DepartmentCitySeeder::class,
             RoleSeeder::class,
@@ -23,7 +27,5 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
         ]);
-
-        Cache::flush();
     }
 }

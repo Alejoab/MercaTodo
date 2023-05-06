@@ -9,10 +9,8 @@ use App\Services\Products\ProductImagesService;
 class ForceDeleteProductAction implements ForceDeleteProduct
 {
 
-    public function execute(int $id): void
+    public function execute(Product $product): void
     {
-        $product = Product::withTrashed()->findOrFail($id);
-
         $imageService = new ProductImagesService();
 
         if ($product->getAttribute('image') !== null) {

@@ -225,7 +225,7 @@ class AdminProductTest extends TestCase
 
     public function tearDown(): void
     {
-        //File::delete(File::allFiles(storage_path('app/public/product_images')));
+        File::delete(File::allFiles(storage_path('app/public/product_images')));
         parent::tearDown();
     }
 }

@@ -11,10 +11,8 @@ use App\Services\Products\ProductImagesService;
 class UpdateProductAction implements UpdateProduct
 {
 
-    public function execute(int $id, array $data): void
+    public function execute(Product $product, array $data): void
     {
-        $product = Product::query()->findOrFail($id);
-
         $brandService = new BrandsService();
         $categoryService = new CategoriesService();
         $imageService = new ProductImagesService();
