@@ -2,13 +2,12 @@
 
 namespace App\Actions\Products;
 
-use App\Contracts\Actions\Products\CreateBrand;
 use App\Models\Brand;
 use App\Services\Cache\CacheDeleteService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class CreateBrandAction implements CreateBrand
+class CreateBrandAction
 {
     public function execute($name): Builder|Model
     {
