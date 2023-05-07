@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function show(Product $product): Response
     {
         return Inertia::render('User/Product', [
-            'product' => $product->with(['brand:id,name']),
+            'product' => $product->load(['brand:id,name']),
         ]);
     }
 

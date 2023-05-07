@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\QueryBuilders\UserQueryBuilder;
-use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,14 +22,14 @@ use Spatie\Permission\Traits\HasRoles;
  *
  * @method static UserQueryBuilder query()
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
-    use MustVerifyEmail;
+    use \Illuminate\Auth\MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.

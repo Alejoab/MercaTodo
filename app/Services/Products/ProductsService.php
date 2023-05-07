@@ -3,6 +3,7 @@
 namespace App\Services\Products;
 
 use App\Models\Product;
+use App\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductsService
@@ -10,16 +11,15 @@ class ProductsService
     public function listProductsAdmin(?string $search, ?int $category, ?int $brand): LengthAwarePaginator
     {
         /**
-         * @var Product $products
+         * @var ProductQueryBuilder $products
          */
 
         $products = Product::withTrashed()
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->join('categories', 'products.category_id', '=', 'categories.id');
 
-        return $products::query()
-            ->filterCategory($category)
-            ->filterBrand([$brand])
+        return $products->filterCategory($category)
+            ->filterBrand($brand?[$brand]:null)
             ->contains($search, ['products.name', 'products.code'])
             ->select(
                 [
@@ -34,7 +34,7 @@ class ProductsService
                 ]
             )
             ->orderBy('products.code', 'desc')
-            ->paginate(50);
+            ->paginate(10);
     }
 
     public function listProducts(?string $search, ?int $category, ?array $brands, ?int $sort): LengthAwarePaginator
@@ -48,14 +48,13 @@ class ProductsService
         ];
 
         /**
-         * @var Product $products
+         * @var ProductQueryBuilder $products
          */
         $products = Product::query()
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->join('categories', 'products.category_id', '=', 'categories.id');
 
-        return $products::query()
-            ->filterCategory($category)
+        return $products->filterCategory($category)
             ->filterBrand($brands)
             ->contains($search, ['products.name', 'products.code', 'brands.name', 'categories.name'])
             ->select(
@@ -67,6 +66,6 @@ class ProductsService
                 'brands.name as brand_name',
             )
             ->orderBy($sorts[$sort][0], $sorts[$sort][1])
-            ->paginate(50);
+            ->paginate(10);
     }
 }

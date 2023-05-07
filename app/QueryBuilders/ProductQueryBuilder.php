@@ -19,8 +19,8 @@ class ProductQueryBuilder extends Builder
 
     public function filterBrand(?array $brandIds): self
     {
-        return $this->when($brandIds, function ($query, $brandIds) {
-            $query->where('products.brand_id', $brandIds);
+        return $this->when(count($brandIds ?: []), function ($query) use ($brandIds) {
+            $query->whereIn('products.brand_id', $brandIds);
         });
     }
 

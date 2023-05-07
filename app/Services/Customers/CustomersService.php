@@ -3,6 +3,7 @@
 namespace App\Services\Customers;
 
 use App\Models\User;
+use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CustomersService
@@ -10,15 +11,14 @@ class CustomersService
     public function listCustomersToTable(?string $search): LengthAwarePaginator
     {
         /**
-         * @var User $users
+         * @var UserQueryBuilder $users
          */
         $users = User::withTrashed()
             ->join('customers', 'customers.user_id', '=', 'users.id')
             ->join('cities', 'customers.city_id', '=', 'cities.id')
             ->join('departments', 'cities.department_id', '=', 'departments.id');
 
-        return $users::query()
-            ->withoutUser(auth()->user()->getAuthIdentifier())
+        return $users->withoutUser(auth()->user()->getAuthIdentifier())
             ->contains($search, ['customers.name', 'customers.document', 'customers.surname', 'users.email'])
             ->select(
                 [
