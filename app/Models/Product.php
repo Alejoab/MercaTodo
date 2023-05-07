@@ -9,6 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property int      $id
+ * @property string   $code
+ * @property int      $category_id
+ * @property int      $brand_id
+ * @property string   $name
+ * @property ?string  $description
+ * @property string   $image
+ * @property float    $price
+ * @property int      $stock
+ *
+ * @property Category $category
+ * @property Brand    $brand *
+ *
  * @method static ProductQueryBuilder query()
  */
 class Product extends Model
