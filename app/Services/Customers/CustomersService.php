@@ -35,6 +35,6 @@ class CustomersService
                 ]
             )
             ->orderBy('users.id')
-            ->paginate(50);
+            ->paginate(10);
     }
 }

@@ -111,9 +111,10 @@ const isNumber = (evt) => {
                             v-model="form.code"
                             autocomplete="code"
                             autofocus
-                            class="mt-1 block w-full"
+                            class="mt-1 block w-full cursor-not-allowed bg-gray-100"
                             maxlength="6"
                             required
+                            disabled
                             type="text"
                         />
 

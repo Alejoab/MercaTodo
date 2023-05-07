@@ -20,7 +20,7 @@ class ProductRequest extends FormRequest
         $product = $this->route('product') ?: null;
 
         return [
-            'code' => ['required', 'max:6', Rule::unique(Product::class)->ignore($product?->getKey())],
+            'code' => ['required', 'size:6', Rule::unique(Product::class)->ignore($product?->getKey())],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],

@@ -40,7 +40,7 @@ const isNumber = (evt) => {
                             </div>
                             <div class="flex flex-col space-y-5 w-full mt-12 px-7">
                                 <div class="flex items-center">
-                                    <InputLabel class="text-xl mr-4" value="Cantidad"></InputLabel>
+                                    <InputLabel class="text-xl mr-4" value="Quantity"></InputLabel>
 
                                     <input :placeholder="product.stock + ' avaliable'"
                                            class="border border-gray-300 rounded-md px-2 py-2 w-full focus:border-indigo-700"
