@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\Log;
 class DeleteUserAction implements DeleteUser
 {
 
-    public function execute(int $id): void
+    public function execute(User $user): void
     {
-        $user = User::query()->findOrFail($id);
-
         $user->delete();
 
         Log::info('[DELETE]', [
-            'user_id' => $user->getAttribute('id'),
+            'user_id' => $user->getKey(),
         ]);
     }
 }

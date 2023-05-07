@@ -32,10 +32,10 @@ class AdminProductController extends Controller
         return Inertia::render('Administrator/Products/CreateProduct');
     }
 
-    public function productShow(int $id): Response
+    public function productShow(Product $product): Response
     {
         return Inertia::render('Administrator/Products/EditProduct', [
-            'product' => Product::withTrashed()->findOrFail($id)->load(['category:id,name', 'brand:id,name']),
+            'product' => $product->load(['category:id,name', 'brand:id,name']),
         ]);
     }
 
@@ -46,26 +46,26 @@ class AdminProductController extends Controller
         return redirect()->route('admin.products');
     }
 
-    public function update(ProductRequest $request, int $id, UpdateProduct $action): RedirectResponse
+    public function update(ProductRequest $request, Product $product, UpdateProduct $action): RedirectResponse
     {
-        $action->execute($id, $request->validated());
+        $action->execute($product, $request->validated());
 
-        return redirect()->route('admin.products.update', $id);
+        return redirect()->route('admin.products.update', $product->getKey());
     }
 
-    public function destroy(int $id, DeleteProduct $action): void
+    public function destroy(Product $product, DeleteProduct $action): void
     {
-        $action->execute($id);
+        $action->execute($product);
     }
 
-    public function restore(int $id, RestoreProduct $action): void
+    public function restore(Product $product, RestoreProduct $action): void
     {
-        $action->execute($id);
+        $action->execute($product);
     }
 
-    public function forceDelete(int $id, ForceDeleteProduct $action): void
+    public function forceDelete(Product $product, ForceDeleteProduct $action): void
     {
-        $action->execute($id);
+        $action->execute($product);
     }
 
     public function searchCategories(Request $request, CategoriesService $service): Collection|array

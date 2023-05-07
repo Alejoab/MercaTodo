@@ -11,10 +11,10 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
-    public function show(int $id): Response
+    public function show(Product $product): Response
     {
         return Inertia::render('User/Product', [
-            'product' => Product::with(['brand:id,name'])->findOrFail($id),
+            'product' => $product->load(['brand:id,name']),
         ]);
     }
 

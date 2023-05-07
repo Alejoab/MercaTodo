@@ -1,6 +1,6 @@
 <script setup>
 import UserLayout from "@/Layouts/UserLayout.vue";
-import {Head} from "@inertiajs/vue3";
+import {Head, usePage} from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
 
 const props = defineProps({
@@ -26,7 +26,7 @@ const isNumber = (evt) => {
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 ">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="flex flex-col md:flex-row items-center md:items-start">
-                    <div class="w-[80%]">
+                    <div class="w-[80%] flex justify-center">
                         <img :src="'/storage/product_images/' + product.image" alt="">
                     </div>
 
@@ -40,7 +40,7 @@ const isNumber = (evt) => {
                             </div>
                             <div class="flex flex-col space-y-5 w-full mt-12 px-7">
                                 <div class="flex items-center">
-                                    <InputLabel class="text-xl mr-4" value="Cantidad"></InputLabel>
+                                    <InputLabel class="text-xl mr-4" value="Quantity"></InputLabel>
 
                                     <input :placeholder="product.stock + ' avaliable'"
                                            class="border border-gray-300 rounded-md px-2 py-2 w-full focus:border-indigo-700"

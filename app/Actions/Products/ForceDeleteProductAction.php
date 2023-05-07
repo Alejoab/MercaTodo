@@ -5,14 +5,13 @@ namespace App\Actions\Products;
 use App\Contracts\Actions\Products\ForceDeleteProduct;
 use App\Models\Product;
 use App\Services\Products\ProductImagesService;
+use Illuminate\Support\Facades\Log;
 
 class ForceDeleteProductAction implements ForceDeleteProduct
 {
 
-    public function execute(int $id): void
+    public function execute(Product $product): void
     {
-        $product = Product::withTrashed()->findOrFail($id);
-
         $imageService = new ProductImagesService();
 
         if ($product->getAttribute('image') !== null) {
@@ -20,5 +19,11 @@ class ForceDeleteProductAction implements ForceDeleteProduct
         }
 
         $product->forceDelete();
+
+        Log::warning('[FORCE DELETE]', [
+            'admin_id' => auth()->user()->getAuthIdentifier(),
+            'product_id' => $product->getKey(),
+            'product_code' => $product->getAttribute('code'),
+        ]);
     }
 }

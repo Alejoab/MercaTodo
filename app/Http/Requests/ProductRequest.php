@@ -16,18 +16,18 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id') ? : null;
-
+        /** @var ?Product $product */
+        $product = $this->route('product') ?: null;
 
         return [
-            'code' => ['required', 'digits:6', Rule::unique(Product::class)->ignore($id)],
+            'code' => ['required', 'size:6', Rule::unique(Product::class)->ignore($product?->getKey())],
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
             'category_name' => ['required', 'string', 'max:255'],
             'brand_name' => ['required', 'string', 'max:255'],
-            'image' => [Rule::requiredIf(Product::query()->where('id', $id)->doesntExist()), 'nullable', 'image'],
+            'image' => [Rule::requiredIf(!$product), 'nullable', 'image'],
         ];
     }
 }

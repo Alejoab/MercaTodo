@@ -37,34 +37,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('categories', [CategoryController::class, 'list'])->name('categories');
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
     Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
-    Route::get('products/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
 
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/users/{id}', [AdminUserController::class, 'userShow'])->name('admin.user.show');
-    Route::put('/users/{id}', [AdminUserController::class, 'userUpdate'])->name('admin.user.update');
-    Route::put('/users/{id}/password', [AdminUserController::class, 'userUpdatePassword'])->name('admin.user.update.password');
-    Route::delete('/users/{id}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
-    Route::put('/users/{id}/restore', [AdminUserController::class, 'userRestore'])->name('admin.user.restore');
-    Route::delete('/users/{id}/force-delete', [AdminUserController::class, 'userForceDelete'])->name('admin.user.force-delete');
+    Route::get('/users/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
+    Route::put('/users/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
+    Route::put('/users/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name('admin.user.update.password');
+    Route::delete('/users/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
+    Route::put('/users/{user}/restore', [AdminUserController::class, 'userRestore'])->withTrashed()->name('admin.user.restore');
+    Route::delete('/users/{user}/force-delete', [AdminUserController::class, 'userForceDelete'])->withTrashed()->name('admin.user.force-delete');
     Route::get('/list-users', [AdminUserController::class, 'listUsers'])->name('admin.list-users');
 
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('admin.customers');
-    Route::get('/customers/{id}', [AdminCustomerController::class, 'customerShow'])->name('admin.customer.show');
-    Route::put('/customers/{id}', [AdminCustomerController::class, 'customerUpdate'])->name('admin.customer.update');
+    Route::get('/customers/{user}', [AdminCustomerController::class, 'customerShow'])->withTrashed()->name('admin.customer.show');
+    Route::put('/customers/{user}', [AdminCustomerController::class, 'customerUpdate'])->withTrashed()->name('admin.customer.update');
     Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
 
     Route::get('/products', [AdminProductController::class, 'index'])->name('admin.products');
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
     Route::post('/products/create', [AdminProductController::class, 'store'])->name('admin.products.create');
-    Route::get('/products/{id}', [AdminProductController::class, 'productShow'])->name('admin.products.show');
-    Route::post('/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
-    Route::delete('/products/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
-    Route::put('/products/{id}/restore', [AdminProductController::class, 'restore'])->name('admin.products.restore');
-    Route::delete('/products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('admin.products.force-delete');
+    Route::get('/products/{product}', [AdminProductController::class, 'productShow'])->withTrashed()->name('admin.products.show');
+    Route::post('/products/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+    Route::put('/products/{product}/restore', [AdminProductController::class, 'restore'])->withTrashed()->name('admin.products.restore');
+    Route::delete('/products/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name('admin.products.force-delete');
     Route::get('/categories', [AdminProductController::class, 'searchCategories'])->name('admin.categories.search');
     Route::get('/brands', [AdminProductController::class, 'searchBrands'])->name('admin.brands.search');
     Route::get('/list-products', [AdminProductController::class, 'listProducts'])->name('admin.list-products');

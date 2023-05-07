@@ -3,23 +3,33 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Auth\MustVerifyEmail;
+use App\QueryBuilders\UserQueryBuilder;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+
+/**
+ * @property ?Carbon  $email_verified_at
+ * @property string   $password
+ * @property Customer $customer
+ *
+ * @method static UserQueryBuilder query()
+ */
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
-    use MustVerifyEmail;
+    use \Illuminate\Auth\MustVerifyEmail;
 
     /**
      * The attributes that are mass assignable.
@@ -52,6 +62,11 @@ class User extends Authenticatable
         = [
             'email_verified_at' => 'datetime',
         ];
+
+    public function newEloquentBuilder($query): UserQueryBuilder
+    {
+        return new UserQueryBuilder($query);
+    }
 
     public function customer(): hasOne
     {

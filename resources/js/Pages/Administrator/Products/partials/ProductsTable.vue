@@ -158,10 +158,9 @@ getBrands();
                     </tr>
                     <tbody>
                     <tr v-for="product in products.data" class="bg-white border-b">
-
                         <th class="px-6 py-1.5 font-medium whitespace-nowrap" scope="row"> {{ product.code }}</th>
                         <td class="px-1 py-1.5"> {{ product.name }}</td>
-                        <td class="px-4 py-1.5"> {{ product.price }}</td>
+                        <td class="px-4 py-1.5"> $ {{ product.price }}</td>
                         <td class="px-4 py-1.5"> {{ product.stock }}</td>
                         <td class="px-4 py-1.5"> {{ product.category_name }}</td>
                         <td class="px-4 py-1.5"> {{ product.brand_name }}</td>

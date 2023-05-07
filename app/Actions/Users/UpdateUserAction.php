@@ -8,17 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class UpdateUserAction implements UpdateUser
 {
-
-    public function execute(int $id, array $data): void
+    public function execute(User $user, array $data): void
     {
-        // TODO: Access undefinded property email_verified_at
-        $user = User::withTrashed()->findOrFail($id);
-
         $user->fill($data);
 
         if ($user->isDirty('email')) {
             Log::info('[EMAIL]', [
-                'user_id' => $user->getAttribute('id'),
+                'user_id' => $user->getKey(),
                 'old_email' => $user->getOriginal('email'),
                 'new_email' => $user->getAttribute('email'),
             ]);

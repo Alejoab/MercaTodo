@@ -100,7 +100,7 @@ const isNumber = (evt) => {
             </p>
         </header>
 
-        <form @submit.prevent="form.post(route('admin.products.update', product.id))">
+        <form @submit.prevent="form.post(route('admin.products.update', product.id), {preserveScroll: true})">
             <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 mt-6">
                 <div class="space-y-6">
                     <div>
@@ -111,9 +111,10 @@ const isNumber = (evt) => {
                             v-model="form.code"
                             autocomplete="code"
                             autofocus
-                            class="mt-1 block w-full"
+                            class="mt-1 block w-full cursor-not-allowed bg-gray-100"
                             maxlength="6"
                             required
+                            disabled
                             type="text"
                         />
 

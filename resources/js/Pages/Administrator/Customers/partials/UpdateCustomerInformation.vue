@@ -64,7 +64,7 @@ getCities();
             </p>
         </header>
 
-        <form @submit.prevent="form.put(route('admin.customer.update', user.id))" class="mt-6 space-y-6 max-w-xl">
+        <form @submit.prevent="form.put(route('admin.customer.update', user.id), {preserveScroll: true})" class="mt-6 space-y-6 max-w-xl">
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -90,6 +90,7 @@ getCities();
                     class="mt-1 block w-full"
                     v-model="form.surname"
                     autocomplete="surname"
+                    required
                 />
 
                 <InputError class="mt-2" :message="form.errors.surname" />
@@ -122,6 +123,7 @@ getCities();
                     autocomplete="document"
                     maxlength="11"
                     v-on:keypress="isNumber($event)"
+                    required
                 />
 
                 <InputError class="mt-2" :message="form.errors.document"/>
@@ -180,7 +182,6 @@ getCities();
                     id="city_id"
                     class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                     v-model.number="form.city_id"
-
                     required
                     autocomplete="city_id"
                 >

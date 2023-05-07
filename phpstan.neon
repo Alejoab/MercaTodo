@@ -1,13 +1,10 @@
 parameters:
     paths:
         - app
-    level: 3
+    level: 5
     excludePaths:
         - app/Http/Controllers/Auth
         - app/Http/Request/Auth
         - app/Http/Middleware
         - app/Http/Kernel.php
         - app/Exceptions/Handler.php
-    ignoreErrors:
-    		- '#Call to an undefined method#'
-    		- '#Access to an undefined property#'

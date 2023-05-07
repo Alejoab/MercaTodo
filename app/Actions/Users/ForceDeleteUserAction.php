@@ -8,16 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class ForceDeleteUserAction implements ForceDeleteUser
 {
-
-    public function execute(int $id): void
+    public function execute(User $user): void
     {
-        $user = User::withTrashed()->findOrFail($id);
-
         $user->forceDelete();
 
         Log::warning('[FORCE DELETE]', [
             'admin_id' => auth()->user()->getAuthIdentifier(),
-            'user_id' => $id,
+            'user_id' => $user->getKey(),
         ]);
     }
 }

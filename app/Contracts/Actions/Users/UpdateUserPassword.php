@@ -2,7 +2,9 @@
 
 namespace App\Contracts\Actions\Users;
 
+use App\Models\User;
+
 interface UpdateUserPassword
 {
-    public function execute(int $id, string $password): void;
+    public function execute(User $user, string $password): void;
 }

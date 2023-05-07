@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static ProductQueryBuilder query()
+ */
 class Product extends Model
 {
     use HasFactory;
@@ -37,5 +41,10 @@ class Product extends Model
     public function getStatusAttribute($value): string
     {
         return !$value ? 'Active' : 'Inactive';
+    }
+
+    public function newEloquentBuilder($query): ProductQueryBuilder
+    {
+        return new ProductQueryBuilder($query);
     }
 }

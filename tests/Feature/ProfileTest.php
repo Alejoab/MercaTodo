@@ -107,8 +107,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->fresh()->deleted_at);
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account(
-    ): void
+    public function test_correct_password_must_be_provided_to_delete_account(): void
     {
         $user = User::factory()->create();
 

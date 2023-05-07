@@ -2,7 +2,9 @@
 
 namespace App\Contracts\Actions\Products;
 
+use App\Models\Product;
+
 interface DeleteProduct
 {
-    public function execute(int $id): void;
+    public function execute(Product $product): void;
 }

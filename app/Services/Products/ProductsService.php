@@ -3,37 +3,24 @@
 namespace App\Services\Products;
 
 use App\Models\Product;
+use App\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductsService
 {
-    public function listProductsAdmin(string|null $search, int|null $category, int|null $brand): LengthAwarePaginator
+    public function listProductsAdmin(?string $search, ?int $category, ?int $brand): LengthAwarePaginator
     {
-        return Product::withTrashed()
-            ->join(
-                'brands',
-                'products.brand_id',
-                '=',
-                'brands.id'
-            )
-            ->join(
-                'categories',
-                'products.category_id',
-                '=',
-                'categories.id'
-            )
-            ->when($category, function ($query, $category) {
-                $query->where('products.category_id', '=', $category);
-            })
-            ->when($brand, function ($query, $brand) {
-                $query->where('products.brand_id', '=', $brand);
-            })
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('products.name', 'like', '%'.$search.'%')
-                        ->orWhere('products.code', 'like', '%'.$search.'%');
-                });
-            })
+        /**
+         * @var ProductQueryBuilder $products
+         */
+
+        $products = Product::withTrashed()
+            ->join('brands', 'products.brand_id', '=', 'brands.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id');
+
+        return $products->filterCategory($category)
+            ->filterBrand($brand?[$brand]:null)
+            ->contains($search, ['products.name', 'products.code'])
             ->select(
                 [
                     'products.id',
@@ -47,41 +34,29 @@ class ProductsService
                 ]
             )
             ->orderBy('products.code', 'desc')
-            ->paginate(50);
+            ->paginate(10);
     }
 
-    public function listProducts(string|null $search, int|null $category, array|null $brands, int|null $sort): LengthAwarePaginator
+    public function listProducts(?string $search, ?int $category, ?array $brands, ?int $sort): LengthAwarePaginator
     {
         $sort = $sort !== null ? $sort : 2;
-        $sorts = [0 => ['products.price', 'asc'], 1 => ['products.price', 'desc'], 2 => ['products.updated_at', 'desc'], 3 => ['products.updated_at', 'asc']];
+        $sorts = [
+            0 => ['products.price', 'asc'],
+            1 => ['products.price', 'desc'],
+            2 => ['products.updated_at', 'desc'],
+            3 => ['products.updated_at', 'asc'],
+        ];
 
-        return Product::query()
-            ->join(
-                'brands',
-                'products.brand_id',
-                '=',
-                'brands.id'
-            )
-            ->join(
-                'categories',
-                'products.category_id',
-                '=',
-                'categories.id'
-            )
-            ->when($category, function ($query, $category) {
-                $query->where('products.category_id', '=', $category);
-            })
-            ->when($brands, function ($query, $brands) {
-                $query->whereIn('products.brand_id', $brands);
-            })
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('products.name', 'like', '%'.$search.'%')
-                        ->orWhere('products.code', 'like', '%'.$search.'%')
-                        ->orWhere('brands.name', 'like', '%'.$search.'%')
-                        ->orWhere('categories.name', 'like', '%'.$search.'%');
-                });
-            })
+        /**
+         * @var ProductQueryBuilder $products
+         */
+        $products = Product::query()
+            ->join('brands', 'products.brand_id', '=', 'brands.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id');
+
+        return $products->filterCategory($category)
+            ->filterBrand($brands)
+            ->contains($search, ['products.name', 'products.code', 'brands.name', 'categories.name'])
             ->select(
                 'products.id',
                 'products.name',
@@ -91,6 +66,6 @@ class ProductsService
                 'brands.name as brand_name',
             )
             ->orderBy($sorts[$sort][0], $sorts[$sort][1])
-            ->paginate(50);
+            ->paginate(10);
     }
 }
