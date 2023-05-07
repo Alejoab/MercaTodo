@@ -184,7 +184,7 @@ const isNumber = (evt) => {
                             class="mt-1 block w-full"
                             required
                             type="text"
-                            @blur="categories = []"
+                            @blur="brands = []"
                         />
 
                         <ul v-show="brands.length"

@@ -5,7 +5,7 @@ import ProductsTable from "@/Pages/Administrator/Products/partials/ProductsTable
 </script>
 
 <template>
-    <Head><title>Customers</title></Head>
+    <Head><title>Products</title></Head>
 
     <UserLayout>
         <div class="max-w-7xl mx-auto lg:p-8 md:p-8 p-4 bg-white shadow sm:rounded-lg">
