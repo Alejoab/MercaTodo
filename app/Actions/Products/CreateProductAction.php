@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Services\Products\ProductImagesService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class CreateProductAction implements CreateProduct
 {
@@ -21,7 +22,7 @@ class CreateProductAction implements CreateProduct
 
         $data['image'] = $imageService->storeImage($data['image']);
 
-        return Product::query()->create([
+        $product = Product::query()->create([
             'code' => $data['code'],
             'name' => $data['name'],
             'description' => $data['description'],
@@ -31,5 +32,12 @@ class CreateProductAction implements CreateProduct
             'brand_id' => $brand->getAttribute('id'),
             'image' => $data['image'],
         ]);
+
+        Log::info('[CREATE]', [
+            'admin_id' => auth()->user()->getAuthIdentifier(),
+            'product_id' => $product->getKey(),
+        ]);
+
+        return $product;
     }
 }
