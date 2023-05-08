@@ -14,6 +14,11 @@ MercaTodo is part of the project proposed for the PHP Bootcamp by Evertec. It is
 - Administrators can disable and enable the customer's account, as such force de deletion of the account.
 - Email verification is required for the customer to access special features.
 
+### Version 2.0.0
+- The administrator can manage his products in such a way that he can create, update, enable and disable them.
+- Registered customers will be able to see the list of products created, so that they can see a showcase of products separated by pages and their data such as photo and price.
+- Customers will also be able to perform a customized search for these products to quickly find what they are looking for.
+
 ## Configuration
 
 In order to run the application, you must do the following:
@@ -27,6 +32,7 @@ In order to run the application, you must do the following:
 - Run `php artisan migrate:fresh --seed` to create the database tables.
 - Run `npm run dev` to compile the assets.
 - Run `php artisan serve` to start the application.
+- Run - `php artisan storage:link` to make the images available to the application.
 
 ## .Env file
 
@@ -51,7 +57,7 @@ The .env file contains the configuration of the application. It is important to 
 >MAIL_FROM_ADDRESS  
 >MAIL_FROM_NAME  
 
-### Administrator User Information
+### User Information of the Administrator
 >ADMIN_NAME  
 >ADMIN_SURNAME  
 >ADMIN_DOCUMENT_TYPE  
@@ -63,6 +69,12 @@ The .env file contains the configuration of the application. It is important to 
 >ADMIN_CITY_ID  
 
 **Notes:** The document type must be 'Identity Card' or 'Passport'. The city id must be a valid city id in the database (1, 1126).
+
+### Seeders Configuration
+>BRAND_SEEDER=5  
+>CATEGORY_SEEDER=5  
+>USER_SEEDER=20  
+>PRODUCT_SEEDER=20  
 
 ## Migrations and Seeds
 
@@ -80,3 +92,13 @@ If you want to run the migrations but not the user seed, you can run the followi
 - `php artisan migrate` to create the database tables.
 - `php artisan db:seed --class=DepartmentsCitiesSeeder` to populate the cities table.
 - `php artisan db:seed --class=RolesSeeder` to populate the products table.
+
+## Product Images
+
+The application is configured to store all product images in the `storage/app/public/product_images` folder. By default, the folder is created when the main seeder is executed. In the case that you do not want to execute the seeder you must create the folder manually. 
+
+To make the images available to the application, you must run the following command:
+
+- `php artisan storage:link`
+
+In the case that you want to change the folder where the images are stored, you must change the path of the `product_images` driver in the `config/filesystems.php` file.
