@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,8 +15,11 @@ use Spatie\Permission\Traits\HasRoles;
 
 
 /**
+ * @property int      $id
+ * @property string   $email
  * @property ?Carbon  $email_verified_at
  * @property string   $password
+ *
  * @property Customer $customer
  *
  * @method static UserQueryBuilder query()
@@ -63,16 +65,33 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
         ];
 
+    /**
+     * Defines a new query builder class
+     *
+     * @param $query
+     *
+     * @return UserQueryBuilder
+     */
     public function newEloquentBuilder($query): UserQueryBuilder
     {
         return new UserQueryBuilder($query);
     }
 
+    /**
+     * Defines the user-customer relation
+     *
+     * @return HasOne
+     */
     public function customer(): hasOne
     {
         return $this->hasOne(Customer::class);
     }
 
+    /**
+     * @param $value
+     *
+     * @return string
+     */
     public function getDeletedAttribute($value): string
     {
         return !$value ? 'Active' : 'Inactive';

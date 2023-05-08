@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Cache;
 
 class BrandsService
 {
+    /**
+     * Searches a brand by name.
+     *
+     * @param $search
+     *
+     * @return array|Collection
+     */
     public function searchBrands($search): array|Collection
     {
         return Brand::query()
@@ -15,6 +22,13 @@ class BrandsService
             ->get('name');
     }
 
+    /**
+     * Lists all brands by a given category
+     *
+     * @param int|null $id
+     *
+     * @return Collection|array
+     */
     public function brandsByCategory(int|null $id): Collection|array
     {
         if (is_null($id)) {
