@@ -16,11 +16,23 @@ use Inertia\Response;
 
 class AdminCustomerController extends Controller
 {
+    /**
+     * Show the customers index page for administrator.
+     *
+     * @return Response
+     */
     public function index(): Response
     {
         return Inertia::render('Administrator/Customers/Index');
     }
 
+    /**
+     * Shows the customer update page for administrator.
+     *
+     * @param User $user
+     *
+     * @return Response
+     */
     public function customerShow(User $user): Response
     {
         return Inertia::render('Administrator/Customers/EditCustomer', [
@@ -29,11 +41,28 @@ class AdminCustomerController extends Controller
         ]);
     }
 
+    /**
+     * Lists the customers for the administrator.
+     *
+     * @param Request          $request
+     * @param CustomersService $service
+     *
+     * @return LengthAwarePaginator
+     */
     public function listCustomers(Request $request, CustomersService $service): LengthAwarePaginator
     {
         return $service->listCustomersToTable($request->get('search'));
     }
 
+    /**
+     * Updates the customer.
+     *
+     * @param CustomerUpdateRequest $request
+     * @param User                  $user
+     * @param UpdateCustomer        $action
+     *
+     * @return RedirectResponse
+     */
     public function customerUpdate(CustomerUpdateRequest $request, User $user, UpdateCustomer $action): RedirectResponse
     {
         $action->execute($user, $request->validated());

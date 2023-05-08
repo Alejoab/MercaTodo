@@ -11,6 +11,13 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
+    /**
+     * Shows the product page for the customer.
+     *
+     * @param Product $product
+     *
+     * @return Response
+     */
     public function show(Product $product): Response
     {
         return Inertia::render('User/Product', [
@@ -18,6 +25,14 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * Lists the products for the customer.
+     *
+     * @param Request         $request
+     * @param ProductsService $service
+     *
+     * @return LengthAwarePaginator
+     */
     public function listProducts(Request $request, ProductsService $service): LengthAwarePaginator
     {
         $search = $request->get('search');
