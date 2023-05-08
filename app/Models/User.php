@@ -2,17 +2,28 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\DocumentType;
+use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+
+/**
+ * @property int      $id
+ * @property string   $email
+ * @property ?Carbon  $email_verified_at
+ * @property string   $password
+ *
+ * @property Customer $customer
+ *
+ * @method static UserQueryBuilder query()
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
@@ -29,15 +40,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable
         = [
-            'name',
-            'surname',
-            'document',
-            'document_type',
             'email',
-            'phone',
-            'address',
             'password',
-            'city_id',
         ];
 
     /**
@@ -59,11 +63,37 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts
         = [
             'email_verified_at' => 'datetime',
-            'document_type' => DocumentType::class
         ];
 
-    public function city(): BelongsTo
+    /**
+     * Defines a new query builder class
+     *
+     * @param $query
+     *
+     * @return UserQueryBuilder
+     */
+    public function newEloquentBuilder($query): UserQueryBuilder
     {
-        return $this->belongsTo(City::class, 'city_id', 'id');
+        return new UserQueryBuilder($query);
+    }
+
+    /**
+     * Defines the user-customer relation
+     *
+     * @return HasOne
+     */
+    public function customer(): hasOne
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getDeletedAttribute($value): string
+    {
+        return !$value ? 'Active' : 'Inactive';
     }
 }

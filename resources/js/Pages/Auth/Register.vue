@@ -11,9 +11,6 @@ const props = defineProps({
     document_types: {
         type: Object
     },
-    departments: {
-        type: Object
-    }
 })
 
 const form = useForm({
@@ -32,10 +29,16 @@ const form = useForm({
 
 const department_id = ref(0);
 const cities = ref({});
+const departments = ref({});
 
 const getCities = async () => {
     const response = await fetch(route('cities', department_id.value));
     cities.value = await response.json();
+};
+
+const getDepartments = async () => {
+    const response = await fetch(route('departments'));
+    departments.value = await response.json();
 };
 
 const submit = () => {
@@ -52,6 +55,8 @@ const isNumber = (evt) => {
         evt.preventDefault()
     }
 }
+
+getDepartments();
 </script>
 
 <template>
@@ -116,7 +121,7 @@ const isNumber = (evt) => {
                     v-model="form.document"
                     required
                     autocomplete="document"
-                    maxlength="10"
+                    maxlength="11"
                     v-on:keypress="isNumber($event)"
                 />
 

@@ -8,7 +8,7 @@ import UserNavBar from "@/Components/UserNavBar.vue";
         <UserNavBar></UserNavBar>
 
         <!-- Page Content -->
-        <main class="py-12">
+        <main v-if="$page.props.auth.user" class="py-12">
             <slot/>
         </main>
     </div>

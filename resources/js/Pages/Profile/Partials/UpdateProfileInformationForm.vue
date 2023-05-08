@@ -4,6 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import {ref} from "vue";
 
 defineProps({
     mustVerifyEmail: {
@@ -12,17 +13,25 @@ defineProps({
     status: {
         type: String,
     },
+    user: {
+        type: Object,
+    },
 });
 
-const user = usePage().props.auth.user;
+const user = usePage().props.user;
+const department_id = ref(user.customer.city.department_id);
+const cities = ref({});
+const departments = ref({});
 
 const form = useForm({
-    name: user.name,
-    surname: user.surname,
-    document_type: user.document_type,
-    document: user.document,
+    name: user.customer.name,
+    surname: user.customer.surname,
+    document_type: user.customer.document_type,
+    document: user.customer.document,
     email: user.email,
-    phone: user.phone,
+    phone: user.customer.phone,
+    city_id: user.customer.city_id,
+    address: user.customer.address
 });
 
 const isNumber = (evt) => {
@@ -33,6 +42,19 @@ const isNumber = (evt) => {
         evt.preventDefault()
     }
 }
+
+const getCities = async () => {
+    const response = await fetch(route('cities', department_id.value));
+    cities.value = await response.json();
+};
+
+const getDepartments = async () => {
+    const response = await fetch(route('departments'));
+    departments.value = await response.json();
+};
+
+getDepartments();
+getCities();
 </script>
 
 <template>
@@ -45,7 +67,7 @@ const isNumber = (evt) => {
             </p>
         </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
+        <form @submit.prevent="form.put(route('profile.update'), {preserveScroll: true})" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -71,6 +93,7 @@ const isNumber = (evt) => {
                     class="mt-1 block w-full"
                     v-model="form.surname"
                     autocomplete="surname"
+                    required
                 />
 
                 <InputError class="mt-2" :message="form.errors.surname" />
@@ -86,6 +109,7 @@ const isNumber = (evt) => {
                     disabled
                     v-model="form.document_type"
                     autocomplete="document_type"
+                    required
                 />
             </div>
 
@@ -99,6 +123,7 @@ const isNumber = (evt) => {
                     disabled
                     v-model="form.document"
                     autocomplete="document"
+                    required
                 />
             </div>
 
@@ -131,6 +156,51 @@ const isNumber = (evt) => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.phone" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="department" value="Department" />
+
+                <select
+                    id="department"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model="department_id"
+                    required
+                    @change="getCities()"
+                >
+                    <option v-for="department in departments" :value="department.id">{{department.name}}</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="city_id" value="City" />
+
+                <select
+                    id="city_id"
+                    class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                    v-model.number="form.city_id"
+                    required
+                    autocomplete="city_id"
+                >
+                    <option v-for="city in cities" :value="city.id">{{city.name}}</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.city_id" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="address" value="Address" />
+
+                <TextInput
+                    id="address"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.address"
+                    required
+                    autocomplete="adress"
+                />
+
+                <InputError class="mt-2" :message="form.errors.address" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">

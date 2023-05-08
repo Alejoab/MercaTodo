@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Enums\DocumentType;
 use App\Models\City;
+use App\Models\Customer;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,12 +36,19 @@ class ProfileTest extends TestCase
     public function test_profile_information_can_be_updated(): void
     {
         $user = User::factory()->create();
+        $customer = Customer::factory()->create(['user_id' => $user->id]);
 
         $response = $this
             ->actingAs($user)
-            ->patch('/profile', [
+            ->put('/profile', [
                 'name' => 'Test User',
+                'surname' => 'Test Surname',
+                'document_type' => DocumentType::ID->value,
+                'document' => '12345678',
                 'email' => 'test@example.com',
+                'address' => 'Test Address',
+                'city_id' => City::query()->first()->id,
+                'phone' => '1234567890',
             ]);
 
         $response
@@ -47,8 +56,9 @@ class ProfileTest extends TestCase
             ->assertRedirect('/profile');
 
         $user->refresh();
+        $customer->refresh();
 
-        $this->assertSame('Test User', $user->name);
+        $this->assertSame('Test User', $customer->name);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
     }
@@ -57,12 +67,19 @@ class ProfileTest extends TestCase
     ): void
     {
         $user = User::factory()->create();
+        $customer = Customer::factory()->create(['user_id' => $user->id]);
 
         $response = $this
             ->actingAs($user)
-            ->patch('/profile', [
+            ->put('/profile', [
                 'name' => 'Test User',
+                'surname' => 'Test Surname',
+                'document_type' => DocumentType::ID->value,
+                'document' => '12345678',
                 'email' => $user->email,
+                'address' => 'Test Address',
+                'city_id' => City::query()->first()->id,
+                'phone' => '1234567890',
             ]);
 
         $response
@@ -87,11 +104,10 @@ class ProfileTest extends TestCase
             ->assertRedirect('/');
 
         $this->assertGuest();
-        $this->assertNotNull($user->deleted_at);
+        $this->assertNotNull($user->fresh()->deleted_at);
     }
 
-    public function test_correct_password_must_be_provided_to_delete_account(
-    ): void
+    public function test_correct_password_must_be_provided_to_delete_account(): void
     {
         $user = User::factory()->create();
 
