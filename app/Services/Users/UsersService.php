@@ -9,6 +9,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class UsersService
 {
+    /**
+     * Lists users to the admin
+     *
+     * @param string|null $search
+     *
+     * @return LengthAwarePaginator
+     */
     public function listUsersToTable(?string $search): LengthAwarePaginator
     {
         /**

@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Cache;
 
 class CitiesService
 {
+    /**
+     * Lists all the cities by department.
+     *
+     * @param int $department_id
+     *
+     * @return Collection|array
+     */
     public function citiesByDepartment(int $department_id): Collection|array
     {
         return Cache::rememberForever('cities_by_department_'.$department_id, function () use ($department_id) {
@@ -16,6 +23,11 @@ class CitiesService
         });
     }
 
+    /**
+     * Lists all departments.
+     *
+     * @return Collection
+     */
     public function departments(): Collection
     {
         return Cache::rememberForever('departments', function () {

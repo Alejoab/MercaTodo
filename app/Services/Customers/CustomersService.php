@@ -8,6 +8,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CustomersService
 {
+    /**
+     * Lists customers to the admin
+     *
+     * @param string|null $search
+     *
+     * @return LengthAwarePaginator
+     */
     public function listCustomersToTable(?string $search): LengthAwarePaginator
     {
         /**
