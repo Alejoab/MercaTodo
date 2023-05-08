@@ -2,9 +2,14 @@
 
 namespace App\Contracts\Actions\Users;
 
-use App\Models\User;
-
 interface CreateUser
 {
+    /**
+     * Creates a new user.
+     *
+     * @param array $data
+     *
+     * @return mixed
+     */
     public function execute(array $data): mixed;
 }
