@@ -29,15 +29,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
-Route::get('departments', [CityController::class, 'departments'])->name('departments');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware([])->group(function () {
     Route::get('', [UserController::class, 'index'])->name('home');
     Route::get('categories', [CategoryController::class, 'list'])->name('categories');
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
     Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
     Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
+    Route::get('departments', [CityController::class, 'departments'])->name('departments');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {

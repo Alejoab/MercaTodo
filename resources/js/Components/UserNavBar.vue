@@ -25,15 +25,14 @@ const showingNavigationDropdown = ref(false);
                         </Link>
                     </div>
 
-                    <!-- SearchBox in the future -->
                     <div class="w-[60%] flex m-auto" v-if="!usePage().props.ziggy.location.includes('admin')">
-                        <search-box class="fle"></search-box>
+                        <search-box></search-box>
                     </div>
                 </div>
 
                 <div class="hidden lg:flex lg:items-center lg:ml-6">
                     <!-- Settings Dropdown -->
-                    <div class="ml-3 relative">
+                    <div v-if="$page.props.auth.user" class="ml-3 relative">
                         <Dropdown align="right" width="48">
                             <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -89,6 +88,21 @@ const showingNavigationDropdown = ref(false);
                             </template>
                         </Dropdown>
                     </div>
+
+                    <div v-else class="ml-3 relative">
+                        <div class="whitespace-nowrap">
+                            <Link
+                                :href="route('login')"
+                                class="font-semibold text-gray-400 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                            >Log in</Link>
+
+                            <Link
+                                :href="route('register')"
+                                class="ml-4 font-semibold text-gray-400 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                            >Register</Link
+                            >
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Hamburger -->
@@ -130,7 +144,7 @@ const showingNavigationDropdown = ref(false);
             class="sm:hidden"
         >
             <!-- Responsive Settings Options -->
-            <div class="pt-4 pb-1 border-t border-gray-200">
+            <div v-if="$page.props.auth.user" class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4">
                     <div class="font-medium text-base text-gray-800">
                         {{ $page.props.auth.user.email }}
@@ -144,6 +158,13 @@ const showingNavigationDropdown = ref(false);
                     <ResponsiveNavLink :href="route('logout')" as="button" method="post">
                         Log Out
                     </ResponsiveNavLink>
+                </div>
+            </div>
+
+            <div v-else class="pt-4 pb-1 border-t border-gray-200">
+                <div class="mt-3 space-y-1">
+                    <ResponsiveNavLink :href="route('register')"> Register </ResponsiveNavLink>
+                    <ResponsiveNavLink :href="route('login')"> Log In </ResponsiveNavLink>
                 </div>
             </div>
         </div>
