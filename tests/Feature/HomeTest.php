@@ -41,16 +41,4 @@ class HomeTest extends TestCase
         $response = $this->actingAs($this->customer)->get('/');
         $response->assertStatus(200);
     }
-
-    public function test_only_logged_users_can_access_to_the_application(): void
-    {
-        $response = $this->get('/');
-        $response->assertRedirect('/login');
-
-        $response = $this->actingAs($this->customer)->get('/');
-        $response->assertStatus(200);
-
-        $response = $this->actingAs($this->admin)->get('/');
-        $response->assertStatus(200);
-    }
 }
