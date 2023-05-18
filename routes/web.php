@@ -7,6 +7,7 @@ use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -38,6 +39,10 @@ Route::middleware([])->group(function () {
     Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
     Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('departments', [CityController::class, 'departments'])->name('departments');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('cart', [OrderController::class, 'index'])->name('cart');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
