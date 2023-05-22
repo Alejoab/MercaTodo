@@ -9,7 +9,7 @@ class CartsService
 {
     public function getCart(int $userId)
     {
-        $cart = json_decode(Redis::command('get', ['cart:' . $userId]), true) ?? [];
+        $cart = json_decode(Redis::command('get', ['cart:'.$userId]), true) ?? [];
         $result = [];
 
         foreach ($cart as $item) {
@@ -20,7 +20,15 @@ class CartsService
             }
         }
 
-        Redis::command('set', ['cart:' . $userId, json_encode($result)]);
+        Redis::command('set', ['cart:'.$userId, json_encode($result)]);
+
         return $result;
+    }
+
+    public function getNumberOfItems(int $userId): int
+    {
+        $cart = json_decode(Redis::command('get', ['cart:'.$userId]), true) ?? [];
+
+        return count($cart);
     }
 }

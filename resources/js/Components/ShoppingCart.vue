@@ -1,5 +1,11 @@
 <script setup>
-const a = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')).length : 0;
+import {ref} from "vue";
+
+const a = ref(0);
+
+axios(route('cart.count'))
+    .then(response => a.value = response.data)
+    .catch(error => console.log(error));
 </script>
 
 

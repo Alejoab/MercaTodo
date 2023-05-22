@@ -40,6 +40,7 @@ Route::middleware([])->group(function () {
     Route::get('product-information/{product}', [ProductController::class, 'productInformation'])->withTrashed()->name('product.information');
     Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('departments', [CityController::class, 'departments'])->name('departments');
+    Route::get('cart-items-count', [OrderController::class, 'getNumberOfItems'])->name('cart.count');
 });
 
 Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
