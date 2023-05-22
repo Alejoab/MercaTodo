@@ -37,13 +37,15 @@ Route::middleware([])->group(function () {
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
     Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
     Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('product-information/{product}', [ProductController::class, 'productInformation'])->withTrashed()->name('product.information');
     Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('departments', [CityController::class, 'departments'])->name('departments');
 });
 
 Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('cart', [OrderController::class, 'index'])->name('cart');
+    Route::get('', [OrderController::class, 'index'])->name('cart');
     Route::post('/add-product', [OrderController::class, 'addProductToCart'])->name('cart.add');
+    Route::delete('/delete-product', [OrderController::class, 'deleteProductToCart'])->name('cart.delete');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {

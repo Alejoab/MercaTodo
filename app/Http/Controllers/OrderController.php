@@ -15,4 +15,9 @@ class OrderController extends Controller
     {
         $action->execute($request->user()->id, $request->validated());
     }
+
+    public function deleteProductToCart(Request $request, DeleteProductCart $action): void
+    {
+        $action->execute(auth()->id(), $request->all());
+    }
 }
