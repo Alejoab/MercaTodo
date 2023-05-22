@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Carts\AddProductCartAction;
+use App\Actions\Carts\DeleteProductCartAction;
 use App\Actions\Customers\CreateCustomerAction;
 use App\Actions\Customers\UpdateCustomerAction;
 use App\Actions\Products\CreateProductAction;
@@ -17,6 +18,8 @@ use App\Actions\Users\RestoreUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Actions\Users\UpdateUserPasswordAction;
 use App\Actions\Users\UpdateUserRoleAction;
+use App\Contracts\Actions\Carts\AddProductCart;
+use App\Contracts\Actions\Carts\DeleteProductCart;
 use App\Contracts\Actions\Customers\CreateCustomer;
 use App\Contracts\Actions\Customers\UpdateCustomer;
 use App\Contracts\Actions\Products\CreateProduct;
@@ -55,5 +58,6 @@ class ActionServiceProvider extends ServiceProvider
             ForceDeleteProduct::class => ForceDeleteProductAction::class,
 
             AddProductCart::class => AddProductCartAction::class,
+            DeleteProductCart::class => DeleteProductCartAction::class,
         ];
 }

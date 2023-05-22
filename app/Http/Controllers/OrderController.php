@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Actions\Carts\AddProductCart;
+use App\Contracts\Actions\Carts\DeleteProductCart;
+use App\Http\Requests\CartRequest;
+use App\Services\Carts\CartsService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function index(): Response
+    public function index(CartsService $service): Response
     {
-        return Inertia::render('Order/ViewCart');
+        return Inertia::render('Order/ViewCart', [
+            'cart' => $service->getCart(auth()->id()),
+        ]);
+    }
 
     public function addProductToCart(CartRequest $request, AddProductCart $action): void
     {
