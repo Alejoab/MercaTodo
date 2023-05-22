@@ -1,6 +1,8 @@
 <script setup>
 import {useForm} from "@inertiajs/vue3";
+import {useCartCounter} from "@/Store/CounterStore";
 
+const cartCounter = useCartCounter();
 const props = defineProps({
     product: {
         type: Object,
@@ -17,6 +19,7 @@ const addToCart = () => {
     form.post(route('cart.add'), {
         preserveScroll: true,
         onSuccess: () => {
+            cartCounter.increment();
         },
         onError: () => {
         }

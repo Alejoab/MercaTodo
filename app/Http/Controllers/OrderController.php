@@ -28,4 +28,9 @@ class OrderController extends Controller
     {
         $action->execute(auth()->id(), $request->all());
     }
+
+    public function getNumberOfItems(Request $request, CartsService $service): int
+    {
+        return $request->user() !== null ? $service->getNumberOfItems(auth()->id()) : 0;
+    }
 }

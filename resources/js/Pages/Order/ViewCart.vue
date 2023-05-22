@@ -6,7 +6,7 @@ import ProductCart from "@/Pages/Order/Partials/ProductCart.vue";
 
 const props = defineProps({
     cart: {
-        type: Array,
+        type: Object,
         required: true
     }
 });

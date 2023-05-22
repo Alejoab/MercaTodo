@@ -3,7 +3,9 @@ import UserLayout from "@/Layouts/UserLayout.vue";
 import {Head, useForm} from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
+import {useCartCounter} from "@/Store/CounterStore";
 
+const cartCounter = useCartCounter();
 const props = defineProps({
     product: {
         type: Object,
@@ -21,6 +23,7 @@ const addProductToCart = () => {
     form.post(route('cart.add'), {
         preserveScroll: true,
         onSuccess: () => {
+            cartCounter.increment();
         },
         onError: () => {
         }
