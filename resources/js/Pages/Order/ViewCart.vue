@@ -18,8 +18,8 @@ const getProducts = async () => {
     let result = [];
 
     for (let i in props.cart) {
-        let response = await axios.get(route('product.information', props.cart[i].id));
-        response.data.quantity = props.cart[i].quantity;
+        let response = await axios.get(route('product.information', i));
+        response.data.quantity = props.cart[i];
         result.push(response.data);
     }
     cart.value = result;

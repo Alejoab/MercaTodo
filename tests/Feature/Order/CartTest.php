@@ -39,7 +39,7 @@ class CartTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function only_logged_in_users_can_see_the_cart(): void
+    public function test_only_logged_in_users_can_see_the_cart(): void
     {
         $response = $this->get(route('cart'));
         $response->assertStatus(302);
@@ -58,13 +58,12 @@ class CartTest extends TestCase
 
         $response->assertOk();
 
-        $data = json_decode(Redis::command('get', ['cart:'.$this->customer->id]), true);
+        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
         $this->assertIsArray($data);
         $this->assertCount(1, $data);
-        $this->assertEquals($data[0], [
-            'id' => $product->id,
-            'quantity' => 1,
-        ]);
+        $this->assertEquals([
+            $product->id => 1,
+        ], $data);
     }
 
     public function test_a_customer_can_update_a_product_in_the_cart(): void
@@ -78,24 +77,22 @@ class CartTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:'.$this->customer->id]), true);
+        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
         $this->assertCount(1, $data);
-        $this->assertEquals($data[0], [
-            'id' => $product->id,
-            'quantity' => 1,
-        ]);
+        $this->assertEquals([
+            $product->id => 1,
+        ], $data);
 
         $this->actingAs($this->customer)->post(route('cart.add'), [
             'product_id' => $product->id,
             'quantity' => 5,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:'.$this->customer->id]), true);
+        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
         $this->assertCount(1, $data);
-        $this->assertEquals($data[0], [
-            'id' => $product->id,
-            'quantity' => 5,
-        ]);
+        $this->assertEquals([
+            $product->id => 5,
+        ], $data);
     }
 
     public function test_a_customer_can_delete_a_product_from_the_cart(): void
@@ -108,14 +105,14 @@ class CartTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 1,
         ]);
-        $data = json_decode(Redis::command('get', ['cart:'.$this->customer->id]), true);
+        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
         $this->assertCount(1, $data);
 
         $this->actingAs($this->customer)->delete(route('cart.delete'), [
             'product_id' => $product->id,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:'.$this->customer->id]), true);
+        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
         $this->assertCount(0, $data);
     }
 

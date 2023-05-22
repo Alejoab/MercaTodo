@@ -76,7 +76,6 @@ const deleteProduct = async () => {
                         type="text"
                         @keypress="isNumber"
                     >
-                    <InputError class="mt-2" :message="form.errors.quantity" />
                     <button
                         v-show="form.quantity !== product.quantity && form.quantity !== ''"
                         class="text-gray-500 underline ml-3"
@@ -85,6 +84,7 @@ const deleteProduct = async () => {
                         Update
                     </button>
                 </div>
+                <InputError class="mt-2" :message="form.errors.quantity" />
             </div>
 
             <div>

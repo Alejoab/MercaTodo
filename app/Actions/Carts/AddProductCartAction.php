@@ -10,18 +10,10 @@ class AddProductCartAction implements AddProductCart
 
     public function execute(int $userId, array $data): void
     {
-        $cart = json_decode(Redis::command('get', ['cart:'.$userId]), true) ?? [];
-        $key = array_search($data['product_id'], array_column($cart, 'id'));
-
-        if ($key !== false) {
-            $cart[$key]['quantity'] = $data['quantity'];
-        } else {
-            $cart[] = [
-                'id' => $data['product_id'],
-                'quantity' => $data['quantity'],
-            ];
-        }
-
-        Redis::command('set', ['cart:'.$userId, json_encode($cart)]);
+        Redis::command('hset', [
+            'cart:'.$userId,
+            $data['product_id'],
+            $data['quantity'],
+        ]);
     }
 }

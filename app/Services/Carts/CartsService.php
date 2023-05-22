@@ -9,25 +9,23 @@ class CartsService
 {
     public function getCart(int $userId)
     {
-        $cart = json_decode(Redis::command('get', ['cart:'.$userId]), true) ?? [];
-        $result = [];
+        $cart = Redis::command('hgetall', ['cart:'.$userId]) ?? [];
 
-        foreach ($cart as $item) {
-            $product = Product::query()->find($item['id']);
+        foreach ($cart as $product_id => $quantity) {
+            $product = Product::query()->find($product_id);
 
-            if ($product) {
-                $result[] = $item;
+            if (!$product) {
+                Redis::command('hdel', ['cart:'.$userId, $product_id]);
+                unset($cart[$product_id]);
             }
         }
 
-        Redis::command('set', ['cart:'.$userId, json_encode($result)]);
-
-        return $result;
+        return $cart;
     }
 
     public function getNumberOfItems(int $userId): int
     {
-        $cart = json_decode(Redis::command('get', ['cart:'.$userId]), true) ?? [];
+        $cart = Redis::command('hgetall', ['cart:'.$userId]) ?? [];
 
         return count($cart);
     }

@@ -25,11 +25,11 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
-                ['id' => 1, 'quantity' => 1,],
+                1 => 1,
             ]
             , $data
         );
@@ -39,12 +39,12 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(2, $data);
         $this->assertEquals(
             [
-                ['id' => 1, 'quantity' => 1,],
-                ['id' => 2, 'quantity' => 1,],
+                1 => 1,
+                2 => 1,
             ]
             , $data
         );
@@ -59,11 +59,11 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
-                ['id' => 1, 'quantity' => 1,],
+                1 => 1,
             ]
             , $data
         );
@@ -73,11 +73,11 @@ class CartUnitTest extends TestCase
             'quantity' => 2,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
-                ['id' => 1, 'quantity' => 2,],
+                1 => 2,
             ]
             , $data
         );
@@ -97,17 +97,17 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(2, $data);
 
         $action = new DeleteProductCartAction();
         $action->execute(1, ['product_id' => 2,]);
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
-                ['id' => 1, 'quantity' => 1,],
+                1 => 1,
             ]
             , $data
         );
@@ -131,7 +131,7 @@ class CartUnitTest extends TestCase
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
-                ['id' => $product->id, 'quantity' => 1,],
+                $product->id => 1,
             ]
             , $data
         );
@@ -157,17 +157,17 @@ class CartUnitTest extends TestCase
         ]);
         $product2->delete();
 
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(2, $data);
 
         $data = $service->getCart(1);
         $this->assertEquals(
             [
-                ['id' => $product1->id, 'quantity' => 1,],
+                $product1->id => 1,
             ]
             , $data
         );
-        $data = json_decode(Redis::command('get', ['cart:1']), true);
+        $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(1, $data);
     }
 }
