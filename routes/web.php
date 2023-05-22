@@ -41,8 +41,9 @@ Route::middleware([])->group(function () {
     Route::get('departments', [CityController::class, 'departments'])->name('departments');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
     Route::get('cart', [OrderController::class, 'index'])->name('cart');
+    Route::post('/add-product', [OrderController::class, 'addProductToCart'])->name('cart.add');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {

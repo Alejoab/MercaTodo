@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Actions\Carts\AddProductCartAction;
 use App\Actions\Customers\CreateCustomerAction;
 use App\Actions\Customers\UpdateCustomerAction;
 use App\Actions\Products\CreateProductAction;
@@ -52,5 +53,7 @@ class ActionServiceProvider extends ServiceProvider
             DeleteProduct::class => DeleteProductAction::class,
             RestoreProduct::class => RestoreProductAction::class,
             ForceDeleteProduct::class => ForceDeleteProductAction::class,
+
+            AddProductCart::class => AddProductCartAction::class,
         ];
 }

@@ -97,7 +97,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <div v-if="!usePage().props.ziggy.location.includes('admin')" class="flex items-center">
-                    <!-- Shopping Cart -->
+                    <!-- Shopping Carts -->
                     <ShoppingCart></ShoppingCart>
                 </div>
 

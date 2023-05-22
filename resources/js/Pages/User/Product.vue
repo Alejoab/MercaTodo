@@ -1,14 +1,8 @@
 <script setup>
 import UserLayout from "@/Layouts/UserLayout.vue";
-import {Head} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
-import {onMounted, ref} from "vue";
-
-onMounted(() => {
-    const cartData = localStorage.getItem('cart');
-    cart.value = cartData ? JSON.parse(cartData) : [];
-
-})
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     product: {
@@ -17,37 +11,20 @@ const props = defineProps({
     }
 });
 
-const quantityToBuy = ref('');
-const cart = ref(JSON.parse(localStorage.getItem('cart')) || []);
+const form = useForm({
+    product_id: props.product.id,
+    quantity: '',
+})
 
-const addProductToCart = (buyNow = false) => {
-    let item = cart.value.find((item) => {
-        if (item.id === props.product.id) {
-            return item;
+
+const addProductToCart = () => {
+    form.post(route('cart.add'), {
+        preserveScroll: true,
+        onSuccess: () => {
+        },
+        onError: () => {
         }
     })
-
-    if (!item) {
-        cart.value.push({
-            'id': props.product.id,
-            'name': props.product.name,
-            'brand': props.product.brand.name,
-            'price': props.product.price,
-            'image': props.product.image,
-            'quantityToBuy': quantityToBuy.value !== '' ? quantityToBuy.value : '1',
-        })
-    } else {
-        item.quantityToBuy = quantityToBuy.value !== '' ? quantityToBuy.value : '1';
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart.value));
-
-    if (buyNow) {
-        window.location.href = route('cart');
-    } else {
-        location.reload();
-    }
-
 }
 
 const isNumber = (evt) => {
@@ -82,18 +59,14 @@ const isNumber = (evt) => {
                                 <div class="flex items-center">
                                     <InputLabel class="text-xl mr-4" value="Quantity"></InputLabel>
 
-                                    <input v-model="quantityToBuy"
+                                    <input v-model.number="form.quantity"
                                            :placeholder="product.stock + ' avaliable'"
                                            class="border border-gray-300 rounded-md px-2 py-2 w-full focus:border-indigo-700"
                                            type="text"
                                            @keypress="isNumber">
+
                                 </div>
-                                <button
-                                    class="bg-indigo-700 font-bold text-white tex px-4 py-2 rounded-md lg:text-xl hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                                    @click="addProductToCart(true)"
-                                >
-                                    Buy Now
-                                </button>
+                                <InputError class="mt-2" :message="form.errors.quantity" />
                                 <button
                                     class="bg-blue-100 font-bold text-blue-600 px-4 py-2 rounded-md lg:text-xl hover:bg-indigo-200 focus:bg-indigo-200 active:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
                                     @click="addProductToCart()"
