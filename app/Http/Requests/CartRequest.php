@@ -17,13 +17,13 @@ class CartRequest extends FormRequest
     public function rules(): array
     {
         /**
-         * @var Product $product
+         * @var ?Product $product
          */
         $product = Product::query()->find($this->request->get('product_id'));
 
         return [
             'product_id' => ['required', Rule::exists('products', 'id')],
-            'quantity' => ['required', 'min:1', 'integer', "max:".($product?->stock ?: 0)],
+            'quantity' => ['required', 'min:1', 'integer', "max:".($product?->stock ?? 0)],
         ];
     }
 }

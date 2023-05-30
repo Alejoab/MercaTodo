@@ -5,8 +5,9 @@ export const useCartCounter = defineStore('counter', {
         count: 0
     }),
     actions: {
-        increment() {
-            this.count++;
+        async increment() {
+            let response = await axios(route('cart.count'))
+            this.count = response.data;
         },
         async syncCartCount() {
             let response = await axios(route('cart.count'))
