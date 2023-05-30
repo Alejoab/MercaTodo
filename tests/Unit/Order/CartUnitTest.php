@@ -113,7 +113,7 @@ class CartUnitTest extends TestCase
         );
     }
 
-    public function test_get_cart(): void
+    public function test_get_cart_with_products(): void
     {
         Category::factory()->create();
         Brand::factory()->create();
@@ -127,11 +127,13 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = $service->getCart(1);
+        $data = $service->getCartWithProducts(1);
+        $product = Product::query()->find($product->id)->toArray();
+        $product['quantity'] = 1;
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
-                $product->id => 1,
+                $product,
             ]
             , $data
         );
@@ -160,14 +162,7 @@ class CartUnitTest extends TestCase
         $data = Redis::command('hgetall', ['cart:1']);
         $this->assertCount(2, $data);
 
-        $data = $service->getCart(1);
-        $this->assertEquals(
-            [
-                $product1->id => 1,
-            ]
-            , $data
-        );
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = $service->getCartWithProducts(1);
         $this->assertCount(1, $data);
     }
 }
