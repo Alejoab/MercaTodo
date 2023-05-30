@@ -47,6 +47,7 @@ Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
     Route::get('', [OrderController::class, 'index'])->name('cart');
     Route::post('/add-product', [OrderController::class, 'addProductToCart'])->name('cart.add');
     Route::delete('/delete-product', [OrderController::class, 'deleteProductToCart'])->name('cart.delete');
+    Route::post('/buy', [OrderController::class, 'createNewOrder'])->name('cart.buy');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
