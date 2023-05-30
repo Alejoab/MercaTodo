@@ -4,6 +4,9 @@ namespace App\QueryBuilders;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @method self withTrashed(bool $withTrashed = true)
+ */
 class ProductQueryBuilder extends Builder
 {
     /**

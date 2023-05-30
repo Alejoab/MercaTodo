@@ -60,30 +60,6 @@ const replaceRoute = () => {
 getProducts();
 getCategories();
 getBrands();
-
-const cart = ref(JSON.parse(localStorage.getItem('cart')) || []);
-
-const addProductToCart = (id, name, brand_name, price, image) => {
-    let item = cart.value.find((item) => {
-        if (item.id === id) {
-            return item;
-        }
-    })
-
-    if (!item) {
-        cart.value.push({
-            'id': id,
-            'name': name,
-            'brand': brand_name,
-            'price': price,
-            'image': image,
-            'quantityToBuy': '1',
-        })
-
-        localStorage.setItem('cart', JSON.stringify(cart.value));
-    }
-
-}
 </script>
 
 
@@ -178,7 +154,7 @@ const addProductToCart = (id, name, brand_name, price, image) => {
 
         <div class="bg-white mt-5 pb-5 rounded-2xl">
             <div class="justify-items-center grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-y-5">
-                <product-card v-for="product in products.data" :product="product" class="text-sm" @add-product="addProductToCart"></product-card>
+                <product-card v-for="product in products.data" :product="product" class="text-sm"></product-card>
             </div>
 
             <div class="mt-7 flex justify-center">

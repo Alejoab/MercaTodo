@@ -69,6 +69,7 @@ const showingNavigationDropdown = ref(false);
                                         </DropdownLink>
                                     </div>
                                     <DropdownLink :href="route('profile.edit')"> Profile</DropdownLink>
+                                    <DropdownLink :href="route('order.history')"> Order History</DropdownLink>
                                     <DropdownLink :href="route('logout')" as="button" method="post">
                                         Log Out
                                     </DropdownLink>
@@ -97,7 +98,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <div v-if="!usePage().props.ziggy.location.includes('admin')" class="flex items-center">
-                    <!-- Shopping Cart -->
+                    <!-- Shopping Carts -->
                     <ShoppingCart></ShoppingCart>
                 </div>
 
@@ -149,11 +150,9 @@ const showingNavigationDropdown = ref(false);
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <ResponsiveNavLink v-if="$page.props.isAdmin" :href="route('admin')"> Administrator
-                    </ResponsiveNavLink>
-                    <ResponsiveNavLink :href="route('logout')" as="button" method="post">
-                        Log Out
-                    </ResponsiveNavLink>
+                    <ResponsiveNavLink v-if="$page.props.isAdmin" :href="route('admin')"> Administrator</ResponsiveNavLink>
+                    <ResponsiveNavLink :href="route('order.history')"> Order History</ResponsiveNavLink>
+                    <ResponsiveNavLink :href="route('logout')" as="button" method="post">Log Out</ResponsiveNavLink>
                 </div>
             </div>
 

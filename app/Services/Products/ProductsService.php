@@ -22,12 +22,12 @@ class ProductsService
         /**
          * @var ProductQueryBuilder $products
          */
-
-        $products = Product::withTrashed()
+        $products = Product::query()->withTrashed()
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->join('categories', 'products.category_id', '=', 'categories.id');
 
-        return $products->filterCategory($category)
+        return $products
+            ->filterCategory($category)
             ->filterBrand($brand ? [$brand] : null)
             ->contains($search, ['products.name', 'products.code'])
             ->select(
@@ -73,7 +73,8 @@ class ProductsService
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->join('categories', 'products.category_id', '=', 'categories.id');
 
-        return $products->filterCategory($category)
+        return $products
+            ->filterCategory($category)
             ->filterBrand($brands)
             ->contains($search, ['products.name', 'products.code', 'brands.name', 'categories.name'])
             ->select(

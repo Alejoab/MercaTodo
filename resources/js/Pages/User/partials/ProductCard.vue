@@ -1,10 +1,30 @@
 <script setup>
+import {useForm} from "@inertiajs/vue3";
+import {useCartCounter} from "@/Store/CounterStore";
+
+const cartCounter = useCartCounter();
 const props = defineProps({
     product: {
         type: Object,
         required: true
     }
 })
+
+const form = useForm({
+    product_id: props.product.id,
+    quantity: 1
+})
+
+const addToCart = () => {
+    form.post(route('cart.add'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            cartCounter.increment();
+        },
+        onError: () => {
+        }
+    })
+}
 </script>
 
 
@@ -27,7 +47,7 @@ const props = defineProps({
                 <span class="text-xl font-bold text-gray-900">$ {{ product.price }}</span>
                 <button
                     class="inline-flex items-center px-1.5 py-1.5 border border-transparent rounded-md font-semibold text-sm text-gray-800 tracking-widest bg-gray-200 hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                    @click="this.$emit('add-product', product.id, product.name, product.brand_name, product.price, product.image)"
+                    @click="addToCart"
                 >
                     Add to Cart
                 </button>

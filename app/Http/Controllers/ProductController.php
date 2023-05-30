@@ -42,4 +42,9 @@ class ProductController extends Controller
 
         return $service->listProducts($search, $category, $brands, $sort);
     }
+
+    public function productInformation(Product $product): Product
+    {
+        return $product;
+    }
 }

@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('order-history', [ProfileController::class, 'orderHistory'])->name('order.history');
 });
 
 
@@ -37,12 +39,17 @@ Route::middleware([])->group(function () {
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
     Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
     Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('product-information/{product}', [ProductController::class, 'productInformation'])->withTrashed()->name('product.information');
     Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('departments', [CityController::class, 'departments'])->name('departments');
+    Route::get('cart-items-count', [OrderController::class, 'getNumberOfItems'])->name('cart.count');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('cart', [OrderController::class, 'index'])->name('cart');
+Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('', [OrderController::class, 'index'])->name('cart');
+    Route::post('/add-product', [OrderController::class, 'addProductToCart'])->name('cart.add');
+    Route::delete('/delete-product', [OrderController::class, 'deleteProductToCart'])->name('cart.delete');
+    Route::post('/buy', [OrderController::class, 'createNewOrder'])->name('cart.buy');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
