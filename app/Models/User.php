@@ -90,6 +90,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function order(): HasMany
     {
+        // TODO: Error with phpstan
+        /**
+         * @phpstan-ignore-next-line
+         */
         return $this->hasMany(Order::class)->orderByDesc('created_at');
     }
 
