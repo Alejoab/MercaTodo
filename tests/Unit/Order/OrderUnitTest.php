@@ -2,7 +2,11 @@
 
 namespace Tests\Unit\Order;
 
+use App\Actions\Orders\AcceptOrderAction;
 use App\Actions\Orders\CreateOrderAction;
+use App\Actions\Orders\DeleteOrderAction;
+use App\Actions\Orders\RejectOrderAction;
+use App\Enums\OrderStatus;
 use App\Exceptions\CartException;
 use App\Models\Brand;
 use App\Models\Category;
@@ -11,7 +15,7 @@ use App\Models\User;
 use App\Services\Carts\CartsService;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class OrderUnitTest extends TestCase
@@ -35,7 +39,7 @@ class OrderUnitTest extends TestCase
             'stock' => 3,
         ]);
 
-        Redis::command('hset', ['cart:'.$this->user->getKey(), $this->product->getKey(), 3]);
+        Cache::put('cart:'.$this->user->getKey(), [$this->product->getKey() => 3]);
     }
 
     public function test_can_create_an_order(): void
@@ -44,7 +48,7 @@ class OrderUnitTest extends TestCase
         $service = new CartsService();
 
         $cart = $service->getValidData($this->user->getKey());
-        $order = $action->execute($this->user->getKey(), $cart);
+        $order = $action->execute($this->user->getKey(), $cart, 'PlacetoPay');
 
         $this->assertDatabaseCount('orders', 1);
         $this->assertDatabaseCount('order_details', 1);
@@ -63,13 +67,70 @@ class OrderUnitTest extends TestCase
         ]);
     }
 
+    public function test_accept_order(): void
+    {
+        $createOrder = new CreateOrderAction();
+        $order = $createOrder->execute($this->user->getKey(), [$this->product->getKey() => 3], 'PlacetoPay');
+
+        $acceptOrder = new AcceptOrderAction();
+        $acceptOrder->execute($order);
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->getKey(),
+            'status' => 'ACCEPTED',
+        ]);
+    }
+
+    public function test_reject_order(): void
+    {
+        $createOrder = new CreateOrderAction();
+        $order = $createOrder->execute($this->user->getKey(), [$this->product->getKey() => 3], 'PlacetoPay');
+
+        $this->product->refresh();
+        $this->assertEquals(0, $this->product->stock);
+        $this->assertNotNull($this->product->deleted_at);
+
+        $rejectOrder = new RejectOrderAction();
+        $rejectOrder->execute($order);
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->getKey(),
+            'status' => OrderStatus::REJECTED,
+        ]);
+
+        $this->product->refresh();
+        $this->assertDatabaseCount('orders', 1);
+        $this->assertDatabaseCount('order_details', 1);
+        $this->assertEquals(3, $this->product->stock);
+        $this->assertNull($this->product->deleted_at);
+    }
+
+    public function test_delete_order(): void
+    {
+        $createOrder = new CreateOrderAction();
+        $order = $createOrder->execute($this->user->getKey(), [$this->product->getKey() => 3], 'PlacetoPay');
+
+        $this->product->refresh();
+        $this->assertEquals(0, $this->product->stock);
+        $this->assertNotNull($this->product->deleted_at);
+
+        $rejectOrder = new DeleteOrderAction();
+        $rejectOrder->execute($order);
+
+        $this->product->refresh();
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertDatabaseCount('order_details', 0);
+        $this->assertEquals(3, $this->product->stock);
+        $this->assertNull($this->product->deleted_at);
+    }
+
     public function test_order_details_exists_even_product_was_deleted(): void
     {
         $action = new CreateOrderAction();
         $service = new CartsService();
 
         $cart = $service->getValidData($this->user->getKey());
-        $order = $action->execute($this->user->getKey(), $cart);
+        $order = $action->execute($this->user->getKey(), $cart, 'PlacetoPay');
 
         $this->product->forceDelete();
         $this->assertDatabaseCount('order_details', 1);
@@ -88,7 +149,7 @@ class OrderUnitTest extends TestCase
         $service = new CartsService();
 
         $cart = $service->getValidData($this->user->getKey());
-        $order = $action->execute($this->user->getKey(), $cart);
+        $order = $action->execute($this->user->getKey(), $cart, 'PlacetoPay');
 
         $order->delete();
         $this->assertDatabaseCount('orders', 0);
@@ -115,7 +176,7 @@ class OrderUnitTest extends TestCase
      */
     public function test_get_valid_cart_data_with_empty_cart(): void
     {
-        Redis::command('flushdb');
+        Cache::flush();
         $service = new CartsService();
 
         $this->expectException(CartException::class);

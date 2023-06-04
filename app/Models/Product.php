@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int      $id
@@ -18,9 +19,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string   $image
  * @property float    $price
  * @property int      $stock
+ * @property ?Carbon  $deleted_at
  *
  * @property Category $category
- * @property Brand    $brand *
+ * @property Brand    $brand
  *
  * @method static ProductQueryBuilder query()
  */

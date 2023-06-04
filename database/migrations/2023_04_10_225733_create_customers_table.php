@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('name', 255);
             $table->string('surname', 255);
             $table->enum('document_type', array_column(DocumentType::cases(), 'value'));
-            $table->string('document', 11)->unique();
+            $table->string('document', 10)->unique();
             $table->string('phone', 10)->nullable();
             $table->string('address', 255);
             $table->foreignIdFor(City::class);

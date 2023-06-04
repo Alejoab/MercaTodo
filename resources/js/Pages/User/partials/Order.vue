@@ -9,6 +9,10 @@ const props = defineProps({
 })
 
 const open = ref(false);
+
+const tryAgain = () => {
+    window.location.href = props.order.processUrl;
+}
 </script>
 
 
@@ -20,23 +24,28 @@ const open = ref(false);
             @click="open = !open"
         >
             <div class="absolute right-3 top-3">
-                <svg :class="{'rotate-180': open}" class="transition h-6 w-6 text-gray-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="6 9 12 15 18 9" /></svg>
+                <svg :class="{'rotate-180': open}" class="transition h-6 w-6 text-gray-500" fill="none" height="24"
+                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                     width="24">
+                    <path d="M0 0h24v24H0z" stroke="none"/>
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
             </div>
 
             <div class="flex space-x-28">
                 <div>
-                    <h1 class="font-bold">ORDER {{order.status.toUpperCase()}}</h1>
-                    {{new Date(order.created_at).toDateString()}}
+                    <h1 class="font-bold">ORDER {{ order.status.toUpperCase() }}</h1>
+                    {{ new Date(order.created_at).toDateString() }}
                 </div>
 
                 <div>
                     <h1 class="font-bold">TOTAL</h1>
-                    ${{order.total}}
+                    ${{ order.total }}
                 </div>
             </div>
 
             <div class="pt-2 pr-4">
-                    {{order.code}}
+                {{ order.code }}
             </div>
         </div>
 
@@ -64,8 +73,11 @@ const open = ref(false);
                     </div>
                 </div>
 
-                <div class="text-end mt-10" v-if="order.status === 'Rejected'">
-                    <button class="bg-yellow-400 rounded-lg px-5 py-1 font-semibold hover:bg-amber-400 active:bg-yellow-500 focus:outline-none transition ease-in-out duration-150 border border-transparent">
+                <div v-if="order.status === 'Pending'" class="text-end mt-10">
+                    <button
+                        class="bg-yellow-400 rounded-lg px-5 py-1 font-semibold hover:bg-amber-400 active:bg-yellow-500 focus:outline-none transition ease-in-out duration-150 border border-transparent"
+                        @click="tryAgain"
+                    >
                         RETRY PAYMENT
                     </button>
                 </div>

@@ -7,16 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int    $id
- * @property int    $order_id
- * @property ?int   $product_id
- * @property string $product_code
- * @property string $product_name
- * @property int    $quantity
- * @property float  $amount
- * @property float  $subtotal
+ * @property int      $id
+ * @property int      $order_id
+ * @property ?int     $product_id
+ * @property string   $product_code
+ * @property string   $product_name
+ * @property int      $quantity
+ * @property float    $amount
+ * @property float    $subtotal
  *
- * @property Order  $order
+ * @property Order    $order
+ * @property ?Product $product
  */
 class Order_detail extends Model
 {
@@ -36,5 +37,13 @@ class Order_detail extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        /**
+         * @phpstan-ignore-next-line
+         */
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }

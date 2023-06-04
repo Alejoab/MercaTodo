@@ -3,16 +3,16 @@
 namespace App\Actions\Carts;
 
 use App\Contracts\Actions\Carts\DeleteProductCart;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class DeleteProductCartAction implements DeleteProductCart
 {
 
     public function execute(int $userId, array $data): void
     {
-        Redis::command('hdel', [
-            'cart:'.$userId,
-            $data['product_id'],
-        ]);
+        $cart = Cache::get('cart:'.$userId) ?? [];
+
+        unset($cart[$data['product_id']]);
+        Cache::put('cart:'.$userId, $cart, now()->addWeek());
     }
 }

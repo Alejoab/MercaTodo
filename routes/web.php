@@ -5,9 +5,10 @@ use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Payments\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -42,14 +43,19 @@ Route::middleware([])->group(function () {
     Route::get('product-information/{product}', [ProductController::class, 'productInformation'])->withTrashed()->name('product.information');
     Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
     Route::get('departments', [CityController::class, 'departments'])->name('departments');
-    Route::get('cart-items-count', [OrderController::class, 'getNumberOfItems'])->name('cart.count');
+    Route::get('cart-items-count', [CartController::class, 'getNumberOfItems'])->name('cart.count');
 });
 
 Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('', [OrderController::class, 'index'])->name('cart');
-    Route::post('/add-product', [OrderController::class, 'addProductToCart'])->name('cart.add');
-    Route::delete('/delete-product', [OrderController::class, 'deleteProductToCart'])->name('cart.delete');
-    Route::post('/buy', [OrderController::class, 'createNewOrder'])->name('cart.buy');
+    Route::get('', [CartController::class, 'index'])->name('cart');
+    Route::post('/add-product', [CartController::class, 'addProductToCart'])->name('cart.add');
+    Route::delete('/delete-product', [CartController::class, 'deleteProductToCart'])->name('cart.delete');
+});
+
+Route::prefix('payment')->group(function () {
+    Route::post('/', [PaymentController::class, 'pay'])->name('cart.buy');
+    Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {

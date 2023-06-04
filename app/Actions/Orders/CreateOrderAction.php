@@ -4,12 +4,13 @@ namespace App\Actions\Orders;
 
 use App\Contracts\Actions\Orders\CreateOrder;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Models\Order;
 
 class CreateOrderAction implements CreateOrder
 {
 
-    public function execute(int $userId, array $cart): Order
+    public function execute(int $userId, array $cart, string $method): Order
     {
         $action = new CreateOrderDetailAction();
 
@@ -19,7 +20,8 @@ class CreateOrderAction implements CreateOrder
         $order = Order::query()->create([
             'code' => 'ORD-'.time(),
             'user_id' => $userId,
-            'status' => OrderStatus::IN_PROGRESS,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::tryFrom($method) ?? PaymentMethod::PLACE_TO_PAY,
         ]);
 
         $total = 0;

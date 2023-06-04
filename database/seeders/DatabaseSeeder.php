@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +18,6 @@ class DatabaseSeeder extends Seeder
          */
         Storage::disk('product_images')->deleteDirectory('') && Storage::disk('product_images')->makeDirectory('');
         Cache::flush();
-        Redis::command('flushdb');
 
         $this->call([
             DepartmentCitySeeder::class,

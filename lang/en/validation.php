@@ -168,6 +168,10 @@ return [
             'stock' => 'The product :product only has :stock items left in stock. Please remove some items from your cart.',
             'deleted' => 'One of your products was deleted from the store.',
         ],
+        'payment' => [
+            'session' => 'There was an error creating the payment session. Please contact support.',
+            'session_active' => 'You already have an active payment session. Please complete your payment or cancel it before creating a new one.',
+        ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
