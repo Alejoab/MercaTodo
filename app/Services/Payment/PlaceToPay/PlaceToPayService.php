@@ -11,6 +11,7 @@ use App\Exceptions\PaymentException;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -77,7 +78,7 @@ class PlaceToPayService implements Payments
         ];
     }
 
-    public function checkPayment(Request $request, Order $order): void
+    public function checkPayment(Order $order): void
     {
         $auth = new Auth();
 

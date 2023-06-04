@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Payments;
 
 use App\Contracts\Actions\Orders\CreateOrder;
+use App\Contracts\Actions\Orders\DeleteOrder;
 use App\Factories\PaymentFactory;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -41,7 +42,7 @@ class PaymentController extends Controller
 
         $paymentService = PaymentFactory::create($order->payment_method);
 
-        $paymentService->checkPayment($request, $order);
+        $paymentService->checkPayment($order);
 
         return Redirect::to(route('order.history'));
     }

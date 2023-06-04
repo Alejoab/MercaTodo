@@ -10,5 +10,5 @@ interface Payments
 {
     public function paymentProcess(Request $request): string;
 
-    public function checkPayment(Request $request, Order $order): void;
+    public function checkPayment(Order $order): void;
 }

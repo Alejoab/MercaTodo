@@ -12,4 +12,9 @@ class OrderQueryBuilder extends Builder
     {
         return $this->where('user_id', $userId)->where('status', OrderStatus::PENDING)->latest()->first();
     }
+
+    public function whereStatus(OrderStatus $status): self
+    {
+        return $this->where('status', $status);
+    }
 }
