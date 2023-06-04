@@ -46,5 +46,19 @@ class PaymentController extends Controller
         return Redirect::to(route('order.history'));
     }
 
+    public function cancel(Request $request, DeleteOrder $action): RedirectResponse
+    {
+        /**
+         * @var Order $order
+         */
+        $order = Order::query()->getLast($request->user()->getKey());
 
+        if (!$order) {
+            return Redirect::to(route('home'));
+        }
+
+        $action->execute($order);
+
+        return Redirect::to(route('home'));
+    }
 }
