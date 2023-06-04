@@ -2,12 +2,19 @@
 
 namespace Tests\Feature\Order;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\City;
+use App\Models\Customer;
+use App\Models\Department;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -16,6 +23,7 @@ class OrderTest extends TestCase
 
     private User $user;
     private Product $product;
+    private Customer $customer;
 
     public function setUp(): void
     {
@@ -23,19 +31,37 @@ class OrderTest extends TestCase
 
         Brand::factory()->create();
         Category::factory()->create();
+        Department::factory(1)->create();
+        City::factory(1)->create();
 
         $this->user = User::factory()->create();
+        $this->customer = Customer::factory()->create(['user_id' => $this->user->getKey()]);
         $this->product = Product::factory()->create([
             'name' => 'Product 1',
             'price' => 100,
             'stock' => 3,
         ]);
 
-        Redis::command('hset', ['cart:'.$this->user->getKey(), $this->product->getKey(), 3]);
+        Cache::put('cart:'.$this->user->getKey(), [$this->product->getKey() => 3]);
     }
 
-    public function test_buy_a_cart(): void
+    public function test_buy(): void
     {
+        Http::fake(
+            [
+                config('placetopay.url').'/api/session' => [
+                    "status" => [
+                        "status" => "OK",
+                        "reason" => "PC",
+                        "message" => "La petición se ha procesado correctamente",
+                        "date" => "2021-11-30T15:08:27-05:00",
+                    ],
+                    "requestId" => 1,
+                    "processUrl" => "https://test-route.com",
+                ],
+            ]
+        );
+
         $response = $this->actingAs($this->user)->post(route('cart.buy'));
 
         $response->assertOk();
@@ -45,7 +71,102 @@ class OrderTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'user_id' => $this->user->getKey(),
             'total' => 300,
+            'status' => 'Pending',
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
         ]);
+
+        $response->assertOk();
+        $response->assertContent('https://test-route.com');
+    }
+
+    public function test_accept_payment(): void
+    {
+        Http::fake(
+            [
+                config('placetopay.url')."/api/session/1" => [
+                    "requestId" => 1,
+                    "status" => [
+                        "status" => "APPROVED",
+                        "reason" => "00",
+                        "message" => "La petición ha sido aprobada exitosamente",
+                        "date" => "2022-07-27T14:51:27-05:00",
+                    ],
+                ],
+            ]
+        );
+
+
+        Order::query()->create([
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->get(route('payment.success'));
+        $response->assertRedirect(route('order.history'));
+
+        $this->assertDatabaseCount('orders', 1);
+        $this->assertDatabaseHas('orders', [
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::ACCEPTED,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+    }
+
+    public function test_cancel_payment(): void
+    {
+        Order::query()->create([
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->get(route('payment.cancel'));
+        $response->assertRedirect(route('home'));
+
+        $this->assertDatabaseCount('orders', 0);
+    }
+
+    public function test_try_buy_with_an_active_session(): void
+    {
+        Order::query()->create([
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('cart.buy'));
+        $response->assertStatus(400);
+        $response->assertJson(['error' => __('validation.custom.payment.session_active')]);
+    }
+
+    public function test_try_access_success_route_without_an_payment_active_session(): void
+    {
+        $response = $this->actingAs($this->user)->get(route('payment.success'));
+        $response->assertRedirect(route('home'));
+    }
+
+    public function test_try_access_cancel_route_without_an_payment_active_session(): void
+    {
+        $response = $this->actingAs($this->user)->get(route('payment.cancel'));
+        $response->assertRedirect(route('home'));
     }
 
     public function test_try_to_buy_a_cart_with_a_deleted_product(): void
@@ -58,7 +179,7 @@ class OrderTest extends TestCase
 
     public function test_try_to_buy_a_cart_with_empty_cart(): void
     {
-        Redis::command('flushdb');
+        Cache::flush();
         $response = $this->actingAs($this->user)->post(route('cart.buy'));
 
         $response->assertStatus(400);
