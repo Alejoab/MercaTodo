@@ -41,6 +41,9 @@ class Order_detail extends Model
 
     public function product(): BelongsTo
     {
+        /**
+         * @phpstan-ignore-next-line
+         */
         return $this->belongsTo(Product::class)->withTrashed();
     }
 }

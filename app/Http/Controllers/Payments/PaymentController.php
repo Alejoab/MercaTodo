@@ -32,7 +32,7 @@ class PaymentController extends Controller
     public function success(Request $request): RedirectResponse
     {
         /**
-         * @var Order $order
+         * @var ?Order $order
          */
         $order = Order::query()->getLast($request->user()->getKey());
 
@@ -50,7 +50,7 @@ class PaymentController extends Controller
     public function cancel(Request $request, DeleteOrder $action): RedirectResponse
     {
         /**
-         * @var Order $order
+         * @var ?Order $order
          */
         $order = Order::query()->getLast($request->user()->getKey());
 

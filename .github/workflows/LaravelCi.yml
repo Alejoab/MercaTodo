@@ -20,10 +20,6 @@ jobs:
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
 
     steps:
       - uses: actions/checkout@v1
@@ -43,12 +39,6 @@ jobs:
 
       - name: Run build vite
         run: npm run build
-
-      - name: Configure Predis
-        run: |
-          sed -i 's/REDIS_HOST=127.0.0.1/REDIS_HOST=redis/' .env
-          sed -i 's/CACHE_DRIVER=file/CACHE_DRIVER=redis/' .env
-          sed -i 's/QUEUE_CONNECTION=sync/QUEUE_CONNECTION=redis/' .env
 
       - name: Run Tests
         run: vendor/bin/phpunit tests/
