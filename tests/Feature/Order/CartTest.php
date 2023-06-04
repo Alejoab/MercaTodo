@@ -9,7 +9,7 @@ use App\Models\Department;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -58,7 +58,7 @@ class CartTest extends TestCase
 
         $response->assertOk();
 
-        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
+        $data = Cache::get('cart:'.$this->customer->id);
         $this->assertIsArray($data);
         $this->assertCount(1, $data);
         $this->assertEquals([
@@ -77,7 +77,7 @@ class CartTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
+        $data = Cache::get('cart:'.$this->customer->id);
         $this->assertCount(1, $data);
         $this->assertEquals([
             $product->id => 1,
@@ -88,7 +88,7 @@ class CartTest extends TestCase
             'quantity' => 5,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
+        $data = Cache::get('cart:'.$this->customer->id);
         $this->assertCount(1, $data);
         $this->assertEquals([
             $product->id => 5,
@@ -105,14 +105,14 @@ class CartTest extends TestCase
             'product_id' => $product->id,
             'quantity' => 1,
         ]);
-        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
+        $data = Cache::get('cart:'.$this->customer->id);
         $this->assertCount(1, $data);
 
         $this->actingAs($this->customer)->delete(route('cart.delete'), [
             'product_id' => $product->id,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:'.$this->customer->id]);
+        $data = Cache::get('cart:'.$this->customer->id);
         $this->assertCount(0, $data);
     }
 

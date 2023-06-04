@@ -2,24 +2,26 @@
 
 namespace App\Services\Carts;
 
+use App\Actions\Carts\DeleteProductCartAction;
 use App\Exceptions\CartEmptyException;
 use App\Exceptions\CartException;
 use App\Exceptions\CartInvalidStockException;
 use App\Models\Product;
 use Exception;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class CartsService
 {
     public function getCartWithProducts(int $userId): array
     {
-        $cart = Redis::command('hgetall', ['cart:'.$userId]) ?? [];
+        $action = new DeleteProductCartAction();
+        $cart = Cache::get('cart:'.$userId) ?? [];
         $products = [];
 
         foreach ($cart as $productId => $quantity) {
             $product = Product::query()->find($productId);
             if (!$product) {
-                Redis::command('hdel', ['cart:'.$userId, $productId]);
+                $action->execute($userId, ['product_id' => $productId]);
                 continue;
             }
 
@@ -33,7 +35,7 @@ class CartsService
 
     public function getNumberOfItems(int $userId): int
     {
-        return Redis::command('hlen', ['cart:'.$userId]);
+        return count(Cache::get('cart:'.$userId));
     }
 
     /**

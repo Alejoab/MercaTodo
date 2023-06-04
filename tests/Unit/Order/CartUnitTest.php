@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\Carts\CartsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class CartUnitTest extends TestCase
@@ -25,7 +25,7 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
@@ -39,7 +39,7 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(2, $data);
         $this->assertEquals(
             [
@@ -59,7 +59,7 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
@@ -73,7 +73,7 @@ class CartUnitTest extends TestCase
             'quantity' => 2,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
@@ -97,13 +97,13 @@ class CartUnitTest extends TestCase
             'quantity' => 1,
         ]);
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(2, $data);
 
         $action = new DeleteProductCartAction();
         $action->execute(1, ['product_id' => 2,]);
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(1, $data);
         $this->assertEquals(
             [
@@ -159,7 +159,7 @@ class CartUnitTest extends TestCase
         ]);
         $product2->delete();
 
-        $data = Redis::command('hgetall', ['cart:1']);
+        $data = Cache::get('cart:1');
         $this->assertCount(2, $data);
 
         $data = $service->getCartWithProducts(1);
