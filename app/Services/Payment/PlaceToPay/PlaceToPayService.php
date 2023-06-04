@@ -58,6 +58,24 @@ class PlaceToPayService implements Payments
         }
     }
 
+    private function createPaymentSession(User $user, Order $order, string $ipAddress, string $userAgent): array
+    {
+        $auth = new Auth();
+        $buyer = new Buyer($user);
+        $payment = new OrderToPayment($order);
+
+        return [
+            'locale' => 'en_CO',
+            'auth' => $auth->getAuth(),
+            'buyer' => $buyer->getBuyer(),
+            'payment' => $payment->getPayment(),
+            'expiration' => Carbon::now()->addMinutes(6),
+            'returnUrl' => route('payment.success'),
+            'cancelUrl' => route('payment.cancel'),
+            'ipAddress' => $ipAddress,
+            'userAgent' => $userAgent,
+        ];
+    }
 
     public function checkPayment(Request $request, Order $order): void
     {

@@ -52,4 +52,9 @@ class Order extends Model
     {
         return $this->hasMany(Order_detail::class);
     }
+
+    public function newEloquentBuilder($query): OrderQueryBuilder
+    {
+        return new OrderQueryBuilder($query);
+    }
 }

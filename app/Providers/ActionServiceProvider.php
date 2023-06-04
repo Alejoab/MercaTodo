@@ -6,8 +6,11 @@ use App\Actions\Carts\AddProductCartAction;
 use App\Actions\Carts\DeleteProductCartAction;
 use App\Actions\Customers\CreateCustomerAction;
 use App\Actions\Customers\UpdateCustomerAction;
+use App\Actions\Orders\AcceptOrderAction;
 use App\Actions\Orders\CreateOrderAction;
 use App\Actions\Orders\CreateOrderDetailAction;
+use App\Actions\Orders\RejectOrderAction;
+use App\Actions\Orders\UpdateOrderAction;
 use App\Actions\Products\CreateProductAction;
 use App\Actions\Products\DeleteProductAction;
 use App\Actions\Products\ForceDeleteProductAction;
@@ -66,5 +69,8 @@ class ActionServiceProvider extends ServiceProvider
 
             CreateOrder::class => CreateOrderAction::class,
             CreateOrderDetail::class => CreateOrderDetailAction::class,
+            AcceptOrder::class => AcceptOrderAction::class,
+            RejectOrder::class => RejectOrderAction::class,
+            UpdateOrder::class => UpdateOrderAction::class,
         ];
 }
