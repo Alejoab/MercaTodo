@@ -23,13 +23,13 @@ class CustomerRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
 
             'surname' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
 
             'email' => [
@@ -37,42 +37,42 @@ class CustomerRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique(User::class)
+                Rule::unique(User::class),
             ],
 
             'document_type' => [
                 'required',
-                new Enum(DocumentType::class)
+                new Enum(DocumentType::class),
             ],
 
             'document' => [
                 'required',
-                'digits_between:8,11',
-                Rule::unique(Customer::class)
+                'digits_between:7,10',
+                Rule::unique(Customer::class),
             ],
 
             'phone' => [
                 'nullable',
                 'string',
-                'digits:10'
+                'digits:10',
             ],
 
             'city_id' => [
                 'required',
-                Rule::exists('cities', 'id')
+                Rule::exists('cities', 'id'),
             ],
 
             'address' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
             ],
 
             'password' => [
                 'required',
                 'confirmed',
-                Password::defaults()
-            ]
+                Password::defaults(),
+            ],
         ];
     }
 }

@@ -43,7 +43,7 @@ class ProfileTest extends TestCase
             ->put('/profile', [
                 'name' => 'Test User',
                 'surname' => 'Test Surname',
-                'document_type' => DocumentType::ID->value,
+                'document_type' => DocumentType::CC->value,
                 'document' => '12345678',
                 'email' => 'test@example.com',
                 'address' => 'Test Address',
@@ -74,8 +74,8 @@ class ProfileTest extends TestCase
             ->put('/profile', [
                 'name' => 'Test User',
                 'surname' => 'Test Surname',
-                'document_type' => DocumentType::ID->value,
-                'document' => '12345678',
+                'document_type' => DocumentType::CC->value,
+                'document' => '1234111111',
                 'email' => $user->email,
                 'address' => 'Test Address',
                 'city_id' => City::query()->first()->id,

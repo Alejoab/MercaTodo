@@ -47,7 +47,7 @@ class CustomerUpdateRequest extends FormRequest
 
             'document' => [
                 'required',
-                'digits_between:8,11',
+                'digits_between:7,10',
                 Rule::unique(Customer::class)->ignore(
                     $user->customer->id,
                 ),
