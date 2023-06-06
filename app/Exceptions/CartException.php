@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Http\Response;
 
-class CartException extends Exception
+class CartException extends CustomException
 {
     public static function empty(): self
     {
@@ -20,13 +20,5 @@ class CartException extends Exception
     public static function deletedProduct(): self
     {
         return new self(__('validation.custom.cart.deleted'));
-    }
-
-    public function render(): Response
-    {
-        $status = 400;
-        $message = $this->getMessage();
-
-        return response(['error' => $message,], $status);
     }
 }

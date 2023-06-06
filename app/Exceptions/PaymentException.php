@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Http\Response;
 
-class PaymentException extends Exception
+class PaymentException extends CustomException
 {
     public static function authError(): self
     {
@@ -20,13 +20,5 @@ class PaymentException extends Exception
     public static function sessionActive(): self
     {
         return new self(__('validation.custom.payment.session_active'));
-    }
-
-    public function render(): Response
-    {
-        $status = 400;
-        $message = $this->getMessage();
-
-        return response(['error' => $message,], $status);
     }
 }
