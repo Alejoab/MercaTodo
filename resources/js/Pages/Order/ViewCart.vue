@@ -63,6 +63,7 @@ const buyCart = () => {
                     Proceed to checkout
                 </button>
                 <InputError :message="form.errors.paymentMethod" class="mt-4 ml-6"></InputError>
+                <InputError :message="form.errors.app" class="mt-2"/>
             </div>
         </div>
 
