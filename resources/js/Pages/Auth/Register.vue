@@ -235,7 +235,7 @@ getDepartments();
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-end mt-4 justify-between">
                 <Link
                     :href="route('login')"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -247,6 +247,7 @@ getDepartments();
                     Register
                 </PrimaryButton>
             </div>
+                <InputError class="mt-5" :message="form.errors.app" />
         </form>
     </GuestLayout>
 </template>

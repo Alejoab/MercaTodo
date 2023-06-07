@@ -1,5 +1,5 @@
 <script setup>
-import {Head} from "@inertiajs/vue3";
+import {Head, useForm} from "@inertiajs/vue3";
 import UserLayout from "@/Layouts/UserLayout.vue";
 import {ref} from "vue";
 import ProductCart from "@/Pages/Order/Partials/ProductCart.vue";
@@ -13,8 +13,11 @@ const props = defineProps({
     }
 });
 
+const form = useForm({
+    paymentMethod: 'PlaceToPay',
+})
+
 const subtotal = ref(props.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0));
-const error = ref('');
 const processing = ref(false);
 
 const deleteProduct = (id) => {
@@ -27,11 +30,10 @@ const updateProduct = (id) => {
 
 const buyCart = () => {
     processing.value = true;
-    axios.post(route('cart.buy')).then(response => {
-        window.location.href = response.data;
-    }).catch(response => {
-        error.value = response.response.data.error;
-        processing.value = false;
+    form.post(route('cart.buy'), {
+        onFinish: () => {
+            processing.value = false;
+        },
     });
 }
 </script>
@@ -60,7 +62,7 @@ const buyCart = () => {
                         @click="buyCart">
                     Proceed to checkout
                 </button>
-                <InputError :message="error" class="mt-4 ml-6"></InputError>
+                <InputError :message="form.errors.paymentMethod" class="mt-4 ml-6"></InputError>
             </div>
         </div>
 

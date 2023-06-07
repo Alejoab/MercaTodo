@@ -81,13 +81,13 @@ const showingNavigationDropdown = ref(false);
                             <div class="whitespace-nowrap">
                                 <Link
                                     :href="route('login')"
-                                    class="font-semibold text-gray-400 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                                    class="font-semibold text-gray-400 hover:text-gray-900"
                                 >Log in
                                 </Link>
 
                                 <Link
                                     :href="route('register')"
-                                    class="ml-4 font-semibold text-gray-400 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
+                                    class="ml-4 font-semibold text-gray-400 hover:text-gray-900"
                                 >Register
                                 </Link
                                 >

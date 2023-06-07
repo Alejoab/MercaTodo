@@ -25,16 +25,16 @@ const showingNavigationDropdown = ref(false);
 
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <div class="ml-3 relative">
-                        <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right">
+                        <div class="sm:top-0 sm:right-0 p-6 text-right">
                             <Link
                                 :href="route('login')"
-                                class="font-semibold text-gray-400 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-indigo-100"
+                                class="font-semibold text-gray-400 hover:text-gray-900"
                             >Log in
                             </Link>
 
                             <Link
                                 :href="route('register')"
-                                class="ml-4 font-semibold text-gray-400 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-indigo-100"
+                                class="ml-4 font-semibold text-gray-400 hover:text-gray-900"
                             >Register
                             </Link
                             >
