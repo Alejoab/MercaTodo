@@ -20,7 +20,7 @@ class CreateUserAction implements CreateUser
     {
         try {
             /** @var User $user */
-            $user = User::query()->create([
+            $user = Uer::query()->create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
             ]);

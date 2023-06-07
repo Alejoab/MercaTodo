@@ -35,7 +35,7 @@ class DeleteOrderAction implements DeleteOrder
             }
             $order->forceDelete();
         } catch (Throwable $e) {
-            Log::warning("[ERROR] [ORDER-NO-DELETED] orderId $order->id");
+            Log::error("[ERROR] [ORDER-NO-DELETED]", ['orderId' => $order->id]);
             throw new ApplicationException($e);
         }
     }

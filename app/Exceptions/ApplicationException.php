@@ -13,13 +13,12 @@ class ApplicationException extends Exception
     {
         parent::__construct("The application is not working properly. Please contact with support.");
 
-        Log::error(
-            "
-        [ERROR] Message: {$e->getMessage()}
-        File: {$e->getFile()}
-        Line: {$e->getLine()}
-        Trace: {$e->getTraceAsString()}
-        "
+        Log::error("[ERROR]", [
+                'Message' => $e->getMessage(),
+                'File' => $e->getFile(),
+                'Line' => $e->getLine(),
+                'Trace' => $e->getTraceAsString(),
+            ]
         );
     }
 

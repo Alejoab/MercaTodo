@@ -37,7 +37,7 @@ class RejectOrderAction implements RejectOrder
                 $order_detail->product->save();
             }
         } catch (Throwable $e) {
-            Log::warning("[ERROR] [ORDER-NO-REJECTED] orderId $order->id");
+            Log::error("[ERROR] [ORDER-NO-REJECTED]", ['orderId' => $order->id,]);
             throw new ApplicationException($e);
         }
     }

@@ -20,8 +20,10 @@ class AcceptOrderAction implements AcceptOrder
         try {
             $order->status = OrderStatus::ACCEPTED;
             $order->save();
+
+            Log::info("[ORDER-ACCEPTED]", ['orderId' => $order->id,]);
         } catch (Throwable $e) {
-            Log::warning("[ERROR] [ORDER-NO-APPROVED] orderId $order->id");
+            Log::error("[ERROR] [ORDER-NO-APPROVED]", ['orderId' => $order->id,]);
             throw new ApplicationException($e);
         }
     }

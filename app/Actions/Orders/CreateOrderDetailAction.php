@@ -6,6 +6,7 @@ use App\Contracts\Actions\Orders\CreateOrderDetail;
 use App\Exceptions\ApplicationException;
 use App\Models\Order_detail;
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class CreateOrderDetailAction implements CreateOrderDetail
@@ -37,6 +38,7 @@ class CreateOrderDetailAction implements CreateOrderDetail
             $product->save();
             if ($product->stock === 0) {
                 $product->delete();
+                Log::info("[PRODUCT-NO-STOCK]", ['productID' => $product->id,]);
             }
 
             return $oderDetail;
