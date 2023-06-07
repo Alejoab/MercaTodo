@@ -62,9 +62,11 @@ class OrderTest extends TestCase
             ]
         );
 
-        $response = $this->actingAs($this->user)->post(route('cart.buy'));
+        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
 
-        $response->assertOk();
+        $response->assertRedirect("https://test-route.com");
         $this->assertDatabaseCount('orders', 1);
         $this->assertDatabaseCount('order_details', 1);
 
@@ -75,9 +77,6 @@ class OrderTest extends TestCase
             'requestId' => 1,
             'processUrl' => 'https://test-route.com',
         ]);
-
-        $response->assertOk();
-        $response->assertContent('https://test-route.com');
     }
 
     public function test_accept_payment(): void
@@ -152,9 +151,11 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('cart.buy'));
-        $response->assertStatus(400);
-        $response->assertJson(['error' => __('validation.custom.payment.session_active')]);
+        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
+
+        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.payment.session_active')]);
     }
 
     public function test_try_access_success_route_without_an_payment_active_session(): void
@@ -172,25 +173,31 @@ class OrderTest extends TestCase
     public function test_try_to_buy_a_cart_with_a_deleted_product(): void
     {
         $this->product->forceDelete();
-        $response = $this->actingAs($this->user)->post(route('cart.buy'));
+        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
 
-        $response->assertStatus(400);
+        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.cart.deleted')]);
     }
 
     public function test_try_to_buy_a_cart_with_empty_cart(): void
     {
         Cache::flush();
-        $response = $this->actingAs($this->user)->post(route('cart.buy'));
+        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
 
-        $response->assertStatus(400);
+        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.cart.empty')]);
     }
 
     public function test_try_to_buy_a_cart_with_an_invalid_quantity(): void
     {
         $this->product->stock = 2;
         $this->product->save();
-        $response = $this->actingAs($this->user)->post(route('cart.buy'));
+        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
 
-        $response->assertStatus(400);
+        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.cart.stock', ['product' => $this->product->name, 'stock' => $this->product->stock])]);
     }
 }
