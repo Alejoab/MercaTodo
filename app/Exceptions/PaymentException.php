@@ -2,9 +2,6 @@
 
 namespace App\Exceptions;
 
-use Exception;
-use Illuminate\Http\Response;
-
 class PaymentException extends CustomException
 {
     public static function authError(): self

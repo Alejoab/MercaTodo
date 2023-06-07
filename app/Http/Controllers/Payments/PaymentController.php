@@ -6,27 +6,30 @@ use App\Contracts\Actions\Orders\CreateOrder;
 use App\Contracts\Actions\Orders\DeleteOrder;
 use App\Factories\PaymentFactory;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PayRequest;
 use App\Models\Order;
 use App\Services\Carts\CartsService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends Controller
 {
     /**
      * @throws Exception
      */
-    public function pay(Request $request, CreateOrder $orderAction, CartsService $cartService): string
+    public function pay(PayRequest $request, CreateOrder $orderAction, CartsService $cartService): Response
     {
         $userId = $request->user()->id;
         $cart = $cartService->getValidData($userId);
 
-        $order = $orderAction->execute($userId, $cart, 'PlaceToPay');
+        $order = $orderAction->execute($userId, $cart, $request->validated(['paymentMethod']));
         $paymentService = PaymentFactory::create($order->payment_method);
 
-        return $paymentService->paymentProcess($request);
+        return Inertia::location($paymentService->paymentProcess($request));
     }
 
     public function success(Request $request): RedirectResponse

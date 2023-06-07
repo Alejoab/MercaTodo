@@ -47,7 +47,7 @@ class PlaceToPayService implements Payments
 
             Cache::forget('cart:'.$request->user()->getKey());
 
-            return $result->json()['processUrl'];
+            return $order->processUrl;
         } else {
             $action = new DeleteOrderAction();
             $action->execute($order);

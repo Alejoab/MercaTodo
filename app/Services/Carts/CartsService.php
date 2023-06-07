@@ -35,7 +35,7 @@ class CartsService
 
     public function getNumberOfItems(int $userId): int
     {
-        return count(Cache::get('cart:'.$userId));
+        return count(Cache::get('cart:'.$userId) ?? []);
     }
 
     /**
