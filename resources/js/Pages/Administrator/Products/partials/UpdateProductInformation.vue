@@ -273,6 +273,7 @@ const isNumber = (evt) => {
                     <Transition class="transition ease-in-out" enter-from-class="opacity-0" leave-to-class="opacity-0">
                         <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
                     </Transition>
+                    <InputError :message="form.errors.app" class="mt-2"/>
                 </div>
             </div>
         </form>
