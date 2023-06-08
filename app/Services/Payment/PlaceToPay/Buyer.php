@@ -22,6 +22,16 @@ class Buyer
             'document' => $this->user->customer->document,
             'documentType' => $this->user->customer->document_type,
             'mobile' => '+57'.$this->user->customer->phone,
+            'address' => $this->getAddress(),
+        ];
+    }
+
+    private function getAddress(): array
+    {
+        return [
+            'street' => $this->user->customer->address,
+            'city' => $this->user->customer->city->name,
+            'country' => $this->user->customer->city->department->name,
         ];
     }
 }

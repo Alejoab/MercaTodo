@@ -63,6 +63,6 @@ class PaymentController extends Controller
 
         $action->execute($order);
 
-        return Inertia::render('Order/CancelPayment');
+        return Inertia::render('Order/CancelOrder');
     }
 }
