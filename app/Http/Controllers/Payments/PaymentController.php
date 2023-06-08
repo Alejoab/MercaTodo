@@ -14,14 +14,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Symfony\Component\HttpFoundation\Response;
+use Inertia\Response;
 
 class PaymentController extends Controller
 {
     /**
      * @throws Exception
      */
-    public function pay(PayRequest $request, CreateOrder $orderAction, CartsService $cartService): Response
+    public function pay(PayRequest $request, CreateOrder $orderAction, CartsService $cartService): \Symfony\Component\HttpFoundation\Response
     {
         $userId = $request->user()->id;
         $cart = $cartService->getValidData($userId);
@@ -50,7 +50,7 @@ class PaymentController extends Controller
         return Redirect::to(route('order.history'));
     }
 
-    public function cancel(Request $request, DeleteOrder $action): RedirectResponse
+    public function cancel(Request $request, DeleteOrder $action): Response|RedirectResponse
     {
         /**
          * @var ?Order $order
@@ -63,6 +63,6 @@ class PaymentController extends Controller
 
         $action->execute($order);
 
-        return Redirect::to(route('home'));
+        return Inertia::render('Order/CancelPayment');
     }
 }
