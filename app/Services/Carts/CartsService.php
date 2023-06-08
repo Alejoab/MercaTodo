@@ -3,9 +3,7 @@
 namespace App\Services\Carts;
 
 use App\Actions\Carts\DeleteProductCartAction;
-use App\Exceptions\CartEmptyException;
 use App\Exceptions\CartException;
-use App\Exceptions\CartInvalidStockException;
 use App\Exceptions\PaymentException;
 use App\Models\Order;
 use App\Models\Product;
@@ -37,7 +35,7 @@ class CartsService
 
     public function getNumberOfItems(int $userId): int
     {
-        return count(Cache::get('cart:'.$userId));
+        return count(Cache::get('cart:'.$userId) ?? []);
     }
 
     /**

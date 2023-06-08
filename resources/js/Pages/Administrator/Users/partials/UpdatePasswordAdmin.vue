@@ -93,6 +93,7 @@ const generatePassword = () => {
                     <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
                 </Transition>
             </div>
+            <InputError class="mt-2" :message="form.errors.app" />
         </div>
     </section>
 </template>

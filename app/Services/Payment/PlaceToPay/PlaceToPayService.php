@@ -7,6 +7,7 @@ use App\Actions\Orders\DeleteOrderAction;
 use App\Actions\Orders\RejectOrderAction;
 use App\Actions\Orders\UpdateOrderAction;
 use App\Contracts\Payments\Payments;
+use App\Exceptions\ApplicationException;
 use App\Exceptions\PaymentException;
 use App\Models\Order;
 use App\Models\User;
@@ -14,11 +15,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Throwable;
 
 class PlaceToPayService implements Payments
 {
     /**
      * @throws PaymentException
+     * @throws ApplicationException
      */
     public function paymentProcess(Request $request): string
     {
@@ -26,13 +29,19 @@ class PlaceToPayService implements Payments
          * @var Order $order
          */
         $order = Order::query()->getLast($request->user()->getKey());
-
         /**
          * @var User $user
          */
         $user = User::query()->find($request->user()->getKey());
 
-        $paymentSession = $this->createPaymentSession($user, $order, $request->ip(), $request->userAgent());
+        try {
+            $paymentSession = $this->createPaymentSession($user, $order, $request->ip(), $request->userAgent());
+        } catch (Throwable $e) {
+            $action = new DeleteOrderAction();
+            $action->execute($order);
+            throw new ApplicationException($e);
+        }
+
         $result = Http::post(config('placetopay.url').'/api/session', $paymentSession);
 
         if ($result->ok()) {
@@ -47,7 +56,7 @@ class PlaceToPayService implements Payments
 
             Cache::forget('cart:'.$request->user()->getKey());
 
-            return $result->json()['processUrl'];
+            return $order->processUrl;
         } else {
             $action = new DeleteOrderAction();
             $action->execute($order);
@@ -55,6 +64,7 @@ class PlaceToPayService implements Payments
             if ($result->json()['status']['reason'] === 401) {
                 throw PaymentException::authError();
             }
+
             throw PaymentException::sessionError($result->json()['status']['message']);
         }
     }
@@ -78,6 +88,9 @@ class PlaceToPayService implements Payments
         ];
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public function checkPayment(Order $order): void
     {
         $auth = new Auth();
@@ -91,6 +104,9 @@ class PlaceToPayService implements Payments
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
     private function paymentStatus(Order $order, string $status): void
     {
         switch ($status) {

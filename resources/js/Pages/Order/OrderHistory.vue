@@ -1,7 +1,7 @@
 <script setup>
 import {Head} from "@inertiajs/vue3";
 import UserLayout from "@/Layouts/UserLayout.vue";
-import Order from "@/Pages/User/partials/Order.vue";
+import Order from "@/Pages/Order/Partials/Order.vue";
 
 const props = defineProps({
     orders: {
