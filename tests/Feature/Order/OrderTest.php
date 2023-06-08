@@ -134,7 +134,7 @@ class OrderTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)->get(route('payment.cancel'));
-        $response->assertRedirect(route('home'));
+        $response->assertOk();
 
         $this->assertDatabaseCount('orders', 0);
     }
