@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\Orders\AcceptOrderAction;
+use App\Actions\Orders\RejectOrderAction;
 use App\Enums\OrderStatus;
+use App\Exceptions\ApplicationException;
 use App\Factories\PaymentFactory;
 use App\Models\Order;
 use Illuminate\Console\Command;
@@ -23,9 +26,6 @@ class checkPaymentSession extends Command
      */
     protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(): void
     {
         $orders = Order::query()->whereStatus(OrderStatus::PENDING)->get();
@@ -35,7 +35,24 @@ class checkPaymentSession extends Command
          */
         foreach ($orders as $order) {
             $paymentService = PaymentFactory::create($order->payment_method);
-            $paymentService->checkPayment($order);
+            $status = $paymentService->checkPayment($order);
+
+            try {
+                switch ($status) {
+                    case OrderStatus::ACCEPTED:
+                        $action = new AcceptOrderAction();
+                        $action->execute($order);
+                        break;
+                    case OrderStatus::REJECTED:
+                        $action = new RejectOrderAction();
+                        $action->execute($order);
+                        break;
+                    default:
+                        break;
+                }
+            } catch (ApplicationException) {
+                return;
+            }
         }
     }
 }

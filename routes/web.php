@@ -52,7 +52,7 @@ Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('/delete-product', [CartController::class, 'deleteProductToCart'])->name('cart.delete');
 });
 
-Route::prefix('payment')->group(function () {
+Route::prefix('payment')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/', [PaymentController::class, 'pay'])->name('cart.buy');
     Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');

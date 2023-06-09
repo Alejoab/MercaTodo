@@ -2,12 +2,11 @@
 
 namespace App\Services\Payment\PlaceToPay;
 
-use App\Actions\Orders\AcceptOrderAction;
-use App\Actions\Orders\DeleteOrderAction;
-use App\Actions\Orders\RejectOrderAction;
 use App\Actions\Orders\UpdateOrderAction;
 use App\Contracts\Payments\Payments;
+use App\Enums\OrderStatus;
 use App\Exceptions\ApplicationException;
+use App\Exceptions\CustomException;
 use App\Exceptions\PaymentException;
 use App\Models\Order;
 use App\Models\User;
@@ -20,52 +19,39 @@ use Throwable;
 class PlaceToPayService implements Payments
 {
     /**
-     * @throws PaymentException
      * @throws ApplicationException
+     * @throws CustomException
      */
-    public function paymentProcess(Request $request): string
+    public function paymentProcess(Request $request, User $user, Order $order): string
     {
-        /**
-         * @var Order $order
-         */
-        $order = Order::query()->getLast($request->user()->getKey());
-        /**
-         * @var User $user
-         */
-        $user = User::query()->find($request->user()->getKey());
-
         try {
             $paymentSession = $this->createPaymentSession($user, $order, $request->ip(), $request->userAgent());
-        } catch (Throwable $e) {
-            $action = new DeleteOrderAction();
-            $action->execute($order);
-            throw new ApplicationException($e);
-        }
+            $result = Http::post(config('placetopay.url').'/api/session', $paymentSession);
 
-        $result = Http::post(config('placetopay.url').'/api/session', $paymentSession);
+            if ($result->ok()) {
+                $action = new UpdateOrderAction();
 
-        if ($result->ok()) {
-            $action = new UpdateOrderAction();
+                $data = [
+                    'requestId' => $result->json()['requestId'],
+                    'processUrl' => $result->json()['processUrl'],
+                ];
 
-            $data = [
-                'requestId' => $result->json()['requestId'],
-                'processUrl' => $result->json()['processUrl'],
-            ];
+                $action->execute($order, $data);
 
-            $action->execute($order, $data);
+                Cache::forget('cart:'.$request->user()->getKey());
 
-            Cache::forget('cart:'.$request->user()->getKey());
+                return $order->processUrl;
+            } else {
+                if ($result->json()['status']['reason'] === 401) {
+                    throw PaymentException::authError();
+                }
 
-            return $order->processUrl;
-        } else {
-            $action = new DeleteOrderAction();
-            $action->execute($order);
-
-            if ($result->json()['status']['reason'] === 401) {
-                throw PaymentException::authError();
+                throw PaymentException::sessionError($result->json()['status']['message']);
             }
-
-            throw PaymentException::sessionError($result->json()['status']['message']);
+        } catch (CustomException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new ApplicationException($e);
         }
     }
 
@@ -88,10 +74,7 @@ class PlaceToPayService implements Payments
         ];
     }
 
-    /**
-     * @throws ApplicationException
-     */
-    public function checkPayment(Order $order): void
+    public function checkPayment(Order $order): OrderStatus
     {
         $auth = new Auth();
 
@@ -100,26 +83,18 @@ class PlaceToPayService implements Payments
         ]);
 
         if ($result->ok()) {
-            $this->paymentStatus($order, $result->json()['status']['status']);
+            return $this->paymentStatus($result->json()['status']['status']);
+        } else {
+            return OrderStatus::PENDING;
         }
     }
 
-    /**
-     * @throws ApplicationException
-     */
-    private function paymentStatus(Order $order, string $status): void
+    private function paymentStatus(string $status): OrderStatus
     {
-        switch ($status) {
-            case 'APPROVED':
-                $action = new AcceptOrderAction();
-                $action->execute($order);
-                break;
-            case 'REJECTED':
-                $action = new RejectOrderAction();
-                $action->execute($order);
-                break;
-            case 'PENDING':
-                break;
-        }
+        return match ($status) {
+            'APPROVED' => OrderStatus::ACCEPTED,
+            'REJECTED' => OrderStatus::REJECTED,
+            default => OrderStatus::PENDING,
+        };
     }
 }
