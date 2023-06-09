@@ -80,7 +80,7 @@ class PlaceToPayService implements Payments
             'auth' => $auth->getAuth(),
             'buyer' => $buyer->getBuyer(),
             'payment' => $payment->getPayment(),
-            'expiration' => Carbon::now()->addMinutes(6),
+            'expiration' => Carbon::now()->addMinutes(config('placetopay.expirationLink')),
             'returnUrl' => route('payment.success'),
             'cancelUrl' => route('payment.cancel'),
             'ipAddress' => $ipAddress,
