@@ -74,7 +74,7 @@ class ProfileController extends Controller
 
     public function orderHistory(Request $request): Response
     {
-        return Inertia::render('User/OrderHistory', [
+        return Inertia::render('Order/OrderHistory', [
             'orders' => $request->user()->load('order.order_detail'),
         ]);
     }
