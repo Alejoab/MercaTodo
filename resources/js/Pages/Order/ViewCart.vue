@@ -31,7 +31,7 @@ const updateProduct = (id) => {
 const buyCart = () => {
     processing.value = true;
     form.post(route('cart.buy'), {
-        onFinish: () => {
+        onError: () => {
             processing.value = false;
         },
     });

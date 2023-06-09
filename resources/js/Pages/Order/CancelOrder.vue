@@ -1,8 +1,10 @@
 <script setup>
 
+import {Head} from "@inertiajs/vue3";
 </script>
 
 <template>
+    <Head><title>Cancel Order</title></Head>
     <div class="min-h-screen bg-gray-100">
         <div class="min-h-screen px-10 sm:px-20 flex justify-center flex-col text-gray-700">
             <div class="flex flex-row">

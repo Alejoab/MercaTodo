@@ -32,7 +32,7 @@ class PaymentController extends Controller
         return Inertia::location($paymentService->paymentProcess($request));
     }
 
-    public function success(Request $request): RedirectResponse
+    public function success(Request $request): Response|RedirectResponse
     {
         /**
          * @var ?Order $order
@@ -47,7 +47,9 @@ class PaymentController extends Controller
 
         $paymentService->checkPayment($order);
 
-        return Redirect::to(route('order.history'));
+        return Inertia::render('Order/SuccessOrder', [
+            'status' => $order->status,
+        ]);
     }
 
     public function cancel(Request $request, DeleteOrder $action): Response|RedirectResponse
