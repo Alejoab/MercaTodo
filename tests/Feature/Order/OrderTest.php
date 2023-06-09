@@ -107,7 +107,7 @@ class OrderTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)->get(route('payment.success'));
-        $response->assertRedirect(route('order.history'));
+        $response->assertOk();
 
         $this->assertDatabaseCount('orders', 1);
         $this->assertDatabaseHas('orders', [

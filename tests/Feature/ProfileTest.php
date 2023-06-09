@@ -124,4 +124,12 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_order_history_page_is_displayed(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('order.history'));
+        $response->assertOk();
+    }
 }
