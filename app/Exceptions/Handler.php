@@ -22,7 +22,8 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+        CustomException::class,
+        ApplicationException::class,
     ];
 
     /**

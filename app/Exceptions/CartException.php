@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
-use Exception;
-use Illuminate\Http\Response;
-
 class CartException extends CustomException
 {
+
+    public function __construct(string $message)
+    {
+        parent::__construct($message);
+        $this->sessionErrorName = 'payment';
+    }
+
     public static function empty(): self
     {
         return new self(__('validation.custom.cart.empty'));

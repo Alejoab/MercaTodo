@@ -4,6 +4,13 @@ namespace App\Exceptions;
 
 class PaymentException extends CustomException
 {
+
+    public function __construct(string $message)
+    {
+        parent::__construct($message);
+        $this->sessionErrorName = 'payment';
+    }
+
     public static function authError(): self
     {
         return new self(__('validation.custom.payment.session'));

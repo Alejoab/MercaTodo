@@ -7,8 +7,10 @@ use Illuminate\Http\RedirectResponse;
 
 class CustomException extends Exception
 {
+    protected string $sessionErrorName;
+
     public function render(): RedirectResponse
     {
-        return redirect()->back()->withErrors(['paymentMethod' => $this->getMessage()]);
+        return redirect()->back()->withErrors([$this->sessionErrorName => $this->getMessage()]);
     }
 }
