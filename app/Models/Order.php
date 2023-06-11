@@ -20,6 +20,7 @@ use Illuminate\Support\Collection;
  * @property PaymentMethod $payment_method
  * @property ?int          $requestId
  * @property ?string       $processUrl
+ * @property boolean       $active
  * @property Carbon        $created_at
  * @property Carbon        $updated_at
  *
@@ -40,12 +41,14 @@ class Order extends Model
             'payment_method',
             'requestId',
             'processUrl',
+            'active',
         ];
 
     protected $casts
         = [
             'status' => OrderStatus::class,
             'payment_method' => PaymentMethod::class,
+            'active' => 'boolean',
         ];
 
     public function order_detail(): HasMany

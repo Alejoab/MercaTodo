@@ -28,12 +28,22 @@ class checkPaymentSession extends Command
 
     public function handle(): void
     {
-        $orders = Order::query()->whereStatus(OrderStatus::PENDING)->get();
+        $orders = Order::query()->whereActive()->get();
 
         /**
          * @var Order $order
          */
         foreach ($orders as $order) {
+            if ($order->status !== OrderStatus::PENDING) {
+                if ($order->created_at->diffInMinutes(now()) >= config('payment.expire')) {
+                    $action = new RejectOrderAction();
+                    $action->execute($order);
+                }
+
+                continue;
+            }
+
+
             $paymentService = PaymentFactory::create($order->payment_method);
             $status = $paymentService->checkPayment($order);
 

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->enum('payment_method', array_column(PaymentMethod::cases(), 'value'))->nullable();
             $table->unsignedBigInteger('requestId')->nullable();
             $table->string('processUrl')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

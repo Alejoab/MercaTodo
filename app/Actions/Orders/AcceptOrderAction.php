@@ -19,6 +19,7 @@ class AcceptOrderAction implements AcceptOrder
     {
         try {
             $order->status = OrderStatus::ACCEPTED;
+            $order->active = false;
             $order->save();
 
             Log::info("[ORDER-ACCEPTED]", ['orderId' => $order->id,]);
