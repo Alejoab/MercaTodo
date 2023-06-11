@@ -78,10 +78,39 @@ class OrderUnitTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'id' => $order->getKey(),
             'status' => 'ACCEPTED',
+            'active' => false,
         ]);
     }
 
-    public function test_reject_order(): void
+    public function test_reject_order_when_the_expiration_time_has_pass(): void
+    {
+        $createOrder = new CreateOrderAction();
+        $order = $createOrder->execute($this->user->getKey(), [$this->product->getKey() => 3], 'PlacetoPay');
+
+        $this->product->refresh();
+        $this->assertEquals(0, $this->product->stock);
+        $this->assertNotNull($this->product->deleted_at);
+
+        $this->travel(config('payment.expire') + 1)->minutes();
+
+        $rejectOrder = new RejectOrderAction();
+        $rejectOrder->execute($order);
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->getKey(),
+            'status' => OrderStatus::REJECTED,
+            'active' => false,
+        ]);
+
+        $this->product->refresh();
+        $this->assertDatabaseCount('orders', 1);
+        $this->assertFalse($order->active);
+        $this->assertDatabaseCount('order_details', 1);
+        $this->assertEquals(3, $this->product->stock);
+        $this->assertNull($this->product->deleted_at);
+    }
+
+    public function test_reject_order_when_it_is_active(): void
     {
         $createOrder = new CreateOrderAction();
         $order = $createOrder->execute($this->user->getKey(), [$this->product->getKey() => 3], 'PlacetoPay');
@@ -96,14 +125,22 @@ class OrderUnitTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'id' => $order->getKey(),
             'status' => OrderStatus::REJECTED,
+            'active' => true,
         ]);
 
-        $this->product->refresh();
-        $this->assertDatabaseCount('orders', 1);
+        $this->travel(config('payment.expire') - 1)->minutes();
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->getKey(),
+            'status' => OrderStatus::REJECTED,
+            'active' => true,
+        ]);
+
         $this->assertDatabaseCount('order_details', 1);
-        $this->assertEquals(3, $this->product->stock);
-        $this->assertNull($this->product->deleted_at);
+        $this->assertEquals(0, $this->product->stock);
+        $this->assertNotNull($this->product->deleted_at);
     }
+
 
     public function test_delete_order(): void
     {
