@@ -26,7 +26,9 @@ class ProductImagesService
 
             return $file_name;
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'image' => $image,
+            ]);
         }
     }
 
@@ -43,7 +45,9 @@ class ProductImagesService
         try {
             Storage::disk('product_images')->delete($image_path);
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'image_path' => $image_path,
+            ]);
         }
     }
 }

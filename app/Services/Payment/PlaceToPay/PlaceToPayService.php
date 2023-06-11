@@ -51,7 +51,11 @@ class PlaceToPayService implements Payments
         } catch (CustomException $e) {
             throw $e;
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'request' => $request->getContent(),
+                'user' => $user->toArray(),
+                'order' => $order->toArray(),
+            ]);
         }
     }
 

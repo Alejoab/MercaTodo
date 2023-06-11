@@ -28,7 +28,10 @@ class UpdateUserRoleAction implements UpdateUserRole
 
             $user->save();
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'user' => $user->toArray(),
+                'role' => $role,
+            ]);
         }
     }
 }

@@ -19,7 +19,10 @@ class UpdateOrderAction implements UpdateOrder
             $order->fill($data);
             $order->save();
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'order' => $order->toArray(),
+                'data' => $data,
+            ]);
         }
     }
 }

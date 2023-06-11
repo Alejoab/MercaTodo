@@ -43,7 +43,7 @@ class CreateOrderDetailAction implements CreateOrderDetail
 
             return $oderDetail;
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, $data);
         }
     }
 }

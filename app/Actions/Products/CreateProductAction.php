@@ -52,7 +52,7 @@ class CreateProductAction implements CreateProduct
             throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, $data);
         }
     }
 }
