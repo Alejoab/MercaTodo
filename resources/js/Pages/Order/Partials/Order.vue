@@ -1,5 +1,7 @@
 <script setup>
 import {ref} from "vue";
+import {useForm} from "@inertiajs/vue3";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     order: {
@@ -10,8 +12,14 @@ const props = defineProps({
 
 const open = ref(false);
 
+const form = useForm({
+    orderId: props.order.id,
+});
+
 const tryAgain = () => {
-    window.location.href = props.order.processUrl;
+    form.post(route('payment.retry'), {
+        preserveScroll: true,
+    });
 }
 </script>
 
@@ -73,7 +81,7 @@ const tryAgain = () => {
                     </div>
                 </div>
 
-                <div v-if="order.status === 'Pending'" class="text-end mt-10">
+                <div v-if="order.active" class="text-end mt-10 mb-5">
                     <button
                         class="bg-yellow-400 rounded-lg px-5 py-1 font-semibold hover:bg-amber-400 active:bg-yellow-500 focus:outline-none transition ease-in-out duration-150 border border-transparent"
                         @click="tryAgain"
@@ -81,6 +89,9 @@ const tryAgain = () => {
                         RETRY PAYMENT
                     </button>
                 </div>
+                <InputError :message="form.errors.orderId"></InputError>
+                <InputError :message="form.errors.payment"></InputError>
+                <InputError :message="form.errors.app"></InputError>
             </div>
         </transition>
     </div>

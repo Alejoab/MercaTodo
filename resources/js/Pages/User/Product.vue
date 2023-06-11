@@ -50,7 +50,7 @@ const isNumber = (evt) => {
                         <img :src="'/storage/product_images/' + product.image" alt="">
                     </div>
 
-                    <div class="w-full flex flex-col items-center mt-10 md:mt-0">
+                    <div class="w-full flex flex-col items-center mt-10 md:mt-0 ml-10">
                         <div>
                             <div>
                                 <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold">{{ product.name }}</h1>

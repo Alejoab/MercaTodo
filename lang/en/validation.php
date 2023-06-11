@@ -171,6 +171,8 @@ return [
         'payment' => [
             'session' => 'There was an error creating the payment session. Please contact support.',
             'session_active' => 'You already have an active payment session. Please complete your payment or cancel it before creating a new one.',
+            'session_expired' => 'The expiration time for the order has passed. Please create a new order.',
+            'order_not_found' => 'The order is not found or you are not authorized to do the payment.',
         ],
         'attribute-name' => [
             'rule-name' => 'custom-message',

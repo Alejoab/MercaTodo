@@ -15,10 +15,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
 use App\Models\Order;
 use App\Services\Carts\CartsService;
-use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -26,7 +26,6 @@ use Throwable;
 class PaymentController extends Controller
 {
     /**
-     * @throws Exception
      * @throws Throwable
      */
     public function pay(PayRequest $request, CreateOrder $orderAction, CartsService $cartService): \Symfony\Component\HttpFoundation\Response
@@ -66,7 +65,6 @@ class PaymentController extends Controller
         }
 
         $paymentService = PaymentFactory::create($order->payment_method);
-
         $status = $paymentService->checkPayment($order);
 
         switch ($status) {
@@ -101,5 +99,40 @@ class PaymentController extends Controller
         $action->execute($order);
 
         return Inertia::render('Order/CancelOrder');
+    }
+
+    /**
+     * @throws PaymentException
+     */
+    public function retry(Request $request): \Symfony\Component\HttpFoundation\Response
+    {
+        $request->validate([
+            'orderId' => ['required', Rule::exists('orders', 'id')],
+        ]);
+
+        /**
+         * @var ?Order $order
+         */
+        $order = Order::query()->whereUser($request->user()->id)->find($request->get('orderId'));
+
+        if (!$order) {
+            throw PaymentException::orderNotFound();
+        }
+        if ($order->status === OrderStatus::PENDING) {
+            return Inertia::location($order->processUrl);
+        }
+        if (!$order->active) {
+            throw PaymentException::orderNotActive();
+        }
+        if (Order::query()->getLast($request->user()->id) !== null) {
+            throw PaymentException::sessionActive();
+        }
+
+        $order->status = OrderStatus::PENDING;
+        $order->save();
+        $paymentService = PaymentFactory::create($order->payment_method);
+        $url = $paymentService->paymentProcess($request, $request->user(), $order);
+
+        return Inertia::location($url);
     }
 }

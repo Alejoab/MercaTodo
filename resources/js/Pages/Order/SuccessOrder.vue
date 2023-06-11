@@ -40,7 +40,7 @@ const props = defineProps({
                     The payment was successful
                 </span>
                 <span class="font-semibold text-gray-500 text-xl md:text-2xl" v-else>
-                    The order was rejected. If you want to try again, please add the items to your cart again.
+                    The order was rejected.
                 </span>
                 <div class="my-12">
                     <a class="bg-indigo-500 px-10 py-2 rounded-3xl cursor-pointer text-gray-800 text-2xl font-semibold" :href="route('order.history')">

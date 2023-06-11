@@ -18,4 +18,14 @@ class PaymentException extends CustomException
     {
         return new self(__('validation.custom.payment.session_active'));
     }
+
+    public static function orderNotActive(): self
+    {
+        return new self(__('validation.custom.payment.session_expired'));
+    }
+
+    public static function orderNotFound(): self
+    {
+        return new self(__('validation.custom.payment.order_not_found'));
+    }
 }

@@ -56,6 +56,7 @@ Route::prefix('payment')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/', [PaymentController::class, 'pay'])->name('cart.buy');
     Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+    Route::post('/retry', [PaymentController::class, 'retry'])->name('payment.retry');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
