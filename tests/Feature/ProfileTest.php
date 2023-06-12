@@ -43,7 +43,7 @@ class ProfileTest extends TestCase
             ->put('/profile', [
                 'name' => 'Test User',
                 'surname' => 'Test Surname',
-                'document_type' => DocumentType::ID->value,
+                'document_type' => DocumentType::CC->value,
                 'document' => '12345678',
                 'email' => 'test@example.com',
                 'address' => 'Test Address',
@@ -74,8 +74,8 @@ class ProfileTest extends TestCase
             ->put('/profile', [
                 'name' => 'Test User',
                 'surname' => 'Test Surname',
-                'document_type' => DocumentType::ID->value,
-                'document' => '12345678',
+                'document_type' => DocumentType::CC->value,
+                'document' => '1234111111',
                 'email' => $user->email,
                 'address' => 'Test Address',
                 'city_id' => City::query()->first()->id,
@@ -123,5 +123,13 @@ class ProfileTest extends TestCase
             ->assertRedirect('/profile');
 
         $this->assertNotNull($user->fresh());
+    }
+
+    public function test_order_history_page_is_displayed(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('order.history'));
+        $response->assertOk();
     }
 }

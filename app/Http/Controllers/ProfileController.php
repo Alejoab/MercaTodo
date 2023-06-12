@@ -71,4 +71,18 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Shows the user order history
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function orderHistory(Request $request): Response
+    {
+        return Inertia::render('Order/OrderHistory', [
+            'orders' => $request->user()->load('order.order_detail'),
+        ]);
+    }
 }

@@ -63,7 +63,7 @@ class AdminCustomerTest extends TestCase
                 'name' => 'Test User',
                 'surname' => 'Test User',
                 'document' => '12345678',
-                'document_type' => DocumentType::ID->value,
+                'document_type' => DocumentType::CC->value,
                 'email' => 'test@test.com',
                 'phone' => '1234567890',
                 'address' => 'Test Address',

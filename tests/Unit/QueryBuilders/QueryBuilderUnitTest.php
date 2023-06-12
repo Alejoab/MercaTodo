@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace QueryBuilders;
 
 use App\Models\Brand;
 use App\Models\Category;

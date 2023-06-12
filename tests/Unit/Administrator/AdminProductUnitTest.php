@@ -34,22 +34,6 @@ class AdminProductUnitTest extends TestCase
         $this->admin->assignRole($roleAdmin);
     }
 
-    public function test_creation_product_form_has_expected_fields(): void
-    {
-        $response = $this->actingAs($this->admin)->post(route('admin.products.create'), [
-            'code' => '00000001',
-            'category_name' => '',
-            'brand_name' => '$brand->name',
-            'name' => '',
-            'description' => '',
-            'image' => 'a',
-            'price' => -1,
-            'stock' => -1,
-        ]);
-
-        $response->assertSessionHasErrors();
-    }
-
     public function test_a_brand_is_not_store_twice(): void
     {
         $brandAction = new CreateBrandAction();

@@ -244,8 +244,9 @@ const isNumber = (evt) => {
                         <img :src="image" alt="Product Image"/>
                     </div>
                 </div>
-                <div class="grid-cols-2">
+                <div class="grid-cols-2 flex space-x-4">
                     <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                    <InputError :message="form.errors.app" class="mt-2"/>
                 </div>
             </div>
         </form>

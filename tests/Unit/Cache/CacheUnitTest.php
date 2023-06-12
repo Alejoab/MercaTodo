@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Cache;
 
 use App\Actions\Products\CreateBrandAction;
 use App\Actions\Products\CreateCategoryAction;

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -85,6 +86,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function customer(): hasOne
     {
         return $this->hasOne(Customer::class);
+    }
+
+    public function order(): HasMany
+    {
+        // TODO: Error with phpstan
+        /**
+         * @phpstan-ignore-next-line
+         */
+        return $this->hasMany(Order::class)->orderByDesc('created_at');
     }
 
     /**

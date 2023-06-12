@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum DocumentType: string
 {
-    case ID = 'Identity Card';
-    case PASSPORT = 'Passport';
+    case CC = 'CC';
+    case NIT = 'NIT';
+    case RUT = 'RUT';
 }

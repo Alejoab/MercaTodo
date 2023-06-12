@@ -5,8 +5,10 @@ use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\Payments\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -27,17 +29,34 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('order-history', [ProfileController::class, 'orderHistory'])->name('order.history');
 });
 
-Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
-Route::get('departments', [CityController::class, 'departments'])->name('departments');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware([])->group(function () {
     Route::get('', [UserController::class, 'index'])->name('home');
     Route::get('categories', [CategoryController::class, 'list'])->name('categories');
     Route::get('brands/{id?}', [BrandController::class, 'brandsByCategory'])->name('brands');
     Route::get('list-products', [ProductController::class, 'listProducts'])->name('list-products');
     Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('product-information/{product}', [ProductController::class, 'productInformation'])->withTrashed()->name('product.information');
+    Route::get('cities/{id}', [CityController::class, 'citiesByDepartment'])->name('cities');
+    Route::get('departments', [CityController::class, 'departments'])->name('departments');
+    Route::get('cart-items-count', [CartController::class, 'getNumberOfItems'])->name('cart.count');
+});
+
+Route::prefix('cart')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('', [CartController::class, 'index'])->name('cart');
+    Route::post('/add-product', [CartController::class, 'addProductToCart'])->name('cart.add');
+    Route::delete('/delete-product', [CartController::class, 'deleteProductToCart'])->name('cart.delete');
+});
+
+Route::prefix('payment')->middleware(['auth', 'verified'])->group(function () {
+    Route::post('/', [PaymentController::class, 'pay'])->name('cart.buy');
+    Route::get('/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+    Route::post('/retry', [PaymentController::class, 'retry'])->name('payment.retry');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {

@@ -19,6 +19,12 @@ MercaTodo is part of the project proposed for the PHP Bootcamp by Evertec. It is
 - Registered customers will be able to see the list of products created, so that they can see a showcase of products separated by pages and their data such as photo and price.
 - Customers will also be able to perform a customized search for these products to quickly find what they are looking for.
 
+### Version 3.0.0
+- Customers will be able to view available products and add them to a shopping cart.
+- The customer will be able to consult his order and make modifications before confirming the order and proceeding with the payment.
+- Customers will be able to review their order history and retry the payment for those that were not successful.
+- Integrates the web checkout of the Place To Pay payment gateway.
+
 ## Configuration
 
 In order to run the application, you must do the following:
@@ -68,13 +74,18 @@ The .env file contains the configuration of the application. It is important to 
 >ADMIN_PASSWORD  
 >ADMIN_CITY_ID  
 
-**Notes:** The document type must be 'Identity Card' or 'Passport'. The city id must be a valid city id in the database (1, 1126).
+**Notes:** The document type must be CC, NIT or RUT. The city id must be a valid city id in the database (1, 1126).
 
 ### Seeders Configuration
->BRAND_SEEDER=5  
->CATEGORY_SEEDER=5  
->USER_SEEDER=20  
->PRODUCT_SEEDER=20  
+>BRAND_SEEDER  
+>CATEGORY_SEEDER  
+>USER_SEEDER  
+>PRODUCT_SEEDER 
+
+### Place To Pay Configuration
+>PLACETOPAY_LOGIN  
+>PLACETOPAY_TRANKEY  
+>PLACETOPAY_URL  
 
 ## Migrations and Seeds
 
@@ -102,3 +113,14 @@ To make the images available to the application, you must run the following comm
 - `php artisan storage:link`
 
 In the case that you want to change the folder where the images are stored, you must change the path of the `product_images` driver in the `config/filesystems.php` file.
+
+## Payment Gateway
+The configuration of the expiration time for an order is in the `config/payment.php` file. This value is in minutes.
+
+While an order is active, the customer can retry the payment as many times as he wants. If the order expires, the customer will not be able to retry the payment and will have to create a new order.
+
+To check the order status periodically, you must run the following command:
+
+- `php artisan schedule:work`
+
+By default, this action is executed every minute. If you want to change the frequency, you must change the value of the `app:check-payment-session` command in the `app/Console/Kernel.php` file.
