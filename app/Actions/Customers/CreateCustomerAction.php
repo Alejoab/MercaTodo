@@ -47,7 +47,7 @@ class CreateCustomerAction implements CreateCustomer
             throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, $data);
         }
     }
 }

@@ -30,7 +30,9 @@ class CreateUserAction implements CreateUser
 
             return $user;
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'email' => $data['email'],
+            ]);
         }
     }
 }

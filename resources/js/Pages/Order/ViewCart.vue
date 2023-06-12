@@ -31,7 +31,7 @@ const updateProduct = (id) => {
 const buyCart = () => {
     processing.value = true;
     form.post(route('cart.buy'), {
-        onFinish: () => {
+        onError: () => {
             processing.value = false;
         },
     });
@@ -63,6 +63,7 @@ const buyCart = () => {
                     Proceed to checkout
                 </button>
                 <InputError :message="form.errors.paymentMethod" class="mt-4 ml-6"></InputError>
+                <InputError :message="form.errors.payment" class="mt-4 ml-6"></InputError>
                 <InputError :message="form.errors.app" class="mt-2"/>
             </div>
         </div>

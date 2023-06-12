@@ -42,7 +42,10 @@ class UpdateProductAction implements UpdateProduct
             throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'product' => $product->toArray(),
+                'data' => $data,
+            ]);
         }
     }
 }

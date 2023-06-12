@@ -28,7 +28,9 @@ class CreateCategoryAction
                 'name' => $name,
             ]);
         } catch (Throwable $e) {
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'name' => $name,
+            ]);
         }
     }
 }

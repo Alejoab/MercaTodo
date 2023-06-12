@@ -51,7 +51,11 @@ class CreateOrderAction implements CreateOrder
             throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'userId' => $userId,
+                'cart' => $cart,
+                'method' => $method,
+            ]);
         }
     }
 }

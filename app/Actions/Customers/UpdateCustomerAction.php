@@ -30,7 +30,10 @@ class UpdateCustomerAction implements UpdateCustomer
             throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, [
+                'user' => $user->toArray(),
+                'data' => $data,
+            ]);
         }
     }
 }

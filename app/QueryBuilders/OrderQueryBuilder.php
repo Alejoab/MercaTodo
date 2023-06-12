@@ -17,4 +17,14 @@ class OrderQueryBuilder extends Builder
     {
         return $this->where('status', $status);
     }
+
+    public function whereActive($active = true): self
+    {
+        return $this->where('active', $active);
+    }
+
+    public function whereUser(int $userId): self
+    {
+        return $this->where('user_id', $userId);
+    }
 }

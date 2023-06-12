@@ -19,12 +19,13 @@ class AcceptOrderAction implements AcceptOrder
     {
         try {
             $order->status = OrderStatus::ACCEPTED;
+            $order->active = false;
             $order->save();
 
             Log::info("[ORDER-ACCEPTED]", ['orderId' => $order->id,]);
         } catch (Throwable $e) {
             Log::error("[ERROR] [ORDER-NO-APPROVED]", ['orderId' => $order->id,]);
-            throw new ApplicationException($e);
+            throw new ApplicationException($e, $order->toArray());
         }
     }
 }

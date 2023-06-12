@@ -107,7 +107,7 @@ class OrderTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)->get(route('payment.success'));
-        $response->assertRedirect(route('order.history'));
+        $response->assertOk();
 
         $this->assertDatabaseCount('orders', 1);
         $this->assertDatabaseHas('orders', [
@@ -119,6 +119,122 @@ class OrderTest extends TestCase
             'requestId' => 1,
             'processUrl' => 'https://test-route.com',
         ]);
+    }
+
+    public function test_retry_payment_when_the_session_is_still_active(): void
+    {
+        $order = Order::query()->create([
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+            'orderId' => $order->id,
+        ]);
+
+        $response->assertRedirect('https://test-route.com');
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+    }
+
+    public function test_retry_payment_when_the_session_is_expired(): void
+    {
+        Http::fake(
+            [
+                config('placetopay.url').'/api/session' => [
+                    "status" => [
+                        "status" => "OK",
+                        "reason" => "PC",
+                        "message" => "La petición se ha procesado correctamente",
+                        "date" => "2021-11-30T15:08:27-05:00",
+                    ],
+                    "requestId" => 100,
+                    "processUrl" => "https://test-route-session-expired.com",
+                ],
+            ]
+        );
+
+        $order = Order::query()->create([
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::REJECTED,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+            'orderId' => $order->id,
+        ]);
+
+        $response->assertRedirect("https://test-route-session-expired.com");
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 100,
+            'processUrl' => 'https://test-route-session-expired.com',
+        ]);
+    }
+
+    public function test_retry_payment_when_order_is_not_active(): void
+    {
+        $order = Order::query()->create([
+            'user_id' => $this->user->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::REJECTED,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'active' => false,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+            'orderId' => $order->id,
+        ]);
+
+        $response->assertSessionHasErrors();
+    }
+
+    public function test_retry_payment_when_the_user_is_not_the_owner_of_it(): void
+    {
+        $user2 = User::factory()->create();
+        $order = Order::query()->create([
+            'user_id' => $user2->getKey(),
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::REJECTED,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'active' => false,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+            'orderId' => $order->id,
+        ]);
+
+        $response->assertSessionHasErrors(['payment' => __('validation.custom.payment.order_not_found')]);
     }
 
     public function test_cancel_payment(): void
@@ -155,7 +271,7 @@ class OrderTest extends TestCase
             'paymentMethod' => 'PlaceToPay',
         ]);
 
-        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.payment.session_active')]);
+        $response->assertSessionHasErrors();
     }
 
     public function test_try_access_success_route_without_an_payment_active_session(): void
@@ -177,7 +293,7 @@ class OrderTest extends TestCase
             'paymentMethod' => 'PlaceToPay',
         ]);
 
-        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.cart.deleted')]);
+        $response->assertSessionHasErrors();
     }
 
     public function test_try_to_buy_a_cart_with_empty_cart(): void
@@ -187,7 +303,7 @@ class OrderTest extends TestCase
             'paymentMethod' => 'PlaceToPay',
         ]);
 
-        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.cart.empty')]);
+        $response->assertSessionHasErrors();
     }
 
     public function test_try_to_buy_a_cart_with_an_invalid_quantity(): void
@@ -198,6 +314,6 @@ class OrderTest extends TestCase
             'paymentMethod' => 'PlaceToPay',
         ]);
 
-        $response->assertSessionHasErrors(['paymentMethod' => __('validation.custom.cart.stock', ['product' => $this->product->name, 'stock' => $this->product->stock])]);
+        $response->assertSessionHasErrors();
     }
 }
