@@ -25,8 +25,18 @@ use Throwable;
 
 class PaymentController extends Controller
 {
+
     /**
+     * Redirects the user to the payment session
+     *
+     * @param PayRequest   $request
+     * @param CreateOrder  $orderAction
+     * @param CartsService $cartService
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws PaymentException
      * @throws Throwable
+     * @throws ApplicationException
      */
     public function pay(PayRequest $request, CreateOrder $orderAction, CartsService $cartService): \Symfony\Component\HttpFoundation\Response
     {
@@ -50,7 +60,13 @@ class PaymentController extends Controller
         return Inertia::location($url);
     }
 
+
     /**
+     * Checks the payment status
+     *
+     * @param Request $request
+     *
+     * @return Response|RedirectResponse
      * @throws ApplicationException
      */
     public function success(Request $request): Response|RedirectResponse
@@ -85,6 +101,15 @@ class PaymentController extends Controller
         ]);
     }
 
+
+    /**
+     * Cancels the payment session
+     *
+     * @param Request     $request
+     * @param DeleteOrder $action
+     *
+     * @return Response|RedirectResponse
+     */
     public function cancel(Request $request, DeleteOrder $action): Response|RedirectResponse
     {
         /**
@@ -101,7 +126,11 @@ class PaymentController extends Controller
         return Inertia::render('Order/CancelOrder');
     }
 
+
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      * @throws PaymentException
      */
     public function retry(Request $request): \Symfony\Component\HttpFoundation\Response
