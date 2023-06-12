@@ -8,11 +8,17 @@ use App\Services\Payment\PlaceToPay\PlaceToPayService;
 
 class PaymentFactory
 {
+    /**
+     * Returns the payment service according to the payment method
+     *
+     * @param PaymentMethod $paymentMethod
+     *
+     * @return Payments
+     */
     public static function create(PaymentMethod $paymentMethod): Payments
     {
-        switch ($paymentMethod) {
-            default:
-                return new PlaceToPayService();
-        }
+        return match ($paymentMethod) {
+            default => new PlaceToPayService(),
+        };
     }
 }
