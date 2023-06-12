@@ -26,6 +26,12 @@ class checkPaymentSession extends Command
      */
     protected $description = 'Command description';
 
+    /**
+     * Checks the payment session when the order is pending and monitors the status of the order while it is active.
+     *
+     * @return void
+     * @throws ApplicationException
+     */
     public function handle(): void
     {
         $orders = Order::query()->whereActive()->get();
