@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 interface Payments
 {
     /**
-     * Creates the user's payment session to the order
+     * Creates the user's payment session to the order and return the process url
      *
      * @param Request $request
      * @param User    $user

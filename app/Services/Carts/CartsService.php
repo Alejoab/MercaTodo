@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Cache;
 
 class CartsService
 {
+    /**
+     * Returns an array with the products and their quantities in the cart
+     *
+     * @param int $userId
+     *
+     * @return array
+     */
     public function getCartWithProducts(int $userId): array
     {
         $action = new DeleteProductCartAction();
@@ -31,13 +38,26 @@ class CartsService
         return $products;
     }
 
+    /**
+     * Returns the number of items in the cart
+     *
+     * @param int $userId
+     *
+     * @return int
+     */
     public function getNumberOfItems(int $userId): int
     {
         return count(Cache::get('cart:'.$userId) ?? []);
     }
 
+
     /**
-     * @throws Exception
+     * Checks the availability of the products in the cart
+     *
+     * @param int $userId
+     *
+     * @return array
+     * @throws CartException
      */
     public function getValidData(int $userId): array
     {

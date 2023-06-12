@@ -13,6 +13,11 @@ class Buyer
         $this->user = $user;
     }
 
+    /**
+     * Returns the buyer data for the placetopay request
+     *
+     * @return array
+     */
     public function getBuyer(): array
     {
         return [
@@ -26,6 +31,11 @@ class Buyer
         ];
     }
 
+    /**
+     * Returns the address array
+     *
+     * @return array
+     */
     private function getAddress(): array
     {
         return [
