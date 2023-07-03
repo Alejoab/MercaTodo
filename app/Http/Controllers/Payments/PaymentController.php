@@ -94,6 +94,7 @@ class PaymentController extends Controller
         }
 
         return Inertia::render('Order/SuccessOrder', [
+            'order' => $order,
             'status' => $order->status,
         ]);
     }
