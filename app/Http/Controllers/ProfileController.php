@@ -37,13 +37,13 @@ class ProfileController extends Controller
      * Updates the user profile.
      *
      * @param CustomerUpdateRequest $request
-     * @param UpdateCustomer        $action
+     * @param UpdateCustomer        $updateCustomerAction
      *
      * @return RedirectResponse
      */
-    public function update(CustomerUpdateRequest $request, UpdateCustomer $action): RedirectResponse
+    public function update(CustomerUpdateRequest $request, UpdateCustomer $updateCustomerAction): RedirectResponse
     {
-        $action->execute($request->user(), $request->validated());
+        $updateCustomerAction->execute($request->user(), $request->validated());
 
         return Redirect::route('profile.edit');
     }
@@ -52,17 +52,17 @@ class ProfileController extends Controller
      * Disables the user.
      *
      * @param Request    $request
-     * @param DeleteUser $action
+     * @param DeleteUser $DeleteUserAction
      *
      * @return RedirectResponse
      */
-    public function destroy(Request $request, DeleteUser $action): RedirectResponse
+    public function destroy(Request $request, DeleteUser $DeleteUserAction): RedirectResponse
     {
         $request->validate([
             'password' => ['required', 'current-password'],
         ]);
 
-        $action->execute($request->user());
+        $DeleteUserAction->execute($request->user());
 
         Auth::logout();
 

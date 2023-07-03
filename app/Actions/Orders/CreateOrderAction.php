@@ -21,7 +21,7 @@ class CreateOrderAction implements CreateOrder
         try {
             DB::beginTransaction();
 
-            $action = new CreateOrderDetailAction();
+            $createOrderDetailAction = new CreateOrderDetailAction();
             /**
              * @var Order $order
              */
@@ -33,7 +33,7 @@ class CreateOrderAction implements CreateOrder
             ]);
             $total = 0;
             foreach ($cart as $product_id => $quantity) {
-                $orderDetail = $action->execute([
+                $orderDetail = $createOrderDetailAction->execute([
                     'order_id' => $order->getKey(),
                     'product_id' => $product_id,
                     'quantity' => $quantity,

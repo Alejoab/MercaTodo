@@ -15,14 +15,14 @@ class CartController extends Controller
     /**
      * Shows the user's cart
      *
-     * @param CartsService $service
+     * @param CartsService $cartsService
      *
      * @return Response
      */
-    public function index(CartsService $service): Response
+    public function index(CartsService $cartsService): Response
     {
         return Inertia::render('Order/ViewCart', [
-            'cart' => $service->getCartWithProducts(auth()->id()),
+            'cart' => $cartsService->getCartWithProducts(auth()->id()),
         ]);
     }
 
@@ -30,38 +30,38 @@ class CartController extends Controller
      * Adds a product to the user's cart
      *
      * @param CartRequest    $request
-     * @param AddProductCart $action
+     * @param AddProductCart $addProductCartAction
      *
      * @return void
      */
-    public function addProductToCart(CartRequest $request, AddProductCart $action): void
+    public function addProductToCart(CartRequest $request, AddProductCart $addProductCartAction): void
     {
-        $action->execute($request->user()->id, $request->validated());
+        $addProductCartAction->execute($request->user()->id, $request->validated());
     }
 
     /**
      * Deletes a product from the user's cart
      *
      * @param Request           $request
-     * @param DeleteProductCart $action
+     * @param DeleteProductCart $deleteProductCartAction
      *
      * @return void
      */
-    public function deleteProductToCart(Request $request, DeleteProductCart $action): void
+    public function deleteProductToCart(Request $request, DeleteProductCart $deleteProductCartAction): void
     {
-        $action->execute(auth()->id(), $request->all());
+        $deleteProductCartAction->execute(auth()->id(), $request->all());
     }
 
     /**
      * Returns the number of items in the user's cart
      *
      * @param Request      $request
-     * @param CartsService $service
+     * @param CartsService $cartsService
      *
      * @return int
      */
-    public function getNumberOfItems(Request $request, CartsService $service): int
+    public function getNumberOfItems(Request $request, CartsService $cartsService): int
     {
-        return $request->user() !== null ? $service->getNumberOfItems(auth()->id()) : 0;
+        return $request->user() !== null ? $cartsService->getNumberOfItems(auth()->id()) : 0;
     }
 }

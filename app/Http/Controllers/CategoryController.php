@@ -10,12 +10,12 @@ class CategoryController extends Controller
     /**
      * List all categories.
      *
-     * @param CategoriesService $service
+     * @param CategoriesService $categoriesService
      *
      * @return Collection
      */
-    public function list(CategoriesService $service): Collection
+    public function list(CategoriesService $categoriesService): Collection
     {
-        return $service->list();
+        return $categoriesService->list();
     }
 }

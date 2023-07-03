@@ -45,13 +45,13 @@ class AdminCustomerController extends Controller
      * Lists the customers for the administrator.
      *
      * @param Request          $request
-     * @param CustomersService $service
+     * @param CustomersService $customersService
      *
      * @return LengthAwarePaginator
      */
-    public function listCustomers(Request $request, CustomersService $service): LengthAwarePaginator
+    public function listCustomers(Request $request, CustomersService $customersService): LengthAwarePaginator
     {
-        return $service->listCustomersToTable($request->get('search'));
+        return $customersService->listCustomersToTable($request->get('search'));
     }
 
     /**
@@ -59,13 +59,13 @@ class AdminCustomerController extends Controller
      *
      * @param CustomerUpdateRequest $request
      * @param User                  $user
-     * @param UpdateCustomer        $action
+     * @param UpdateCustomer        $updateCustomerAction
      *
      * @return RedirectResponse
      */
-    public function customerUpdate(CustomerUpdateRequest $request, User $user, UpdateCustomer $action): RedirectResponse
+    public function customerUpdate(CustomerUpdateRequest $request, User $user, UpdateCustomer $updateCustomerAction): RedirectResponse
     {
-        $action->execute($user, $request->validated());
+        $updateCustomerAction->execute($user, $request->validated());
 
         return redirect()->route('admin.customer.show', $user->getKey());
     }
