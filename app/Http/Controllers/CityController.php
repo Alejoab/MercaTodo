@@ -11,24 +11,24 @@ class CityController extends Controller
      * List cities by department.
      *
      * @param int           $id
-     * @param CitiesService $service
+     * @param CitiesService $citiesService
      *
      * @return Collection|array
      */
-    public function citiesByDepartment(int $id, CitiesService $service): Collection|array
+    public function citiesByDepartment(int $id, CitiesService $citiesService): Collection|array
     {
-        return $service->citiesByDepartment($id);
+        return $citiesService->citiesByDepartment($id);
     }
 
     /**
      * Lists departments.
      *
-     * @param CitiesService $service
+     * @param CitiesService $citiesService
      *
      * @return Collection|array
      */
-    public function departments(CitiesService $service): Collection|array
+    public function departments(CitiesService $citiesService): Collection|array
     {
-        return $service->departments();
+        return $citiesService->departments();
     }
 }

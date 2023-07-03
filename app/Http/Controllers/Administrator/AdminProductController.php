@@ -60,13 +60,13 @@ class AdminProductController extends Controller
      * Creates a new product.
      *
      * @param ProductRequest $request
-     * @param CreateProduct  $action
+     * @param CreateProduct  $createProductAction
      *
      * @return RedirectResponse
      */
-    public function store(ProductRequest $request, CreateProduct $action): RedirectResponse
+    public function store(ProductRequest $request, CreateProduct $createProductAction): RedirectResponse
     {
-        $action->execute($request->validated());
+        $createProductAction->execute($request->validated());
 
         return redirect()->route('admin.products');
     }
@@ -76,13 +76,13 @@ class AdminProductController extends Controller
      *
      * @param ProductRequest $request
      * @param Product        $product
-     * @param UpdateProduct  $action
+     * @param UpdateProduct  $updateProductAction
      *
      * @return RedirectResponse
      */
-    public function update(ProductRequest $request, Product $product, UpdateProduct $action): RedirectResponse
+    public function update(ProductRequest $request, Product $product, UpdateProduct $updateProductAction): RedirectResponse
     {
-        $action->execute($product, $request->validated());
+        $updateProductAction->execute($product, $request->validated());
 
         return redirect()->route('admin.products.update', $product->getKey());
     }
@@ -91,75 +91,75 @@ class AdminProductController extends Controller
      * Disables a product.
      *
      * @param Product       $product
-     * @param DeleteProduct $action
+     * @param DeleteProduct $deleteProductAction
      *
      * @return void
      */
-    public function destroy(Product $product, DeleteProduct $action): void
+    public function destroy(Product $product, DeleteProduct $deleteProductAction): void
     {
-        $action->execute($product);
+        $deleteProductAction->execute($product);
     }
 
     /**
      * Restores a product.
      *
      * @param Product        $product
-     * @param RestoreProduct $action
+     * @param RestoreProduct $restoreProductAction
      *
      * @return void
      */
-    public function restore(Product $product, RestoreProduct $action): void
+    public function restore(Product $product, RestoreProduct $restoreProductAction): void
     {
-        $action->execute($product);
+        $restoreProductAction->execute($product);
     }
 
     /**
      * Force deletes a product.
      *
      * @param Product            $product
-     * @param ForceDeleteProduct $action
+     * @param ForceDeleteProduct $forceDeleteProductAction
      *
      * @return void
      */
-    public function forceDelete(Product $product, ForceDeleteProduct $action): void
+    public function forceDelete(Product $product, ForceDeleteProduct $forceDeleteProductAction): void
     {
-        $action->execute($product);
+        $forceDeleteProductAction->execute($product);
     }
 
     /**
      * @param Request           $request
-     * @param CategoriesService $service
+     * @param CategoriesService $categoriesService
      *
      * @return Collection|array
      */
-    public function searchCategories(Request $request, CategoriesService $service): Collection|array
+    public function searchCategories(Request $request, CategoriesService $categoriesService): Collection|array
     {
-        return $service->searchCategories($request->get('search'));
+        return $categoriesService->searchCategories($request->get('search'));
     }
 
     /**
      * @param Request       $request
-     * @param BrandsService $service
+     * @param BrandsService $brandsService
      *
      * @return Collection|array
      */
-    public function searchBrands(Request $request, BrandsService $service): Collection|array
+    public function searchBrands(Request $request, BrandsService $brandsService): Collection|array
     {
-        return $service->searchBrands($request->get('search'));
+        return $brandsService->searchBrands($request->get('search'));
     }
 
     /**
      * @param Request         $request
-     * @param ProductsService $service
+     * @param ProductsService $productsService
      *
      * @return LengthAwarePaginator
      */
-    public function listProducts(Request $request, ProductsService $service): LengthAwarePaginator
+    public function listProducts(Request $request, ProductsService $productsService): LengthAwarePaginator
     {
         $search = $request->get('search');
         $category = $request->get('category');
         $brand = $request->get('brand');
 
-        return $service->listProductsAdmin($search, $category, $brand);
+        return $productsService->listProductsAdmin($search, $category, $brand);
     }
 }

@@ -29,18 +29,18 @@ class ProductController extends Controller
      * Lists the products for the customer.
      *
      * @param Request         $request
-     * @param ProductsService $service
+     * @param ProductsService $productsService
      *
      * @return LengthAwarePaginator
      */
-    public function listProducts(Request $request, ProductsService $service): LengthAwarePaginator
+    public function listProducts(Request $request, ProductsService $productsService): LengthAwarePaginator
     {
         $search = $request->get('search');
         $category = $request->get('category');
         $brands = $request->get('brand');
         $sort = $request->get('sortBy');
 
-        return $service->listProducts($search, $category, $brands, $sort);
+        return $productsService->listProducts($search, $category, $brands, $sort);
     }
 
     public function productInformation(Product $product): Product

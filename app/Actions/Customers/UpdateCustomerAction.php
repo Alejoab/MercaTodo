@@ -19,8 +19,7 @@ class UpdateCustomerAction implements UpdateCustomer
         try {
             DB::beginTransaction();
 
-            $action = new UpdateUserAction();
-            $action->execute($user, ['email' => $data['email'],]);
+            (new UpdateUserAction())->execute($user, ['email' => $data['email'],]);
             $user->customer->fill($data);
             $user->customer->save();
 

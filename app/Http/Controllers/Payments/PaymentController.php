@@ -30,7 +30,7 @@ class PaymentController extends Controller
      * Redirects the user to the payment session
      *
      * @param PayRequest   $request
-     * @param CreateOrder  $orderAction
+     * @param CreateOrder  $createOrderAction
      * @param CartsService $cartService
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -38,7 +38,7 @@ class PaymentController extends Controller
      * @throws Throwable
      * @throws ApplicationException
      */
-    public function pay(PayRequest $request, CreateOrder $orderAction, CartsService $cartService): \Symfony\Component\HttpFoundation\Response
+    public function pay(PayRequest $request, CreateOrder $createOrderAction, CartsService $cartService): \Symfony\Component\HttpFoundation\Response
     {
         $userId = $request->user()->id;
         if (Order::query()->getLast($userId) !== null) {
@@ -46,14 +46,13 @@ class PaymentController extends Controller
         }
 
         $cart = $cartService->getValidData($userId);
-        $order = $orderAction->execute($userId, $cart, $request->validated(['paymentMethod']));
+        $order = $createOrderAction->execute($userId, $cart, $request->validated(['paymentMethod']));
 
         try {
             $paymentService = PaymentFactory::create($order->payment_method);
             $url = $paymentService->paymentProcess($request, $request->user(), $order);
         } catch (Throwable $e) {
-            $action = new DeleteOrderAction();
-            $action->execute($order);
+            (new DeleteOrderAction())->execute($order);
             throw $e;
         }
 
@@ -85,18 +84,17 @@ class PaymentController extends Controller
 
         switch ($status) {
             case OrderStatus::ACCEPTED:
-                $action = new AcceptOrderAction();
-                $action->execute($order);
+                (new AcceptOrderAction())->execute($order);
                 break;
             case OrderStatus::REJECTED:
-                $action = new RejectOrderAction();
-                $action->execute($order);
+                (new RejectOrderAction())->execute($order);
                 break;
             case OrderStatus::PENDING:
                 break;
         }
 
         return Inertia::render('Order/SuccessOrder', [
+            'order' => $order,
             'status' => $order->status,
         ]);
     }
@@ -106,11 +104,11 @@ class PaymentController extends Controller
      * Cancels the payment session
      *
      * @param Request     $request
-     * @param DeleteOrder $action
+     * @param DeleteOrder $deleteOrderAction
      *
      * @return Response|RedirectResponse
      */
-    public function cancel(Request $request, DeleteOrder $action): Response|RedirectResponse
+    public function cancel(Request $request, DeleteOrder $deleteOrderAction): Response|RedirectResponse
     {
         /**
          * @var ?Order $order
@@ -121,7 +119,7 @@ class PaymentController extends Controller
             return Redirect::to(route('home'));
         }
 
-        $action->execute($order);
+        $deleteOrderAction->execute($order);
 
         return Inertia::render('Order/CancelOrder');
     }
