@@ -20,6 +20,7 @@
         "laravel/breeze": "^1.20",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
+        "laravel/telescope": "^4.15",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpstan/phpstan": "^1.10",
