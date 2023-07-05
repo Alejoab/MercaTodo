@@ -37,7 +37,7 @@ class AdminImportController extends Controller
         $import->status = ExportImportStatus::PENDING;
         $import->save();
 
-        Excel::queueImport(new ProductsImport($import), $file->path());
+        Excel::queueImport(new ProductsImport($import), $request->file('file'));
 
         return response()->json(['message' => 'Import has been queued.']);
     }
