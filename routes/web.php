@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\AdminCustomerController;
+use App\Http\Controllers\Administrator\AdminExportController;
 use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\BrandController;
@@ -59,34 +60,44 @@ Route::prefix('payment')->middleware(['auth', 'verified'])->group(function () {
     Route::post('/retry', [PaymentController::class, 'retry'])->name('payment.retry');
 });
 
-Route::prefix('admin')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin');
-
-    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/users/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
-    Route::put('/users/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
-    Route::put('/users/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name('admin.user.update.password');
-    Route::delete('/users/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
-    Route::put('/users/{user}/restore', [AdminUserController::class, 'userRestore'])->withTrashed()->name('admin.user.restore');
-    Route::delete('/users/{user}/force-delete', [AdminUserController::class, 'userForceDelete'])->withTrashed()->name('admin.user.force-delete');
+Route::prefix('admin/users')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
+    Route::get('/', [AdminUserController::class, 'index'])->name('admin.users');
     Route::get('/list-users', [AdminUserController::class, 'listUsers'])->name('admin.list-users');
+    Route::get('/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
+    Route::put('/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
+    Route::delete('/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
+    Route::put('/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name('admin.user.update.password');
+    Route::put('/{user}/restore', [AdminUserController::class, 'userRestore'])->withTrashed()->name('admin.user.restore');
+    Route::delete('/{user}/force-delete', [AdminUserController::class, 'userForceDelete'])->withTrashed()->name('admin.user.force-delete');
+});
 
-    Route::get('/customers', [AdminCustomerController::class, 'index'])->name('admin.customers');
-    Route::get('/customers/{user}', [AdminCustomerController::class, 'customerShow'])->withTrashed()->name('admin.customer.show');
-    Route::put('/customers/{user}', [AdminCustomerController::class, 'customerUpdate'])->withTrashed()->name('admin.customer.update');
+Route::prefix('admin/customers')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
+    Route::get('/', [AdminCustomerController::class, 'index'])->name('admin.customers');
     Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
+    Route::get('/{user}', [AdminCustomerController::class, 'customerShow'])->withTrashed()->name('admin.customer.show');
+    Route::put('/{user}', [AdminCustomerController::class, 'customerUpdate'])->withTrashed()->name('admin.customer.update');
+});
 
-    Route::get('/products', [AdminProductController::class, 'index'])->name('admin.products');
-    Route::get('/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
-    Route::post('/products/create', [AdminProductController::class, 'store'])->name('admin.products.create');
-    Route::get('/products/{product}', [AdminProductController::class, 'productShow'])->withTrashed()->name('admin.products.show');
-    Route::post('/products/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
-    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
-    Route::put('/products/{product}/restore', [AdminProductController::class, 'restore'])->withTrashed()->name('admin.products.restore');
-    Route::delete('/products/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name('admin.products.force-delete');
+Route::prefix('admin/products/exports')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
+    Route::get('/', [AdminExportController::class, 'export'])->name('admin.products.export');
+    Route::get('/check-exports', [AdminExportController::class, 'checkExport'])->name('admin.products.exports.check-export');
+    Route::get('/download', [AdminExportController::class, 'download'])->name('admin.products.export.download');
+});
+
+Route::prefix('admin/products')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
+    Route::get('/', [AdminProductController::class, 'index'])->name('admin.products');
+    Route::get('/list-products', [AdminProductController::class, 'listProducts'])->name('admin.list-products');
     Route::get('/categories', [AdminProductController::class, 'searchCategories'])->name('admin.categories.search');
     Route::get('/brands', [AdminProductController::class, 'searchBrands'])->name('admin.brands.search');
-    Route::get('/list-products', [AdminProductController::class, 'listProducts'])->name('admin.list-products');
+    Route::get('/create', [AdminProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/create', [AdminProductController::class, 'store'])->name('admin.products.create');
+    Route::get('/{product}', [AdminProductController::class, 'productShow'])->withTrashed()->name('admin.products.show');
+    Route::post('/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+    Route::put('/{product}/restore', [AdminProductController::class, 'restore'])->withTrashed()->name('admin.products.restore');
+    Route::delete('/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name('admin.products.force-delete');
 });
+
+Route::middleware(['auth', 'verified', 'role:Administrator'])->get('admin', [AdminController::class, 'index'])->name('admin');
 
 require __DIR__.'/auth.php';
