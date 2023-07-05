@@ -3,6 +3,7 @@
 use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminExportController;
+use App\Http\Controllers\Administrator\AdminImportController;
 use App\Http\Controllers\Administrator\AdminProductController;
 use App\Http\Controllers\Administrator\AdminUserController;
 use App\Http\Controllers\BrandController;
@@ -82,6 +83,10 @@ Route::prefix('admin/products/exports')->middleware(['auth', 'verified', 'role:A
     Route::get('/', [AdminExportController::class, 'export'])->name('admin.products.export');
     Route::get('/check-exports', [AdminExportController::class, 'checkExport'])->name('admin.products.exports.check-export');
     Route::get('/download', [AdminExportController::class, 'download'])->name('admin.products.export.download');
+});
+
+Route::prefix('admin/products/imports')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
+    Route::post('/', [AdminImportController::class, 'import'])->name('admin.products.import');
 });
 
 Route::prefix('admin/products')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {

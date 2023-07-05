@@ -41,7 +41,6 @@ class CreateProductAction implements CreateProduct
             ]);
 
             Log::info('[CREATE]', [
-                'admin_id' => auth()->user()->getAuthIdentifier(),
                 'product_id' => $product->getKey(),
                 'product_code' => $product->getAttribute('code'),
             ]);

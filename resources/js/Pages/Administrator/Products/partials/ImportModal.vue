@@ -23,6 +23,12 @@ const form = useForm({
 const uploadFile = (e) => {
     form.file = e.target.files[0];
 }
+
+const submit = () => {
+    form.post(route('admin.products.import'), {
+        preserveScroll: true,
+    });
+}
 </script>
 
 <template>
@@ -35,7 +41,7 @@ const uploadFile = (e) => {
             <h2 class="text-md font-semibold text-gray-900 mb-5 mt-7">
                 New product data import
             </h2>
-            <form class="flex justify-between bg-gray-100 rounded-md p-5">
+            <form class="flex justify-between bg-gray-100 rounded-md p-5" @submit.prevent="submit">
                 <div class="my-auto">
                     <input
                         id="importFile"
