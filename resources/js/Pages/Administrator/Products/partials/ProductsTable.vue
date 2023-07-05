@@ -9,6 +9,7 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputError from "@/Components/InputError.vue";
+import ImportModal from "@/Pages/Administrator/Products/partials/ImportModal.vue";
 
 const products = ref({});
 const categories = ref([]);
@@ -18,6 +19,7 @@ const restoreProductId = ref('');
 const exportModal = ref(false);
 const exportFileName = ref('');
 const exportError = ref('');
+const showImportModal = ref(false);
 
 let pollingInterval = null;
 
@@ -108,6 +110,7 @@ const checkExport = async () => {
 
     return false;
 }
+
 
 onMounted(() => {
     getProducts();
@@ -206,6 +209,8 @@ onUnmounted(() => {
                             <div class="flex flex-col space-y-2">
                                 <a :href="route('admin.products.create')" class="text-start p-2 pl-3">Add Product</a>
                                 <button class="text-start p-2 pl-3" @click="exportModal = true">Export Products</button>
+                                <button class="text-start p-2 pl-3" @click="showImportModal = true">Import Products
+                                </button>
                             </div>
                         </template>
                     </Dropdown>
@@ -333,9 +338,9 @@ onUnmounted(() => {
 
     <Modal :show="exportModal" @close="exportModal = false">
         <div class="p-6">
-            <span class="mb-6">
+            <p class="mt-1 text-sm text-gray-600">
                 Exporting products will generate a XLSX file with all the filter products in your store.
-            </span>
+            </p>
             <div class="flex justify-between mt-6">
                 <primary-button class="disabled:bg-amber-500" @click="exportProducts">Export Products</primary-button>
 
@@ -353,8 +358,9 @@ onUnmounted(() => {
             </div>
             <InputError :message="exportError" class="mt-3"></InputError>
         </div>
-
     </Modal>
+
+    <ImportModal :show="showImportModal" @close="showImportModal = false"></ImportModal>
 </template>
 
 <style>
