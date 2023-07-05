@@ -47,7 +47,7 @@ const isNumber = (evt) => {
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="flex flex-col md:flex-row items-center md:items-start">
                     <div class="w-[80%] flex justify-center">
-                        <img :src="'/storage/product_images/' + product.image" alt="">
+                        <img :src="product.image ? '/storage/product_images/' + product.image : '/storage/default/no_product_image.png'" :alt="product.name">
                     </div>
 
                     <div class="w-full flex flex-col items-center mt-10 md:mt-0 ml-10">

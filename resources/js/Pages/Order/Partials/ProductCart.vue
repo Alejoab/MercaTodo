@@ -59,7 +59,7 @@ const deleteProduct = async () => {
         </button>
 
         <div>
-            <img :alt="product.name" :src="'/storage/product_images/' + product.image" class="w-80 rounded-lg">
+            <img :alt="product.name" :src="product.image ? '/storage/product_images/' + product.image : '/storage/default/no_product_image.png'" class="w-80 rounded-lg">
         </div>
 
         <div class="flex justify-between w-full">
