@@ -36,4 +36,22 @@ class AdminImportController extends Controller
 
         return response()->json(['message' => 'Import has been queued.']);
     }
+
+    public function checkImport(): JsonResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+
+        $import = ExportImport::query()
+            ->fromUser($userId)
+            ->getImports()
+            ->latest()
+            ->first();
+
+        return match ($import?->getAttribute('status')) {
+            ExportImportStatus::PENDING => response()->json(['status' => ExportImportStatus::PENDING, 'data' => $import->getAttribute('errors'),]),
+            ExportImportStatus::COMPLETED => response()->json(['status' => ExportImportStatus::COMPLETED, 'data' => $import->getAttribute('errors'),]),
+            ExportImportStatus::FAILED => response()->json(['status' => ExportImportStatus::FAILED,]),
+            default => response()->json(),
+        };
+    }
 }

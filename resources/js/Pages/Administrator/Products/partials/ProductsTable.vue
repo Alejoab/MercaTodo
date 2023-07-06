@@ -88,7 +88,6 @@ const startPolling = async () => {
 const checkExport = async () => {
     const response = await axios.get(route('admin.products.exports.check'));
 
-
     if (response.data.length === 0) {
         clearInterval(pollingInterval);
         return true;
@@ -110,7 +109,6 @@ const checkExport = async () => {
 
     return false;
 }
-
 
 onMounted(() => {
     getProducts();
