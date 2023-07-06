@@ -13,6 +13,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -47,12 +48,12 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
             }
 
             /**
-             * @var ?Product $product
+             * @var ?Product $productFound
              */
-            $product = Product::query()->where('code', '=', $row['code'])->latest()->first();
+            $productFound = Product::query()->withTrashed()->where('code', '=', $row['code'])->latest()->first();
 
-            if ($product) {
-                $this->updateAction->execute($product, [
+            if ($productFound) {
+                $product = $this->updateAction->execute($productFound, [
                     'code' => $row['code'],
                     'name' => $row['name'],
                     'description' => $row['description'],
@@ -63,7 +64,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                     'image' => null,
                 ]);
             } else {
-                $this->createAction->execute([
+                $product = $this->createAction->execute([
                     'code' => $row['code'],
                     'name' => $row['name'],
                     'description' => $row['description'],
@@ -73,6 +74,10 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                     'brand_name' => $row['brand_name'],
                     'image' => null,
                 ]);
+            }
+
+            if ($row['status'] === 'Inactive') {
+                $product->delete();
             }
         }
     }
@@ -88,6 +93,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 'stock' => ['required', 'integer', 'min:0'],
                 'category_name' => ['required', 'string', 'max:255'],
                 'brand_name' => ['required', 'string', 'max:255'],
+                'status' => ['nullable', Rule::in(['Active', 'Inactive'])],
             ])->validate();
 
             return true;

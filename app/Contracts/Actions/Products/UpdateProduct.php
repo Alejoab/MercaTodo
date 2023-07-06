@@ -12,7 +12,7 @@ interface UpdateProduct
      * @param Product $product
      * @param array   $data
      *
-     * @return void
+     * @return Product
      */
-    public function execute(Product $product, array $data): void;
+    public function execute(Product $product, array $data): Product;
 }

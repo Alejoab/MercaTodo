@@ -6,8 +6,6 @@ use App\Contracts\Actions\Products\CreateProduct;
 use App\Exceptions\ApplicationException;
 use App\Models\Product;
 use App\Services\Products\ProductImagesService;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -17,7 +15,7 @@ class CreateProductAction implements CreateProduct
     /**
      * @throws ApplicationException
      */
-    public function execute(array $data): Builder|Model
+    public function execute(array $data): Product
     {
         try {
             DB::beginTransaction();
@@ -29,6 +27,9 @@ class CreateProductAction implements CreateProduct
                 $data['image'] = (new ProductImagesService())->storeImage($data['image']);
             }
 
+            /**
+             * @var Product $product
+             */
             $product = Product::query()->create([
                 'code' => $data['code'],
                 'name' => $data['name'],

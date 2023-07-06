@@ -2,6 +2,8 @@
 
 namespace App\Contracts\Actions\Products;
 
+use App\Models\Product;
+
 interface CreateProduct
 {
     /**
@@ -9,7 +11,7 @@ interface CreateProduct
      *
      * @param array $data
      *
-     * @return mixed
+     * @return Product
      */
-    public function execute(array $data): mixed;
+    public function execute(array $data): Product;
 }

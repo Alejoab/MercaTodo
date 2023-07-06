@@ -15,7 +15,7 @@ class UpdateProductAction implements UpdateProduct
     /**
      * @throws ApplicationException
      */
-    public function execute(Product $product, array $data): void
+    public function execute(Product $product, array $data): Product
     {
         try {
             DB::beginTransaction();
@@ -42,6 +42,8 @@ class UpdateProductAction implements UpdateProduct
             $product->save();
 
             DB::commit();
+
+            return $product;
         } catch (ApplicationException $e) {
             DB::rollBack();
             throw $e;
