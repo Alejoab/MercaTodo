@@ -28,13 +28,16 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
         $this->updateAction = new UpdateProductAction();
     }
 
+    /**
+     * @throws ApplicationException
+     */
     public function collection(Collection $collection): void
     {
         foreach ($collection as $row) {
             /**
              * @var ?Product $product
              */
-            $product = Product::query()->where('id', '=', $row['id'])->latest()->first();
+            $product = Product::query()->where('code', '=', $row['code'])->latest()->first();
 
             if ($product) {
                 $this->updateAction->execute($product, [

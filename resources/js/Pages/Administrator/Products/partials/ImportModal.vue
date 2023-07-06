@@ -35,8 +35,8 @@ const submit = () => {
     <Modal :show="show" @close="close">
         <div class="p-6">
             <p class="mt-1 text-sm text-gray-600">
-                You can import product data. If you want to update a product it must have the same id that it has in the
-                database. If you want to add a new product it must have an empty id.
+                You can import product data. If you want to update a product it must have the same code that it has in the
+                database. If you want to add a new product it must have a new code.
             </p>
             <h2 class="text-md font-semibold text-gray-900 mb-5 mt-7">
                 New product data import

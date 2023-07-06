@@ -33,7 +33,6 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     public function headings(): array
     {
         return [
-            'id',
             'code',
             'name',
             'description',
@@ -60,7 +59,6 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
             ->contains($this->search, ['products.name', 'products.code'])
             ->select(
                 [
-                    'products.id',
                     'products.code',
                     'products.name',
                     'products.description',
