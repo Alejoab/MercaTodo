@@ -35,6 +35,7 @@ class AdminImportController extends Controller
         }
 
         $import->status = ExportImportStatus::PENDING;
+        $import->errors = [];
         $import->save();
 
         Excel::queueImport(new ProductsImport($import), $request->file('file'));
