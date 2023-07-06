@@ -112,28 +112,28 @@ class ProductExportTest extends TestCase
 
         $export = ExportImport::query()->first();
 
-        $response = $this->getJson(route('admin.products.exports.check-export'));
+        $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
         $response->assertJson(['status' => ExportImportStatus::PENDING->value]);
 
         $export->status = ExportImportStatus::COMPLETED;
         $export->save();
 
-        $response = $this->getJson(route('admin.products.exports.check-export'));
+        $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
         $response->assertJson(['status' => ExportImportStatus::COMPLETED->value]);
 
         $export->status = ExportImportStatus::FAILED;
         $export->save();
 
-        $response = $this->getJson(route('admin.products.exports.check-export'));
+        $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
         $response->assertJson(['status' => ExportImportStatus::FAILED->value]);
     }
 
     public function test_check_export_status_with_no_exports()
     {
-        $response = $this->getJson(route('admin.products.exports.check-export'));
+        $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
         $response->assertJson([]);
     }

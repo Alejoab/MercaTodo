@@ -5,10 +5,10 @@ namespace Database\Factories;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 /**
  * @extends Factory<Product>
@@ -22,9 +22,9 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $color = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        $color = '#'.str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
         $image = Image::canvas(800, 800)->fill($color)->encode('jpg');
-        $imageName = Str::random(40) . '.jpg';
+        $imageName = Str::random(40).'.jpg';
 
         Storage::disk('product_images')->put("$imageName", $image);
 

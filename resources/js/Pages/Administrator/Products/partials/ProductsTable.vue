@@ -86,7 +86,7 @@ const startPolling = async () => {
     }
 }
 const checkExport = async () => {
-    const response = await axios.get(route('admin.products.exports.check-export'));
+    const response = await axios.get(route('admin.products.exports.check'));
 
 
     if (response.data.length === 0) {
