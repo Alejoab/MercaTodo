@@ -9,17 +9,12 @@ use App\Http\Requests\ImportRequest;
 use App\Imports\ProductsImport;
 use App\Models\ExportImport;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminImportController extends Controller
 {
     public function import(ImportRequest $request): JsonResponse
     {
-        /**
-         * @var UploadedFile $file
-         */
-        $file = $request->validated('file');
         $userId = auth()->user()->getAuthIdentifier();
 
         /**
@@ -35,7 +30,6 @@ class AdminImportController extends Controller
         }
 
         $import->status = ExportImportStatus::PENDING;
-        $import->errors = [];
         $import->save();
 
         Excel::queueImport(new ProductsImport($import), $request->file('file'));

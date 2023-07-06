@@ -6,6 +6,7 @@ use App\Actions\Products\CreateProductAction;
 use App\Actions\Products\UpdateProductAction;
 use App\Contracts\Actions\Products\CreateProduct;
 use App\Contracts\Actions\Products\UpdateProduct;
+use App\Enums\ExportImportStatus;
 use App\Exceptions\ApplicationException;
 use App\Models\ExportImport;
 use App\Models\Product;
@@ -16,14 +17,17 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, SkipsEmptyRows
+class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, SkipsEmptyRows, WithEvents
 {
 
     private ExportImport $import;
     private CreateProduct $createAction;
     private UpdateProduct $updateAction;
+    private array $errors = [];
 
     public function __construct(ExportImport $import)
     {
@@ -91,8 +95,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
             $errors = [
                 $row['code'] => $e->errors(),
             ];
-            $this->import->errors += $errors;
-            $this->import->save();
+            $this->errors += $errors;
 
             return false;
         }
@@ -101,5 +104,22 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function () {
+                $this->import->status = ExportImportStatus::COMPLETED;
+                $this->import->errors = $this->errors;
+                $this->import->save();
+            },
+        ];
+    }
+
+    public function failed(): void
+    {
+        $this->import->status = ExportImportStatus::FAILED;
+        $this->import->save();
     }
 }
