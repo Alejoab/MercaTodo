@@ -1,7 +1,7 @@
 <script setup>
 import {TailwindPagination} from "laravel-vue-pagination";
-import {Link, usePage} from '@inertiajs/vue3';
-import {onMounted, ref} from "vue";
+import {Link, router, usePage} from '@inertiajs/vue3';
+import {ref} from "vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
@@ -10,9 +10,22 @@ import Dropdown from "@/Components/Dropdown.vue";
 import ExportModal from "@/Pages/Administrator/Products/partials/ExportModal.vue";
 import ImportModal from "@/Pages/Administrator/Products/partials/ImportModal.vue";
 
-const products = ref({});
-const categories = ref([]);
-const brands = ref([]);
+const props = defineProps({
+    products: {
+        type: Object,
+        required: true
+    },
+    categories: {
+        type: Array,
+        required: true
+    },
+    brands: {
+        type: Array,
+        required: true
+    },
+});
+
+const brands = ref(props.brands);
 const destroyProductId = ref('');
 const restoreProductId = ref('');
 const showExportModal = ref(false);
@@ -25,20 +38,19 @@ const query = ref({
     brand: usePage().props.ziggy.query['brand'] ? usePage().props.ziggy.query['brand'] : '',
 })
 
-const clearQuery = () => {
-    query.value = {
-        page: 1,
-        search: '',
-        category: '',
-        brand: '',
-    }
-
-    replaceRoute();
+const getProducts = async (page = 1) => {
+    query.value.page = page;
+    await router.visit(route('admin.products', query.value), {
+        preserveScroll: true,
+        replace: true,
+    });
 }
 
-const getCategories = async () => {
-    const response = await fetch(route('categories'));
-    categories.value = await response.json();
+const clearQuery = async () => {
+    await router.visit(route('admin.products'), {
+        preserveScroll: true,
+        replace: true,
+    });
 }
 
 const getBrands = async () => {
@@ -46,34 +58,27 @@ const getBrands = async () => {
     brands.value = await response.json();
 }
 
-const getProducts = async () => {
-    const response = await fetch(route('admin.list-products', query.value));
-    products.value = await response.json();
-}
-
-const replaceRoute = () => {
-    window.location.href = route('admin.products', query.value);
-}
-
-const destroyProduct = async (id) => {
+const destroyProduct = (id) => {
     destroyProductId.value = '';
-    await axios.delete(route('admin.products.destroy', id));
-    await getProducts();
+    axios.delete(route('admin.products.destroy', id))
+        .then(() => {
+            const updateProduct = props.products.data.find(product => product.id === id);
+            if (updateProduct) {
+                updateProduct.status = updateProduct.status === 'Active' ? 'Inactive' : 'Active';
+            }
+        });
 }
 
-const restoreProduct = async (id) => {
+const restoreProduct = (id) => {
     restoreProductId.value = '';
-    await axios.put(route('admin.products.restore', id));
-    await getProducts()
+    axios.put(route('admin.products.restore', id))
+        .then(() => {
+            const updateProduct = props.products.data.find(product => product.id === id);
+            if (updateProduct) {
+                updateProduct.status = updateProduct.status === 'Active' ? 'Inactive' : 'Active';
+            }
+        });
 }
-
-onMounted(() => {
-    axios.all([
-        getProducts(),
-        getCategories(),
-        getBrands(),
-    ])
-})
 </script>
 
 <template>
@@ -120,7 +125,7 @@ onMounted(() => {
 
             <div class="w-full flex justify-between mt-5 lg:mt-0 px-10 lg:px-0">
                 <div class="my-auto">
-                    <button class="p-1 ml-2" @click="query.page = 1; replaceRoute()">
+                    <button class="p-1 ml-2" @click="getProducts">
                         <svg class="h-8 w-8 text-black" fill="none" height="24" stroke="currentColor"
                              stroke-linecap="round"
                              stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24">
@@ -236,7 +241,7 @@ onMounted(() => {
             </div>
             <div class="mt-7 flex justify-center">
                 <TailwindPagination :data="products" :limit="1"
-                                    @pagination-change-page="query.page = $event; replaceRoute()"></TailwindPagination>
+                                    @pagination-change-page="getProducts"></TailwindPagination>
             </div>
         </div>
     </div>

@@ -90,7 +90,6 @@ Route::prefix('admin/products/imports')->middleware(['auth', 'verified', 'role:A
 
 Route::prefix('admin/products')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminProductController::class, 'index'])->name('admin.products');
-    Route::get('/list-products', [AdminProductController::class, 'listProducts'])->name('admin.list-products');
     Route::get('/categories', [AdminProductController::class, 'searchCategories'])->name('admin.categories.search');
     Route::get('/brands', [AdminProductController::class, 'searchBrands'])->name('admin.brands.search');
     Route::get('/create', [AdminProductController::class, 'create'])->name('admin.products.create');

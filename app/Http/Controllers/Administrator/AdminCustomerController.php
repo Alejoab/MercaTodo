@@ -18,6 +18,9 @@ class AdminCustomerController extends Controller
     /**
      * Show the customers index page for administrator.
      *
+     * @param Request          $request
+     * @param CustomersService $customersService
+     *
      * @return Response
      */
     public function index(Request $request, CustomersService $customersService): Response
