@@ -138,7 +138,7 @@ class ProductExportTest extends TestCase
         $response->assertJson([]);
     }
 
-    public function test_database_store_export(): void
+    public function test_database_stores_export(): void
     {
         Excel::fake();
 
@@ -151,7 +151,7 @@ class ProductExportTest extends TestCase
         ]);
     }
 
-    public function test_only_one_export_register_for_user(): void
+    public function test_database_has_only_one_export_for_each_user(): void
     {
         Excel::fake();
 

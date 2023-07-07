@@ -29,6 +29,11 @@ class ExportImport extends Model
             'type',
         ];
 
+    protected $attributes
+        = [
+            'errors' => '{}',
+        ];
+
     protected $casts
         = [
             'errors' => 'array',
