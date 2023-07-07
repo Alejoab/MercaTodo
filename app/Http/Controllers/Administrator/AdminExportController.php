@@ -35,7 +35,7 @@ class AdminExportController extends Controller
             return response()->json(['error' => 'Export is already in progress.'], 400);
         }
 
-        $fileName = "products_export_$userId.csv";
+        $fileName = "products_export_$userId.xlsx";
 
         $export->status = ExportImportStatus::PENDING;
         $export->save();
@@ -66,12 +66,16 @@ class AdminExportController extends Controller
     public function download(): StreamedResponse
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "products_export_$userId.csv";
+        $fileName = "products_export_$userId.xlsx";
 
         /**
          * @var FilesystemAdapter $disk
          */
         $disk = Storage::disk('exports');
+
+        if (!$disk->exists($fileName)) {
+            abort(404);
+        }
 
         return $disk->download($fileName);
     }

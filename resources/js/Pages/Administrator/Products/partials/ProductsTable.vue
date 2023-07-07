@@ -68,9 +68,11 @@ const restoreProduct = async (id) => {
 }
 
 onMounted(() => {
-    getProducts();
-    getCategories();
-    getBrands();
+    axios.all([
+        getProducts(),
+        getCategories(),
+        getBrands(),
+    ])
 })
 </script>
 

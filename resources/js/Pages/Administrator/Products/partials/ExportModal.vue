@@ -80,11 +80,16 @@ onUnmounted(() => {
 <template>
     <Modal :show="show" @close="close">
         <div class="p-6">
+            <h2 class="text-md font-semibold text-gray-900 mt-2 mb-5">
+                Export Product Data
+            </h2>
             <p class="mt-1 text-sm text-gray-600">
                 Exporting products will generate a XLSX file with all the filter products in your store.
             </p>
             <div class="flex justify-between mt-6">
-                <primary-button class="disabled:bg-amber-500" @click="exportProducts">Export Products</primary-button>
+                <primary-button :disabled="exportFileName === 'pending'" class="disabled:bg-gray-500"
+                                @click="exportProducts">Export Products
+                </primary-button>
 
                 <div v-if="!exportFileName || exportFileName === 'failed'"></div>
                 <div v-else-if="exportFileName === 'pending'" class="flex items-center">

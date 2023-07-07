@@ -95,15 +95,13 @@ onUnmounted(() => {
 <template>
     <Modal :show="show" @close="close">
         <div class="p-6">
-            <p class="mt-1 text-sm text-gray-600">
-                You can import product data. If you want to update a product it must have the same code that it has in
-                the
-                database. If you want to add a new product it must have a new code.
-            </p>
-            <h2 class="text-md font-semibold text-gray-900 mb-5 mt-7">
-                New product data import
+            <h2 class="text-md font-semibold text-gray-900 mt-2 mb-5">
+                Import Product Data
             </h2>
-            <form class="flex justify-between bg-gray-100 rounded-md p-5" @submit.prevent="submit">
+            <p class="mt-1 text-sm text-gray-600">
+                The file must contain the following fields: code, name, description, price, stock, category_name, brand_name and status. This file must be in CSV or XLSX format.
+            </p>
+            <form class="flex justify-between bg-gray-100 rounded-md p-5 mt-7" @submit.prevent="submit">
                 <div class="my-auto">
                     <input
                         id="importFile"
@@ -111,6 +109,7 @@ onUnmounted(() => {
                         name="File Upload"
                         type="file"
                         @input="uploadFile"
+                        class="file:p-2 file:border-none file:rounded-xl"
                     >
 
                     <InputError :message="form.errors.file" class="mt-2"/>
