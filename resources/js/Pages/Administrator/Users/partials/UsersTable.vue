@@ -1,6 +1,6 @@
 <script setup>
 import {TailwindPagination} from "laravel-vue-pagination";
-import {Link, router} from '@inertiajs/vue3';
+import {Link, router, usePage} from '@inertiajs/vue3';
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
@@ -85,7 +85,10 @@ const restoreUser = async (id) => {
                     <th class="px-6 py-3" scope="col"> Email</th>
                     <th class="px-6 py-3" scope="col"> Role</th>
                     <th class="px-6 py-3" scope="col"> Status</th>
-                    <th class="px-6 py-3" scope="col"> Actions</th>
+                    <th v-if="usePage().props.permissions.includes('Update') || usePage().props.permissions.includes('Delete')" class="px-6 py-3 text-center"
+                        scope="col">
+                        Actions
+                    </th>
                     </thead>
                     <tbody>
                     <tr v-for="user in users.data" class="bg-white border-b">
@@ -94,9 +97,11 @@ const restoreUser = async (id) => {
                         <td class="px-6 py-1.5"> {{ user.email }}</td>
                         <td class="px-6 py-1.5"> {{ user.role }}</td>
                         <td class="px-6 py-1.5"> {{ user.deleted }}</td>
-                        <td class="px-6 py-1.5">
+                        <td v-if="usePage().props.permissions.includes('Update') || usePage().props.permissions.includes('Delete')"
+                            class="px-6 py-1.5 text-center">
                             <div class="inline-flex space-x-1">
-                                <Link :href="route('admin.user.show', user.id)">
+                                <Link v-if="usePage().props.permissions.includes('Update')"
+                                      :href="route('admin.user.show', user.id)">
                                     <svg class="h-6 w-6 text-black" fill="none" stroke="currentColor"
                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                          viewBox="0 0 24 24">
@@ -106,9 +111,12 @@ const restoreUser = async (id) => {
                                         <line x1="16" x2="19" y1="5" y2="8"/>
                                     </svg>
                                 </Link>
-                                <button v-if="user.deleted === 'Active'" @click="destroyUserId = user.id">
+                                <button
+                                    v-if="user.deleted === 'Active' && usePage().props.permissions.includes('Delete')"
+                                    @click="destroyUserId = user.id">
                                     <svg class="h-6 w-6 text-red-500" fill="none" height="24" stroke="currentColor"
-                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
+                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                         viewBox="0 0 24 24"
                                          width="24">
                                         <path d="M0 0h24v24H0z" stroke="none"/>
                                         <line x1="4" x2="20" y1="7" y2="7"/>
@@ -118,7 +126,9 @@ const restoreUser = async (id) => {
                                         <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
                                     </svg>
                                 </button>
-                                <button v-else @click="restoreUserId = user.id">
+                                <button
+                                    v-if="user.deleted !== 'Active' && usePage().props.permissions.includes('Delete')"
+                                    @click="restoreUserId = user.id">
                                     <svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor"
                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                          viewBox="0 0 24 24">

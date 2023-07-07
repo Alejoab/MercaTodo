@@ -50,7 +50,7 @@ class AdminUserController extends Controller
         return Inertia::render('Administrator/Users/EditUser', [
             'user' => $user->load(['roles:name', 'permissions:name']),
             'roles' => RoleEnum::cases(),
-            'permissions' => PermissionEnum::cases(),
+            'permissions_view' => PermissionEnum::cases(),
         ]);
     }
 

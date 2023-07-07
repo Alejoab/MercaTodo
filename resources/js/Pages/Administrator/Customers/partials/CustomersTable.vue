@@ -1,6 +1,6 @@
 <script setup>
 import {TailwindPagination} from "laravel-vue-pagination";
-import {Link, router} from '@inertiajs/vue3';
+import {Link, router, usePage} from '@inertiajs/vue3';
 import {ref} from "vue";
 
 const props = defineProps({
@@ -62,7 +62,7 @@ const getCustomers = async (page = 1, search = '') => {
                     <th class="px-6 py-3" scope="col"> City</th>
                     <th class="px-6 py-3" scope="col"> Department</th>
                     <th class="px-6 py-3" scope="col"> Address</th>
-                    <th class="px-6 py-3" scope="col"></th>
+                    <th v-if="usePage().props.permissions.includes('Update')" class="px-6 py-3" scope="col"></th>
                     </thead>
                     <tbody>
                     <tr v-for="user in customers.data" class="bg-white border-b">
@@ -76,9 +76,10 @@ const getCustomers = async (page = 1, search = '') => {
                         <td class="px-4 py-1.5"> {{ user.city }}</td>
                         <td class="px-4 py-1.5"> {{ user.department }}</td>
                         <td class="px-4 py-1.5"> {{ user.address }}</td>
-                        <td class="px-4 py-1.5 text-center">
+                        <td v-if="usePage().props.permissions.includes('Update')" class="px-4 py-1.5 text-center">
                             <div class="inline-flex space-x-1">
-                                <Link :href="route('admin.customer.show', user.id)">
+                                <Link v-if="usePage().props.permissions.includes('Update')"
+                                      :href="route('admin.customer.show', user.id)">
                                     <svg class="h-6 w-6 text-black" fill="none" stroke="currentColor"
                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                          viewBox="0 0 24 24">

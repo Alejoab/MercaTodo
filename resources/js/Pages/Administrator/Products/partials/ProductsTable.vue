@@ -160,10 +160,12 @@ const restoreProduct = (id) => {
 
                         <template #content>
                             <div class="flex flex-col space-y-2">
-                                <a :href="route('admin.products.create')" class="text-start p-2 pl-3">Add Product</a>
+                                <a v-if="usePage().props.permissions.includes('Create')" :href="route('admin.products.create')"
+                                   class="text-start p-2 pl-3">Add Product</a>
                                 <button class="text-start p-2 pl-3" @click="showExportModal = true">Export Products
                                 </button>
-                                <button class="text-start p-2 pl-3" @click="showImportModal = true">Import Products
+                                <button v-if="usePage().props.permissions.includes('Create')" class="text-start p-2 pl-3"
+                                        @click="showImportModal = true">Import Products
                                 </button>
                             </div>
                         </template>
@@ -183,7 +185,8 @@ const restoreProduct = (id) => {
                         <th class="px-6 py-3" scope="col"> Category</th>
                         <th class="px-6 py-3" scope="col"> Brand</th>
                         <th class="text-center" scope="col"> Status</th>
-                        <th class="px-6 py-3" scope="col"></th>
+                        <th v-if="usePage().props.permissions.includes('Update') || usePage().props.permissions.includes('Delete')" class="px-6 py-3"
+                            scope="col"></th>
                     </tr>
                     <tbody>
                     <tr v-for="product in products.data" class="bg-white border-b">
@@ -194,9 +197,11 @@ const restoreProduct = (id) => {
                         <td class="px-4 py-1.5"> {{ product.category_name }}</td>
                         <td class="px-4 py-1.5"> {{ product.brand_name }}</td>
                         <td class="px-4 py-1.5 text-center"> {{ product.status }}</td>
-                        <td class="text-center">
+                        <td v-if="usePage().props.permissions.includes('Update') || usePage().props.permissions.includes('Delete')"
+                            class="text-center">
                             <div class="inline-flex space-x-1">
-                                <Link :href="route('admin.products.show', product.id)">
+                                <Link v-if="usePage().props.permissions.includes('Update')"
+                                      :href="route('admin.products.show', product.id)">
                                     <svg class="h-6 w-6 text-black" fill="none" stroke="currentColor"
                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                          viewBox="0 0 24 24">
@@ -207,7 +212,9 @@ const restoreProduct = (id) => {
                                     </svg>
                                 </Link>
 
-                                <button v-if="product.status === 'Active'" @click="destroyProductId = product.id">
+                                <button
+                                    v-if="product.status === 'Active' && usePage().props.permissions.includes('Delete')"
+                                    @click="destroyProductId = product.id">
                                     <svg class="h-6 w-6 text-red-500" fill="none" height="24" stroke="currentColor"
                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                          viewBox="0 0 24 24"
@@ -221,7 +228,9 @@ const restoreProduct = (id) => {
                                     </svg>
                                 </button>
 
-                                <button v-else @click="restoreProductId = product.id">
+                                <button
+                                    v-if="product.status !== 'Active' && usePage().props.permissions.includes('Delete')"
+                                    @click="restoreProductId = product.id">
                                     <svg class="h-6 w-6 text-green-500" fill="none" height="24" stroke="currentColor"
                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                          viewBox="0 0 24 24"
@@ -292,5 +301,6 @@ const restoreProduct = (id) => {
 
     <ExportModal :query="query" :show="showExportModal" @close="showExportModal = false"></ExportModal>
 
-    <ImportModal :show="showImportModal" @close="showImportModal = false"></ImportModal>
+    <ImportModal v-if="usePage().props.permissions.includes('Create')" :show="showImportModal"
+                 @close="showImportModal = false"></ImportModal>
 </template>
