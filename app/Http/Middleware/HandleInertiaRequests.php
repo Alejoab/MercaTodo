@@ -37,7 +37,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'isAdmin' => $request->user()?->hasrole(RoleEnum::SUPER_ADMIN->value) || $request->user()?->hasrole(RoleEnum::ADMIN->value),
             'role' => $request->user()?->getRoleNames()->first(),
-            'permissions' => $request->user()?->getPermissionNames(),
+            'permissions' => array_column($request->user()?->getAllPermissions()->toArray() ?? [], 'name'),
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [
                     'location' => $request->url(),

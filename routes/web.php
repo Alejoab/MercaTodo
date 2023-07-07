@@ -73,14 +73,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
         Route::get('/', [AdminUserController::class, 'index'])->name('admin.users');
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->get('/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
-        Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name(
-            'admin.user.update.password'
-        );
+        Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name('admin.user.update.password');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->put('/{user}/restore', [AdminUserController::class, 'userRestore'])->withTrashed()->name('admin.user.restore');
-        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{user}/force-delete', [AdminUserController::class, 'userForceDelete'])->withTrashed()->name(
-            'admin.user.force-delete'
-        );
+        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{user}/force-delete', [AdminUserController::class, 'userForceDelete'])->withTrashed()->name('admin.user.force-delete');
     });
 
     Route::prefix('customers')->group(function () {
