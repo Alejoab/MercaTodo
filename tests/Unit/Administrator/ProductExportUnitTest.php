@@ -4,6 +4,7 @@ namespace Tests\Unit\Administrator;
 
 use App\Enums\ExportImportStatus;
 use App\Enums\ExportImportType;
+use App\Enums\RoleEnum;
 use App\Exports\ProductsExport;
 use App\Models\Brand;
 use App\Models\Category;
@@ -30,7 +31,7 @@ class ProductExportUnitTest extends TestCase
     {
         parent::setUp();
 
-        $roleAdmin = Role::create(['name' => 'Administrator']);
+        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
         Department::factory(1)->create();
         City::factory(1)->create();
         $this->admin = User::factory()->create();

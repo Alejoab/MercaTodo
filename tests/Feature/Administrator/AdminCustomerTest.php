@@ -3,6 +3,7 @@
 namespace Tests\Feature\Administrator;
 
 use App\Enums\DocumentType;
+use App\Enums\RoleEnum;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\User;
@@ -21,8 +22,8 @@ class AdminCustomerTest extends TestCase
     {
         parent::setUp();
 
-        $roleAdmin = Role::create(['name' => 'Administrator']);
-        $roleCustomer = Role::create(['name' => 'Customer']);
+        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
+        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
 
         Department::factory(1)->create();
         City::factory(1)->create();

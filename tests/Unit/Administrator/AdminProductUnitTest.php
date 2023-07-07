@@ -4,6 +4,7 @@ namespace Tests\Unit\Administrator;
 
 use App\Actions\Products\CreateBrandAction;
 use App\Actions\Products\CreateCategoryAction;
+use App\Enums\RoleEnum;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\City;
@@ -25,7 +26,7 @@ class AdminProductUnitTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $roleAdmin = Role::create(['name' => 'Administrator']);
+        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
 
         Department::factory(1)->create();
         City::factory(1)->create();

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminExportController;
@@ -15,6 +16,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+
+$admins = implode('|', [RoleEnum::ADMIN->value, RoleEnum::SUPER_ADMIN->value]);
 
 /*
 |--------------------------------------------------------------------------

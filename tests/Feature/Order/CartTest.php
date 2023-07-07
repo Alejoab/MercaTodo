@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Order;
 
+use App\Enums\RoleEnum;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\City;
@@ -24,7 +25,7 @@ class CartTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $roleCustomer = Role::create(['name' => 'Customer']);
+        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
 
         Department::factory(1)->create();
         City::factory(1)->create();
