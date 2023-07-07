@@ -73,7 +73,6 @@ Route::prefix('admin/users')->middleware(['auth', 'verified', 'role:Administrato
 
 Route::prefix('admin/customers')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminCustomerController::class, 'index'])->name('admin.customers');
-    Route::get('/list-customers', [AdminCustomerController::class, 'listCustomers'])->name('admin.list-customers');
     Route::get('/{user}', [AdminCustomerController::class, 'customerShow'])->withTrashed()->name('admin.customer.show');
     Route::put('/{user}', [AdminCustomerController::class, 'customerUpdate'])->withTrashed()->name('admin.customer.update');
 });
