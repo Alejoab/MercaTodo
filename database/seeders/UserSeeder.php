@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\PermissionEnum;
 use App\Enums\RoleEnum;
 use App\Models\Customer;
 use App\Models\User;
@@ -33,7 +32,7 @@ class UserSeeder extends Seeder
             'address' => env('ADMIN_ADDRESS'),
             'city_id' => env('ADMIN_CITY_ID'),
             'user_id' => $adminUser->id,
-        ])->user->syncPermissions(array_column(PermissionEnum::cases(), 'value'));
+        ]);
 
 
         /**

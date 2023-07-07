@@ -15,12 +15,16 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (RoleEnum::cases() as $role) {
-            Role::create(['name' => $role->value]);
-        }
-
         foreach (PermissionEnum::cases() as $permission) {
             Permission::create(['name' => $permission->value]);
+        }
+
+        foreach (RoleEnum::cases() as $role) {
+            $roleDB = Role::create(['name' => $role->value]);
+
+            if ($role === RoleEnum::SUPER_ADMIN) {
+                $roleDB->syncPermissions(array_column(PermissionEnum::cases(), 'value'));
+            }
         }
     }
 }
