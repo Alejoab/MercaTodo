@@ -108,8 +108,8 @@ const getBrands = async () => {
                 </div>
 
                 <div class="mb-10 flex justify-between px-3">
-                    <SecondaryButton @click="clearQuery">Clear</SecondaryButton>
-                    <PrimaryButton @click="getProducts">Search</PrimaryButton>
+                    <SecondaryButton @click="clearQuery()">Clear</SecondaryButton>
+                    <PrimaryButton @click="getProducts()">Search</PrimaryButton>
                 </div>
             </div>
         </transition>
@@ -161,7 +161,7 @@ const getBrands = async () => {
                 <TailwindPagination
                     :data="products"
                     :limit="1"
-                    @pagination-change-page="getProducts"
+                    @pagination-change-page="getProducts()"
                 >
                 </TailwindPagination>
             </div>

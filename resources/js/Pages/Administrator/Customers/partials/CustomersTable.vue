@@ -96,7 +96,7 @@ const getCustomers = async (page = 1, search = '') => {
             </div>
             <div class="mt-7 flex justify-center">
                 <TailwindPagination :data="customers" :limit="1"
-                                    @pagination-change-page="getCustomers"></TailwindPagination>
+                                    @pagination-change-page="getCustomers()"></TailwindPagination>
             </div>
         </div>
     </div>

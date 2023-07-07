@@ -36,7 +36,7 @@ const query = ref({
     search: usePage().props.ziggy.query['search'] ? usePage().props.ziggy.query['search'] : '',
     category: usePage().props.ziggy.query['category'] ? usePage().props.ziggy.query['category'] : '',
     brand: usePage().props.ziggy.query['brand'] ? usePage().props.ziggy.query['brand'] : '',
-})
+});
 
 const getProducts = async (page = 1) => {
     query.value.page = page;
@@ -87,10 +87,10 @@ const restoreProduct = (id) => {
             <div class="flex flex-col md:flex-row my-auto md:space-x-4 space-y-3 md:space-y-0 mx-auto">
                 <div>
                     <input
-                        id="simple-search" v-model="query.search"
+                        id="simple-search"
+                        v-model="query.search"
                         class="bg-gray-50 border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5"
                         placeholder="Search"
-                        required
                         type="text"
                     >
                 </div>
@@ -98,10 +98,9 @@ const restoreProduct = (id) => {
                 <div>
                     <select
                         id="category_name"
-                        v-model.number="query.category"
+                        v-model="query.category"
                         autocomplete="category_name"
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-60"
-                        required
                         @change="getBrands(); query.brand = '';"
                     >
                         <option disabled selected value="">Select a Category</option>
@@ -112,10 +111,9 @@ const restoreProduct = (id) => {
                 <div>
                     <select
                         id="brand_name"
-                        v-model.number="query.brand"
+                        v-model="query.brand"
                         autocomplete="brand_name"
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-60"
-                        required
                     >
                         <option disabled selected value="">Select a Brand</option>
                         <option v-for="brand in brands" :value="brand.id">{{ brand.name }}</option>
@@ -125,7 +123,7 @@ const restoreProduct = (id) => {
 
             <div class="w-full flex justify-between mt-5 lg:mt-0 px-10 lg:px-0">
                 <div class="my-auto">
-                    <button class="p-1 ml-2" @click="getProducts">
+                    <button class="p-1 ml-2" @click="getProducts()">
                         <svg class="h-8 w-8 text-black" fill="none" height="24" stroke="currentColor"
                              stroke-linecap="round"
                              stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24">
@@ -135,7 +133,7 @@ const restoreProduct = (id) => {
                         </svg>
                     </button>
 
-                    <button class="p-1 ml-2" @click="clearQuery">
+                    <button class="p-1 ml-2" @click="clearQuery()">
                         <svg class="h-8 w-8 text-black" fill="none" height="24" stroke="currentColor"
                              stroke-linecap="round"
                              stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24">
@@ -241,7 +239,7 @@ const restoreProduct = (id) => {
             </div>
             <div class="mt-7 flex justify-center">
                 <TailwindPagination :data="products" :limit="1"
-                                    @pagination-change-page="getProducts"></TailwindPagination>
+                                    @pagination-change-page="getProducts()"></TailwindPagination>
             </div>
         </div>
     </div>
