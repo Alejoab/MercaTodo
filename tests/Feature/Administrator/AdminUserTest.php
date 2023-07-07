@@ -2,16 +2,17 @@
 
 namespace Tests\Feature\Administrator;
 
-use App\Enums\DocumentType;
+use App\Enums\PermissionEnum;
 use App\Enums\RoleEnum;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class AdminCustomerTest extends TestCase
+class AdminUserTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -117,5 +118,20 @@ class AdminCustomerTest extends TestCase
             route('admin.user.force-delete', $this->user->id)
         );
         $response->assertSessionHasErrors('password');
+    }
+
+    public function test_admin_can_update_the_role_of_the_user(): void
+    {
+        Role::create(['name' => RoleEnum::ADMIN->value]);
+        Permission::create(['name' => PermissionEnum::UPDATE->value]);
+
+        $this->actingAs($this->admin)->put(route('admin.user.update', $this->user->id), [
+            'role' => RoleEnum::ADMIN->value,
+            'permissions' => [PermissionEnum::UPDATE->value],
+        ]);
+
+        $this->user->refresh();
+        $this->assertContains(RoleEnum::ADMIN->value, $this->user->getRoleNames());
+        $this->assertContains(PermissionEnum::UPDATE->value, $this->user->getAllPermissions()->pluck('name')->toArray());
     }
 }
