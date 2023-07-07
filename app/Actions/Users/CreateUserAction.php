@@ -3,6 +3,7 @@
 namespace App\Actions\Users;
 
 use App\Contracts\Actions\Users\CreateUser;
+use App\Enums\RoleEnum;
 use App\Exceptions\ApplicationException;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -25,7 +26,7 @@ class CreateUserAction implements CreateUser
                 'password' => Hash::make($data['password']),
             ]);
 
-            $user->assignRole('Customer');
+            $user->assignRole(RoleEnum::CUSTOMER->value);
             event(new Registered($user));
 
             return $user;

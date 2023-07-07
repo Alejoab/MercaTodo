@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\User;
 use App\Services\Customers\CustomersService;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,11 +18,18 @@ class AdminCustomerController extends Controller
     /**
      * Show the customers index page for administrator.
      *
+     * @param Request          $request
+     * @param CustomersService $customersService
+     *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request, CustomersService $customersService): Response
     {
-        return Inertia::render('Administrator/Customers/Index');
+        $customers = $customersService->listCustomersToTable($request->get('search'));
+
+        return Inertia::render('Administrator/Customers/Index', [
+            'customers' => $customers,
+        ]);
     }
 
     /**
@@ -39,19 +45,6 @@ class AdminCustomerController extends Controller
             'user' => $user->load('customer.city'),
             'document_types' => DocumentType::cases(),
         ]);
-    }
-
-    /**
-     * Lists the customers for the administrator.
-     *
-     * @param Request          $request
-     * @param CustomersService $customersService
-     *
-     * @return LengthAwarePaginator
-     */
-    public function listCustomers(Request $request, CustomersService $customersService): LengthAwarePaginator
-    {
-        return $customersService->listCustomersToTable($request->get('search'));
     }
 
     /**

@@ -13,7 +13,6 @@ use App\Models\Product;
 use App\Services\Products\BrandsService;
 use App\Services\Products\CategoriesService;
 use App\Services\Products\ProductsService;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,11 +24,24 @@ class AdminProductController extends Controller
     /**
      * Shows the index products pages.
      *
+     * @param Request           $request
+     * @param ProductsService   $productsService
+     * @param CategoriesService $categoriesService
+     * @param BrandsService     $brandsService
+     *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request, ProductsService $productsService, CategoriesService $categoriesService, BrandsService $brandsService): Response
     {
-        return Inertia::render('Administrator/Products/Index');
+        $search = $request->get('search');
+        $category = $request->get('category');
+        $brand = $request->get('brand');
+
+        return Inertia::render('Administrator/Products/Index', [
+            'products' => fn() => $productsService->listProductsAdmin($search, $category, $brand),
+            'categories' => fn() => $categoriesService->list(),
+            'brands' => fn() => $brandsService->brandsByCategory($category),
+        ]);
     }
 
     /**
@@ -146,20 +158,5 @@ class AdminProductController extends Controller
     public function searchBrands(Request $request, BrandsService $brandsService): Collection|array
     {
         return $brandsService->searchBrands($request->get('search'));
-    }
-
-    /**
-     * @param Request         $request
-     * @param ProductsService $productsService
-     *
-     * @return LengthAwarePaginator
-     */
-    public function listProducts(Request $request, ProductsService $productsService): LengthAwarePaginator
-    {
-        $search = $request->get('search');
-        $category = $request->get('category');
-        $brand = $request->get('brand');
-
-        return $productsService->listProductsAdmin($search, $category, $brand);
     }
 }

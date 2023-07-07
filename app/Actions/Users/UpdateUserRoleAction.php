@@ -11,9 +11,13 @@ use Throwable;
 class UpdateUserRoleAction implements UpdateUserRole
 {
     /**
+     * @param User   $user
+     * @param string $role
+     * @param array  $permissions
+     *
      * @throws ApplicationException
      */
-    public function execute(User $user, string $role): void
+    public function execute(User $user, string $role, array $permissions): void
     {
         try {
             if (!$user->hasRole($role)) {
@@ -25,6 +29,8 @@ class UpdateUserRoleAction implements UpdateUserRole
                     'role' => $role,
                 ]);
             }
+
+            $user->syncPermissions($permissions);
 
             $user->save();
         } catch (Throwable $e) {

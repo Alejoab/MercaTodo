@@ -7,28 +7,36 @@ use App\Contracts\Actions\Users\ForceDeleteUser;
 use App\Contracts\Actions\Users\RestoreUser;
 use App\Contracts\Actions\Users\UpdateUserPassword;
 use App\Contracts\Actions\Users\UpdateUserRole;
+use App\Enums\PermissionEnum;
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRoleUpdateRequest;
 use App\Models\User;
 use App\Services\Users\UsersService;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class AdminUserController extends Controller
 {
     /**
      * Show the users list.
      *
+     * @param Request      $request
+     * @param UsersService $service
+     *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request, UsersService $service): Response
     {
-        return Inertia::render('Administrator/Users/Index');
+        $users = $service->listUsersToTable($request->get('search'));
+
+        return Inertia::render('Administrator/Users/Index', [
+            'users' => $users,
+        ]);
     }
 
     /**
@@ -41,23 +49,24 @@ class AdminUserController extends Controller
     public function userShow(User $user): Response
     {
         return Inertia::render('Administrator/Users/EditUser', [
-            'user' => $user->load('roles:name'),
-            'roles' => Role::all()->pluck('name'),
+            'user' => $user->load(['roles:name', 'permissions:name']),
+            'roles' => RoleEnum::cases(),
+            'permissions_view' => PermissionEnum::cases(),
         ]);
     }
 
     /**
      * Updates a user.
      *
-     * @param Request        $request
-     * @param User           $user
-     * @param UpdateUserRole $action
+     * @param UserRoleUpdateRequest $request
+     * @param User                  $user
+     * @param UpdateUserRole        $updateRoleAction
      *
      * @return RedirectResponse
      */
-    public function userUpdate(Request $request, User $user, UpdateUserRole $action): RedirectResponse
+    public function userUpdate(UserRoleUpdateRequest $request, User $user, UpdateUserRole $updateRoleAction): RedirectResponse
     {
-        $action->execute($user, $request['role']);
+        $updateRoleAction->execute($user, $request['role'], $request['permissions']);
 
         return redirect()->route('admin.user.show', $user->getKey());
     }
@@ -126,18 +135,5 @@ class AdminUserController extends Controller
         $action->execute($user);
 
         return Redirect::to(route('admin.users'));
-    }
-
-    /**
-     * List all the users.
-     *
-     * @param Request      $request
-     * @param UsersService $service
-     *
-     * @return LengthAwarePaginator
-     */
-    public function listUsers(Request $request, UsersService $service): LengthAwarePaginator
-    {
-        return $service->listUsersToTable($request->get('search'));
     }
 }

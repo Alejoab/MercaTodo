@@ -2,15 +2,17 @@
 
 namespace Tests\Feature\Administrator;
 
-use App\Enums\DocumentType;
+use App\Enums\PermissionEnum;
+use App\Enums\RoleEnum;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class AdminCustomerTest extends TestCase
+class AdminUserTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,8 +23,8 @@ class AdminCustomerTest extends TestCase
     {
         parent::setUp();
 
-        $roleAdmin = Role::create(['name' => 'Administrator']);
-        $roleCustomer = Role::create(['name' => 'Customer']);
+        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
+        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
 
         Department::factory(1)->create();
         City::factory(1)->create();
@@ -55,20 +57,13 @@ class AdminCustomerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_admin_can_update_a_user_information(): void
+    public function test_admin_can_update_user(): void
     {
         $response = $this->actingAs($this->admin)->put(
             route('admin.user.update', $this->user->id),
             [
-                'name' => 'Test User',
-                'surname' => 'Test User',
-                'document' => '12345678',
-                'document_type' => DocumentType::CC->value,
-                'email' => 'test@test.com',
-                'phone' => '1234567890',
-                'address' => 'Test Address',
-                'city_id' => 1,
-                'role' => 'Customer',
+                'role' => RoleEnum::CUSTOMER->value,
+                'permissions' => [],
             ]
         );
 
@@ -123,5 +118,20 @@ class AdminCustomerTest extends TestCase
             route('admin.user.force-delete', $this->user->id)
         );
         $response->assertSessionHasErrors('password');
+    }
+
+    public function test_admin_can_update_the_role_of_the_user(): void
+    {
+        Role::create(['name' => RoleEnum::ADMIN->value]);
+        Permission::create(['name' => PermissionEnum::UPDATE->value]);
+
+        $this->actingAs($this->admin)->put(route('admin.user.update', $this->user->id), [
+            'role' => RoleEnum::ADMIN->value,
+            'permissions' => [PermissionEnum::UPDATE->value],
+        ]);
+
+        $this->user->refresh();
+        $this->assertContains(RoleEnum::ADMIN->value, $this->user->getRoleNames());
+        $this->assertContains(PermissionEnum::UPDATE->value, $this->user->getAllPermissions()->pluck('name')->toArray());
     }
 }

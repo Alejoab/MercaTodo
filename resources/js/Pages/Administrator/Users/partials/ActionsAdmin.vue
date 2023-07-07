@@ -1,7 +1,7 @@
 <script setup>
 
 import DangerButton from "@/Components/DangerButton.vue";
-import {router, useForm, usePage} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import {nextTick, ref} from "vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -61,105 +61,106 @@ const closeModal = () => {
 </script>
 
 <template>
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">Actions</h2>
-    </header>
-    <div class="mt-4">
-        <div v-if="user.deleted_at">
-            <SuccessButton @click="restoreUserId = user.id" class="mr-5">Restore Account</SuccessButton>
-            <DangerButton @click="confirmUserDeletion"> Force Delete Account </DangerButton>
-        </div>
+    <section>
+        <header>
+            <h2 class="text-lg font-medium text-gray-900">Actions</h2>
+        </header>
+        <div class="mt-4">
+            <div v-if="user.deleted_at">
+                <SuccessButton class="mr-5" @click="restoreUserId = user.id">Restore Account</SuccessButton>
+                <DangerButton @click="confirmUserDeletion"> Force Delete Account</DangerButton>
+            </div>
             <DangerButton v-else @click="destroyUserId = user.id">Delete Account</DangerButton>
-    </div>
-
-    <Modal :show="confirmingUserDeletion" @close="closeModal">
-        <div class="p-6">
-            <h2 class="text-lg font-medium text-gray-900">
-                Are you sure you want to delete the account?
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Once the account is deleted, all of its resources and data will be permanently deleted. Please
-                enter your password to confirm you would like to permanently delete the account.
-            </p>
-
-            <div class="mt-6">
-                <InputLabel for="password" value="Password" class="sr-only" />
-
-                <TextInput
-                    id="password"
-                    ref="passwordInput"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="Password"
-                    @keyup.enter="deleteUser"
-                />
-
-                <InputError :message="form.errors.password" class="mt-2" />
-            </div>
-
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
-
-                <DangerButton
-                    class="ml-3"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    @click="deleteUser"
-                >
-                    Delete Account
-                </DangerButton>
-            </div>
         </div>
-    </Modal>
 
-    <Modal :show="!! destroyUserId" @close="destroyUserId = ''">
-        <div class="p-6">
-            <h2 class="text-lg font-medium text-gray-900">
-                Are you sure you want to delete the account?
-            </h2>
+        <Modal :show="confirmingUserDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete the account?
+                </h2>
 
-            <p class="mt-1 text-sm text-gray-600">
-                Once you delete this account, it will only be disabled for the user, but the information will still be stored.
-            </p>
+                <p class="mt-1 text-sm text-gray-600">
+                    Once the account is deleted, all of its resources and data will be permanently deleted. Please
+                    enter your password to confirm you would like to permanently delete the account.
+                </p>
 
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="destroyUserId = ''"> Cancel </SecondaryButton>
+                <div class="mt-6">
+                    <InputLabel class="sr-only" for="password" value="Password"/>
 
-                <DangerButton
-                    class="ml-3"
-                    @click="destroyUser(destroyUserId)"
-                >
-                    Delete Account
-                </DangerButton>
+                    <TextInput
+                        id="password"
+                        ref="passwordInput"
+                        v-model="form.password"
+                        class="mt-1 block w-3/4"
+                        placeholder="Password"
+                        type="password"
+                        @keyup.enter="deleteUser"
+                    />
+
+                    <InputError :message="form.errors.password" class="mt-2"/>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal"> Cancel</SecondaryButton>
+
+                    <DangerButton
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        class="ml-3"
+                        @click="deleteUser"
+                    >
+                        Delete Account
+                    </DangerButton>
+                </div>
             </div>
-        </div>
-    </Modal>
+        </Modal>
 
-    <Modal :show="!! restoreUserId" @close="restoreUserId = ''">
-        <div class="p-6">
-            <h2 class="text-lg font-medium text-gray-900">
-                Are you sure you want to restore the account?
-            </h2>
+        <Modal :show="!! destroyUserId" @close="destroyUserId = ''">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete the account?
+                </h2>
 
-            <p class="mt-1 text-sm text-gray-600">
-                Once you restore the account the user will have access to it again.
-            </p>
+                <p class="mt-1 text-sm text-gray-600">
+                    Once you delete this account, it will only be disabled for the user, but the information will still
+                    be stored.
+                </p>
 
-            <div class="mt-6 flex justify-end">
-                <SecondaryButton @click="restoreUserId = ''"> Cancel </SecondaryButton>
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="destroyUserId = ''"> Cancel</SecondaryButton>
 
-                <SuccessButton
-                    class="ml-3"
-                    @click="restoreUser(restoreUserId)"
-                >
-                    Restore Account
-                </SuccessButton>
+                    <DangerButton
+                        class="ml-3"
+                        @click="destroyUser(destroyUserId)"
+                    >
+                        Delete Account
+                    </DangerButton>
+                </div>
             </div>
-        </div>
-    </Modal>
-</section>
+        </Modal>
+
+        <Modal :show="!! restoreUserId" @close="restoreUserId = ''">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to restore the account?
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    Once you restore the account the user will have access to it again.
+                </p>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="restoreUserId = ''"> Cancel</SecondaryButton>
+
+                    <SuccessButton
+                        class="ml-3"
+                        @click="restoreUser(restoreUserId)"
+                    >
+                        Restore Account
+                    </SuccessButton>
+                </div>
+            </div>
+        </Modal>
+    </section>
 </template>
 

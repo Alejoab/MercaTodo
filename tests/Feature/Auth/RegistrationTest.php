@@ -3,6 +3,9 @@
 namespace Tests\Feature\Auth;
 
 use App\Enums\DocumentType;
+use App\Enums\RoleEnum;
+use App\Models\City;
+use App\Models\Department;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -16,13 +19,9 @@ class RegistrationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        DB::unprepared(
-            'INSERT INTO departments (id, name) VALUES (1, "Test State")'
-        );
-        DB::unprepared(
-            'INSERT INTO cities (id, name, department_id) VALUES (1, "Test City", 1)'
-        );
-        Role::create(['name' => 'Customer']);
+        Department::factory()->create();
+        City::factory()->create();
+        Role::create(['name' => RoleEnum::CUSTOMER->value]);
     }
 
     public function test_registration_screen_can_be_rendered(): void
@@ -42,7 +41,7 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'phone' => '1234567890',
             'address' => 'Test Address',
-            'city_id' => '1',
+            'city_id' => City::query()->first()->id,
             'password' => 'Test_Password_0',
             'password_confirmation' => 'Test_Password_0',
         ]);
