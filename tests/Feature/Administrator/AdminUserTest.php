@@ -56,20 +56,13 @@ class AdminCustomerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_admin_can_update_a_user_information(): void
+    public function test_admin_can_update_user(): void
     {
         $response = $this->actingAs($this->admin)->put(
             route('admin.user.update', $this->user->id),
             [
-                'name' => 'Test User',
-                'surname' => 'Test User',
-                'document' => '12345678',
-                'document_type' => DocumentType::CC->value,
-                'email' => 'test@test.com',
-                'phone' => '1234567890',
-                'address' => 'Test Address',
-                'city_id' => 1,
-                'role' => 'Customer',
+                'role' => RoleEnum::CUSTOMER->value,
+                'permissions' => [],
             ]
         );
 

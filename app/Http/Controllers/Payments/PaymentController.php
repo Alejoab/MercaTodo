@@ -13,12 +13,12 @@ use App\Exceptions\PaymentException;
 use App\Factories\PaymentFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
+use App\Http\Requests\RetryPaymentRequest;
 use App\Models\Order;
 use App\Services\Carts\CartsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -126,17 +126,13 @@ class PaymentController extends Controller
 
 
     /**
-     * @param Request $request
+     * @param RetryPaymentRequest $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws PaymentException
      */
-    public function retry(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function retry(RetryPaymentRequest $request): \Symfony\Component\HttpFoundation\Response
     {
-        $request->validate([
-            'orderId' => ['required', Rule::exists('orders', 'id')],
-        ]);
-
         /**
          * @var ?Order $order
          */

@@ -10,6 +10,7 @@ use App\Contracts\Actions\Users\UpdateUserRole;
 use App\Enums\PermissionEnum;
 use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRoleUpdateRequest;
 use App\Models\User;
 use App\Services\Users\UsersService;
 use Illuminate\Http\RedirectResponse;
@@ -57,13 +58,13 @@ class AdminUserController extends Controller
     /**
      * Updates a user.
      *
-     * @param Request        $request
-     * @param User           $user
-     * @param UpdateUserRole $updateRoleAction
+     * @param UserRoleUpdateRequest $request
+     * @param User                  $user
+     * @param UpdateUserRole        $updateRoleAction
      *
      * @return RedirectResponse
      */
-    public function userUpdate(Request $request, User $user, UpdateUserRole $updateRoleAction): RedirectResponse
+    public function userUpdate(UserRoleUpdateRequest $request, User $user, UpdateUserRole $updateRoleAction): RedirectResponse
     {
         $updateRoleAction->execute($user, $request['role'], $request['permissions']);
 
