@@ -63,7 +63,6 @@ Route::prefix('payment')->middleware(['auth', 'verified'])->group(function () {
 
 Route::prefix('admin/users')->middleware(['auth', 'verified', 'role:Administrator'])->group(function () {
     Route::get('/', [AdminUserController::class, 'index'])->name('admin.users');
-    Route::get('/list-users', [AdminUserController::class, 'listUsers'])->name('admin.list-users');
     Route::get('/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
     Route::put('/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
     Route::delete('/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');

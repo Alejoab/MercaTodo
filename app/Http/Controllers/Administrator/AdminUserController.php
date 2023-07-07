@@ -10,7 +10,6 @@ use App\Contracts\Actions\Users\UpdateUserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Users\UsersService;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -24,11 +23,18 @@ class AdminUserController extends Controller
     /**
      * Show the users list.
      *
+     * @param Request      $request
+     * @param UsersService $service
+     *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request, UsersService $service): Response
     {
-        return Inertia::render('Administrator/Users/Index');
+        $users = $service->listUsersToTable($request->get('search'));
+
+        return Inertia::render('Administrator/Users/Index', [
+            'users' => $users,
+        ]);
     }
 
     /**
@@ -126,18 +132,5 @@ class AdminUserController extends Controller
         $action->execute($user);
 
         return Redirect::to(route('admin.users'));
-    }
-
-    /**
-     * List all the users.
-     *
-     * @param Request      $request
-     * @param UsersService $service
-     *
-     * @return LengthAwarePaginator
-     */
-    public function listUsers(Request $request, UsersService $service): LengthAwarePaginator
-    {
-        return $service->listUsersToTable($request->get('search'));
     }
 }
