@@ -7,6 +7,8 @@ use App\Contracts\Actions\Users\ForceDeleteUser;
 use App\Contracts\Actions\Users\RestoreUser;
 use App\Contracts\Actions\Users\UpdateUserPassword;
 use App\Contracts\Actions\Users\UpdateUserRole;
+use App\Enums\PermissionEnum;
+use App\Enums\RoleEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Users\UsersService;
@@ -16,7 +18,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class AdminUserController extends Controller
 {
@@ -47,8 +48,9 @@ class AdminUserController extends Controller
     public function userShow(User $user): Response
     {
         return Inertia::render('Administrator/Users/EditUser', [
-            'user' => $user->load('roles:name'),
-            'roles' => Role::all()->pluck('name'),
+            'user' => $user->load(['roles:name', 'permissions:name']),
+            'roles' => RoleEnum::cases(),
+            'permissions' => PermissionEnum::cases(),
         ]);
     }
 
@@ -57,13 +59,13 @@ class AdminUserController extends Controller
      *
      * @param Request        $request
      * @param User           $user
-     * @param UpdateUserRole $action
+     * @param UpdateUserRole $updateRoleAction
      *
      * @return RedirectResponse
      */
-    public function userUpdate(Request $request, User $user, UpdateUserRole $action): RedirectResponse
+    public function userUpdate(Request $request, User $user, UpdateUserRole $updateRoleAction): RedirectResponse
     {
-        $action->execute($user, $request['role']);
+        $updateRoleAction->execute($user, $request['role'], $request['permissions']);
 
         return redirect()->route('admin.user.show', $user->getKey());
     }

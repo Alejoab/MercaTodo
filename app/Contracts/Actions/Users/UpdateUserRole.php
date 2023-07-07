@@ -11,8 +11,9 @@ interface UpdateUserRole
      *
      * @param User   $user
      * @param string $role
+     * @param array  $permissions
      *
      * @return void
      */
-    public function execute(User $user, string $role): void;
+    public function execute(User $user, string $role, array $permissions): void;
 }
