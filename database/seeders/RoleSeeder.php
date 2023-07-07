@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PermissionEnum;
 use App\Enums\RoleEnum;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
@@ -15,6 +17,10 @@ class RoleSeeder extends Seeder
     {
         foreach (RoleEnum::cases() as $role) {
             Role::create(['name' => $role->value]);
+        }
+
+        foreach (PermissionEnum::cases() as $permission) {
+            Permission::create(['name' => $permission->value]);
         }
     }
 }
