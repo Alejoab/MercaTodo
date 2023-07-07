@@ -1,25 +1,22 @@
 <script setup>
 import {TailwindPagination} from "laravel-vue-pagination";
 import {Link, usePage} from '@inertiajs/vue3';
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import Dropdown from "@/Components/Dropdown.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import InputError from "@/Components/InputError.vue";
+import ExportModal from "@/Pages/Administrator/Products/partials/ExportModal.vue";
+import ImportModal from "@/Pages/Administrator/Products/partials/ImportModal.vue";
 
 const products = ref({});
 const categories = ref([]);
 const brands = ref([]);
 const destroyProductId = ref('');
 const restoreProductId = ref('');
-const exportModal = ref(false);
-const exportFileName = ref('');
-const exportError = ref('');
-
-let pollingInterval = null;
+const showExportModal = ref(false);
+const showImportModal = ref(false);
 
 const query = ref({
     page: usePage().props.ziggy.query['page'] ? usePage().props.ziggy.query['page'] : 1,
@@ -70,58 +67,14 @@ const restoreProduct = async (id) => {
     await getProducts()
 }
 
-const exportProducts = () => {
-    exportError.value = '';
-    axios.get(route('admin.products.export', query.value))
-        .then((response) => startPolling())
-        .catch((error) => exportError.value = error.response.data.error);
-}
-
-const startPolling = async () => {
-    if (!await checkExport()) {
-        exportFileName.value = 'pending';
-        pollingInterval = setInterval(() => checkExport(), 3000);
-    }
-}
-const checkExport = async () => {
-    const response = await axios.get(route('admin.products.exports.check-export'));
-
-
-    if (response.data.length === 0) {
-        clearInterval(pollingInterval);
-        return true;
-    }
-
-    if (response.data.status === 'Completed') {
-        clearInterval(pollingInterval);
-        exportFileName.value = route('admin.products.export.download');
-        exportError.value = '';
-        return true;
-    }
-
-    if (response.data.status === 'Failed') {
-        clearInterval(pollingInterval);
-        exportFileName.value = 'failed';
-        exportError.value = 'An error has occurred in the data export. Please try again later';
-        return true;
-    }
-
-    return false;
-}
-
 onMounted(() => {
-    getProducts();
-    getCategories();
-    getBrands();
-    startPolling();
+    axios.all([
+        getProducts(),
+        getCategories(),
+        getBrands(),
+    ])
 })
-
-onUnmounted(() => {
-    clearInterval(pollingInterval);
-});
-
 </script>
-
 
 <template>
     <div>
@@ -205,7 +158,10 @@ onUnmounted(() => {
                         <template #content>
                             <div class="flex flex-col space-y-2">
                                 <a :href="route('admin.products.create')" class="text-start p-2 pl-3">Add Product</a>
-                                <button class="text-start p-2 pl-3" @click="exportModal = true">Export Products</button>
+                                <button class="text-start p-2 pl-3" @click="showExportModal = true">Export Products
+                                </button>
+                                <button class="text-start p-2 pl-3" @click="showImportModal = true">Import Products
+                                </button>
                             </div>
                         </template>
                     </Dropdown>
@@ -331,70 +287,7 @@ onUnmounted(() => {
         </div>
     </Modal>
 
-    <Modal :show="exportModal" @close="exportModal = false">
-        <div class="p-6">
-            <span class="mb-6">
-                Exporting products will generate a XLSX file with all the filter products in your store.
-            </span>
-            <div class="flex justify-between mt-6">
-                <primary-button class="disabled:bg-amber-500" @click="exportProducts">Export Products</primary-button>
+    <ExportModal :query="query" :show="showExportModal" @close="showExportModal = false"></ExportModal>
 
-                <div v-if="!exportFileName || exportFileName === 'failed'"></div>
-                <div v-else-if="exportFileName === 'pending'" class="flex items-center">
-                    <div class="dots-loading flex items-center">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <p class="ml-2 inline-block align-middle">Generating</p>
-                </div>
-
-                <a v-else :href="exportFileName" class="underline my-auto">Download Export</a>
-            </div>
-            <InputError :message="exportError" class="mt-3"></InputError>
-        </div>
-
-    </Modal>
+    <ImportModal :show="showImportModal" @close="showImportModal = false"></ImportModal>
 </template>
-
-<style>
-.dots-loading {
-    position: relative;
-    width: 30px;
-    height: 20px;
-}
-
-.dots-loading div {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 2px;
-    background: #3490dc;
-    border-radius: 50%;
-    animation: dots-loading 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-}
-
-.dots-loading div:nth-child(1) {
-    animation-delay: -0.24s;
-}
-
-.dots-loading div:nth-child(2) {
-    animation-delay: -0.12s;
-}
-
-.dots-loading div:nth-child(3) {
-    animation-delay: 0s;
-}
-
-@keyframes dots-loading {
-    0% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.5);
-    }
-}
-</style>

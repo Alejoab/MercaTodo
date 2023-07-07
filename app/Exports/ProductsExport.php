@@ -33,7 +33,6 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     public function headings(): array
     {
         return [
-            'id',
             'code',
             'name',
             'description',
@@ -41,7 +40,7 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
             'stock',
             'category_name',
             'brand_name',
-            'deleted_at',
+            'status',
         ];
     }
 
@@ -60,7 +59,6 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
             ->contains($this->search, ['products.name', 'products.code'])
             ->select(
                 [
-                    'products.id',
                     'products.code',
                     'products.name',
                     'products.description',
@@ -68,10 +66,10 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
                     'products.stock',
                     'categories.name as category_name',
                     'brands.name as brand_name',
-                    'products.deleted_at',
+                    'products.deleted_at as status',
                 ]
             )
-            ->orderBy('products.id');
+            ->orderBy('products.code', 'desc');
     }
 
     public function registerEvents(): array

@@ -26,6 +26,12 @@ class ExportImport extends Model
             'user_id',
             'status',
             'errors',
+            'type',
+        ];
+
+    protected $attributes
+        = [
+            'errors' => '{}',
         ];
 
     protected $casts

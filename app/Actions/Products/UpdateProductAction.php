@@ -15,23 +15,24 @@ class UpdateProductAction implements UpdateProduct
     /**
      * @throws ApplicationException
      */
-    public function execute(Product $product, array $data): void
+    public function execute(Product $product, array $data): Product
     {
         try {
             DB::beginTransaction();
 
-            $brandAction = new CreateBrandAction();
-            $categoryAction = new CreateCategoryAction();
-            $imageService = new ProductImagesService();
-
-            $brand = $brandAction->execute($data['brand_name']);
-            $category = $categoryAction->execute($data['category_name']);
+            $brand = (new CreateBrandAction())->execute($data['brand_name']);
+            $category = (new CreateCategoryAction())->execute($data['category_name']);
 
             $data['brand_id'] = $brand->getAttribute('id');
             $data['category_id'] = $category->getAttribute('id');
 
             if ($data['image'] !== null) {
-                $imageService->deleteImage($product->getAttribute('image'));
+                $imageService = new ProductImagesService();
+
+                if ($product->image !== null) {
+                    $imageService->deleteImage($product->image);
+                }
+
                 $data['image'] = $imageService->storeImage($data['image']);
             } else {
                 unset($data['image']);
@@ -41,6 +42,8 @@ class UpdateProductAction implements UpdateProduct
             $product->save();
 
             DB::commit();
+
+            return $product;
         } catch (ApplicationException $e) {
             DB::rollBack();
             throw $e;

@@ -73,6 +73,10 @@ class AdminExportController extends Controller
          */
         $disk = Storage::disk('exports');
 
+        if (!$disk->exists($fileName)) {
+            abort(404);
+        }
+
         return $disk->download($fileName);
     }
 }
