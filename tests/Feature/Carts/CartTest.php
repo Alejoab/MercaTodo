@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Order;
+namespace Carts;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;

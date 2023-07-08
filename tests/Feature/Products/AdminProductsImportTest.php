@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Administrator;
+namespace Products;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class AdminImportTest extends TestCase
+class AdminProductsImportTest extends TestCase
 {
     use RefreshDatabase;
 

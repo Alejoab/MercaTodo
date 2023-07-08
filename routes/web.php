@@ -6,7 +6,6 @@ use App\Http\Controllers\Web\AdminController;
 use App\Http\Controllers\Web\Carts\CartController;
 use App\Http\Controllers\Web\Customers\AdminCustomerController;
 use App\Http\Controllers\Web\Customers\CityController;
-use App\Http\Controllers\Web\Customers\ProfileController;
 use App\Http\Controllers\Web\Payments\PaymentController;
 use App\Http\Controllers\Web\Products\AdminExportController;
 use App\Http\Controllers\Web\Products\AdminImportController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Web\Products\BrandController;
 use App\Http\Controllers\Web\Products\CategoryController;
 use App\Http\Controllers\Web\Products\ProductController;
 use App\Http\Controllers\Web\Users\AdminUserController;
+use App\Http\Controllers\Web\Users\ProfileController;
 use App\Http\Controllers\Web\Users\UserController;
 use Illuminate\Support\Facades\Route;
 

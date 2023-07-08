@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Users;
 
 use App\Domain\Customers\Enums\DocumentType;
 use App\Domain\Customers\Models\City;

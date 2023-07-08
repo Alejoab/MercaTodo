@@ -19,7 +19,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class ProductExportUnitTest extends TestCase
+class ProductProductsExportUnitTest extends TestCase
 {
     use RefreshDatabase;
 

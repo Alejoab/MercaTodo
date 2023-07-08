@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Order;
+namespace Carts;
 
 use App\Domain\Carts\Actions\AddProductCartAction;
 use App\Domain\Carts\Actions\DeleteProductCartAction;

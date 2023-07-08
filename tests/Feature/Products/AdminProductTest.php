@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Administrator;
+namespace Products;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;

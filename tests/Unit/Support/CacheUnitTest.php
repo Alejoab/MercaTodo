@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Support;
 
 use App\Domain\Products\Actions\CreateBrandAction;
 use App\Domain\Products\Actions\CreateCategoryAction;

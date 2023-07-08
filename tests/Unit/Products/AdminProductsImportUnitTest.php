@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class AdminImportUnitTest extends TestCase
+class AdminProductsImportUnitTest extends TestCase
 {
     use RefreshDatabase;
 

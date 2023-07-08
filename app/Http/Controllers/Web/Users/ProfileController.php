@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web\Customers;
+namespace App\Http\Controllers\Web\Users;
 
 use App\Domain\Customers\Contracts\UpdateCustomer;
 use App\Domain\Customers\Models\Department;
