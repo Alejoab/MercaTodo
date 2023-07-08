@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Products;
 
 use App\Domain\Products\Contracts\CreateProduct;
+use App\Domain\Products\Contracts\UpdateProduct;
+use App\Domain\Products\Models\Product;
 use App\Domain\Products\Resources\ProductResource;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
@@ -43,9 +45,14 @@ class AdminProductApiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, Product $product, UpdateProduct $updateProductAction)
     {
-        //
+        $product = $updateProductAction->execute($product, $request->validated());
+
+        return response()->json([
+            'message' => 'Product update successfully',
+            'data' => new ProductResource($product),
+        ]);
     }
 
     /**

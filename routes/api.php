@@ -23,4 +23,5 @@ Route::post('login', [LoginApiController::class, 'login'])->name('api.login');
 
 Route::prefix('admin/products')->middleware(['auth:sanctum', 'verified', "role:$admins"])->group(function () {
     Route::middleware(['permission:'.PermissionEnum::CREATE->value])->post('/store', [AdminProductApiController::class, 'store'])->name('api.admin.products.store');
+    Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{product}', [AdminProductApiController::class, 'update'])->name('api.admin.products.update');
 });

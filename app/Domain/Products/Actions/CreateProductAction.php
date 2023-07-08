@@ -23,7 +23,7 @@ class CreateProductAction implements CreateProduct
             $brand = (new CreateBrandAction())->execute($data['brand_name']);
             $category = (new CreateCategoryAction())->execute($data['category_name']);
 
-            if (isset($data['image'])) {
+            if (isset($data['image']) && $data['image'] !== null) {
                 $data['image'] = (new ProductImagesService())->storeImage($data['image']);
             }
 
