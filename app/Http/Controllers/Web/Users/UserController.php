@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Users;
 
 use App\Domain\Products\Services\BrandsService;
 use App\Domain\Products\Services\CategoriesService;
 use App\Domain\Products\Services\ProductsService;
+use App\Http\Controllers\Web\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;

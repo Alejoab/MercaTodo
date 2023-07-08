@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Web\Auth;
 
 use App\Domain\Customers\Contracts\CreateCustomer;
 use App\Domain\Customers\Enums\DocumentType;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\Controller;
 use App\Http\Requests\CustomerRequest;
 use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;

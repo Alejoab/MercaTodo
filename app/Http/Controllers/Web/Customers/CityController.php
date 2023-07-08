@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Customers;
 
 use App\Domain\Customers\Services\CitiesService;
+use App\Http\Controllers\Web\Controller;
 use Illuminate\Database\Eloquent\Collection;
 
 class CityController extends Controller

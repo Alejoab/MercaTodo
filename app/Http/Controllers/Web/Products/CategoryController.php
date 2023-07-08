@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Products;
 
 use App\Domain\Products\Services\CategoriesService;
+use App\Http\Controllers\Web\Controller;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoryController extends Controller

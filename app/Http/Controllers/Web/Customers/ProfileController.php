@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Customers;
 
 use App\Domain\Customers\Contracts\UpdateCustomer;
 use App\Domain\Customers\Models\Department;
 use App\Domain\Users\Contracts\DeleteUser;
+use App\Http\Controllers\Web\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
