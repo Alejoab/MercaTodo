@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Order;
 
-use App\Actions\Carts\AddProductCartAction;
-use App\Actions\Carts\DeleteProductCartAction;
+use App\Domain\Carts\Actions\AddProductCartAction;
+use App\Domain\Carts\Actions\DeleteProductCartAction;
+use App\Domain\Carts\Services\CartsService;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Services\Carts\CartsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;

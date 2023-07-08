@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Actions\Carts\AddProductCart;
-use App\Contracts\Actions\Carts\DeleteProductCart;
+use App\Domain\Carts\Contracts\AddProductCart;
+use App\Domain\Carts\Contracts\DeleteProductCart;
+use App\Domain\Carts\Services\CartsService;
 use App\Http\Requests\CartRequest;
-use App\Services\Carts\CartsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -29,8 +29,8 @@ class CartController extends Controller
     /**
      * Adds a product to the user's cart
      *
-     * @param CartRequest    $request
-     * @param AddProductCart $addProductCartAction
+     * @param CartRequest                                $request
+     * @param \App\Domain\Carts\Contracts\AddProductCart $addProductCartAction
      *
      * @return void
      */
@@ -42,8 +42,8 @@ class CartController extends Controller
     /**
      * Deletes a product from the user's cart
      *
-     * @param Request           $request
-     * @param DeleteProductCart $deleteProductCartAction
+     * @param Request                                       $request
+     * @param \App\Domain\Carts\Contracts\DeleteProductCart $deleteProductCartAction
      *
      * @return void
      */

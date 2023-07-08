@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Actions\Carts;
+namespace App\Domain\Carts\Actions;
 
-use App\Contracts\Actions\Carts\DeleteProductCart;
+use App\Domain\Carts\Contracts\AddProductCart;
 use Illuminate\Support\Facades\Cache;
 
-class DeleteProductCartAction implements DeleteProductCart
+class AddProductCartAction implements AddProductCart
 {
 
     public function execute(int $userId, array $data): void
     {
         $cart = Cache::get('cart:'.$userId) ?? [];
 
-        unset($cart[$data['product_id']]);
+        $cart[$data['product_id']] = $data['quantity'];
         Cache::put('cart:'.$userId, $cart, now()->addWeek());
     }
 }

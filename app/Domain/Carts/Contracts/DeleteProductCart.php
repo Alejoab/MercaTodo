@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Actions\Carts;
+namespace App\Domain\Carts\Contracts;
 
 interface DeleteProductCart
 {

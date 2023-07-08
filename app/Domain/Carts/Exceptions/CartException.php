@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Exceptions;
+namespace App\Domain\Carts\Exceptions;
+
+use App\Exceptions\CustomException;
 
 class CartException extends CustomException
 {

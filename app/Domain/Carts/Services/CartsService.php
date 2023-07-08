@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Services\Carts;
+namespace App\Domain\Carts\Services;
 
-use App\Actions\Carts\DeleteProductCartAction;
-use App\Exceptions\CartException;
+use App\Domain\Carts\Actions\DeleteProductCartAction;
+use App\Domain\Carts\Exceptions\CartException;
 use App\Models\Product;
-use Exception;
 use Illuminate\Support\Facades\Cache;
 
 class CartsService
@@ -19,7 +18,7 @@ class CartsService
      */
     public function getCartWithProducts(int $userId): array
     {
-        $action = new DeleteProductCartAction();
+        $action = new \App\Domain\Carts\Actions\DeleteProductCartAction();
         $cart = Cache::get('cart:'.$userId) ?? [];
         $products = [];
 
