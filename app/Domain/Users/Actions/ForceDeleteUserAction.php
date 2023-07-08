@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Domain\Users\Actions;
 
-use App\Contracts\Actions\Users\ForceDeleteUser;
-use App\Models\User;
+use App\Domain\Users\Contracts\ForceDeleteUser;
+use App\Domain\Users\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class ForceDeleteUserAction implements ForceDeleteUser

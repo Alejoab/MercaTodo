@@ -2,7 +2,7 @@
 
 namespace App\Domain\Customers\Services;
 
-use App\Models\User;
+use App\Domain\Users\Models\User;
 use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

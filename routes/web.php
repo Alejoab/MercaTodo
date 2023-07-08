@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\PermissionEnum;
-use App\Enums\RoleEnum;
+use App\Domain\Users\Enums\PermissionEnum;
+use App\Domain\Users\Enums\RoleEnum;
 use App\Http\Controllers\Administrator\AdminController;
 use App\Http\Controllers\Administrator\AdminCustomerController;
 use App\Http\Controllers\Administrator\AdminExportController;

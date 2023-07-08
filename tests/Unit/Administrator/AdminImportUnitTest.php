@@ -4,12 +4,12 @@ namespace Tests\Unit\Administrator;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use App\Enums\ExportImportStatus;
 use App\Enums\ExportImportType;
-use App\Enums\RoleEnum;
 use App\Imports\ProductsImport;
 use App\Models\ExportImport;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Users\Models;
 
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Orders\Models\Order;
 use App\QueryBuilders\UserQueryBuilder;
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -68,6 +70,11 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
         ];
 
+    protected static function newFactory(): Factory
+    {
+        return UserFactory::new();
+    }
+
     /**
      * Defines a new query builder class
      *
@@ -92,7 +99,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function order(): HasMany
     {
-        // TODO: Error with phpstan
         /**
          * @phpstan-ignore-next-line
          */

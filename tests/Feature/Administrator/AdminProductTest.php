@@ -4,11 +4,11 @@ namespace Tests\Feature\Administrator;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Enums\RoleEnum;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

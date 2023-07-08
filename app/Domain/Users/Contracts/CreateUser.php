@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Actions\Users;
+namespace App\Domain\Users\Contracts;
 
 interface CreateUser
 {

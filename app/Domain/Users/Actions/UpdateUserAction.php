@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Domain\Users\Actions;
 
-use App\Contracts\Actions\Users\UpdateUser;
+use App\Domain\Users\Contracts\UpdateUser;
+use App\Domain\Users\Models\User;
 use App\Exceptions\ApplicationException;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 

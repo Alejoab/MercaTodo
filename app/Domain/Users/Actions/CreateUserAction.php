@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Domain\Users\Actions;
 
-use App\Contracts\Actions\Users\CreateUser;
-use App\Enums\RoleEnum;
+use App\Domain\Users\Contracts\CreateUser;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use App\Exceptions\ApplicationException;
-use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

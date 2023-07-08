@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PermissionEnum;
-use App\Enums\RoleEnum;
+use App\Domain\Users\Enums\PermissionEnum;
+use App\Domain\Users\Enums\RoleEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

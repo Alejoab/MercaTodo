@@ -2,7 +2,7 @@
 
 namespace App\Domain\Customers\Contracts;
 
-use App\Models\User;
+use App\Domain\Users\Models\User;
 
 interface UpdateCustomer
 {

@@ -7,9 +7,9 @@ use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Contracts\Payments;
 use App\Domain\Payments\Exceptions\PaymentException;
+use App\Domain\Users\Models\User;
 use App\Exceptions\ApplicationException;
 use App\Exceptions\CustomException;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -22,9 +22,9 @@ class PlaceToPayService implements Payments
     /**
      * Creates a new placetopay payment session and returns the process url
      *
-     * @param Request $request
-     * @param User    $user
-     * @param Order   $order
+     * @param Request                       $request
+     * @param \App\Domain\Users\Models\User $user
+     * @param Order                         $order
      *
      * @return string
      * @throws ApplicationException

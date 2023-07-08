@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Domain\Users\Actions;
 
-use App\Contracts\Actions\Users\RestoreUser;
-use App\Models\User;
+use App\Domain\Users\Contracts\RestoreUser;
+use App\Domain\Users\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class RestoreUserAction implements RestoreUser

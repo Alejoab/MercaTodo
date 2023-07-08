@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Actions\Users;
+namespace App\Domain\Users\Actions;
 
-use App\Contracts\Actions\Users\UpdateUserRole;
+use App\Domain\Users\Contracts\UpdateUserRole;
+use App\Domain\Users\Models\User;
 use App\Exceptions\ApplicationException;
-use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UpdateUserRoleAction implements UpdateUserRole
 {
     /**
-     * @param User   $user
-     * @param string $role
-     * @param array  $permissions
+     * @param \App\Domain\Users\Models\User $user
+     * @param string                        $role
+     * @param array                         $permissions
      *
      * @throws ApplicationException
      */

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Payments\PlaceToPay;
 
-use App\Models\User;
+use App\Domain\Users\Models\User;
 
 class Buyer
 {

@@ -2,9 +2,9 @@
 
 namespace App\Domain\Customers\Actions;
 
-use App\Actions\Users\CreateUserAction;
 use App\Domain\Customers\Contracts\CreateCustomer;
 use App\Domain\Customers\Models\Customer;
+use App\Domain\Users\Actions\CreateUserAction;
 use App\Exceptions\ApplicationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

@@ -3,7 +3,7 @@
 namespace App\Domain\Customers\Models;
 
 use App\Domain\Customers\Enums\DocumentType;
-use App\Models\User;
+use App\Domain\Users\Models\User;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,18 +11,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int          $id
- * @property string       $name
- * @property string       $surname
- * @property DocumentType $document_type
- * @property string       $document
- * @property ?string      $phone
- * @property string       $address
- * @property int          $city_id
- * @property int          $user_id
+ * @property int                           $id
+ * @property string                        $name
+ * @property string                        $surname
+ * @property DocumentType                  $document_type
+ * @property string                        $document
+ * @property ?string                       $phone
+ * @property string                        $address
+ * @property int                           $city_id
+ * @property int                           $user_id
  *
- * @property City         $city
- * @property User         $user
+ * @property City                          $city
+ * @property \App\Domain\Users\Models\User $user
  */
 class Customer extends Model
 {
@@ -67,6 +67,6 @@ class Customer extends Model
      */
     public function user(): belongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Domain\Users\Models\User::class);
     }
 }

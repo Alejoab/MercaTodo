@@ -4,9 +4,9 @@ namespace Tests\Feature\Administrator;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Enums\PermissionEnum;
-use App\Enums\RoleEnum;
-use App\Models\User;
+use App\Domain\Users\Enums\PermissionEnum;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;

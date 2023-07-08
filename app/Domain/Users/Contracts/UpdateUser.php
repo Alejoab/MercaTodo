@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Contracts\Actions\Users;
+namespace App\Domain\Users\Contracts;
 
-use App\Models\User;
+use App\Domain\Users\Models\User;
 
 interface UpdateUser
 {
     /**
      * Updates the user's information.
      *
-     * @param User  $user
-     * @param array $data
+     * @param \App\Domain\Users\Models\User $user
+     * @param array                         $data
      *
      * @return void
      */

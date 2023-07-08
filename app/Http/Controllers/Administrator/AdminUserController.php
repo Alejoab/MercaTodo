@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Contracts\Actions\Users\DeleteUser;
-use App\Contracts\Actions\Users\ForceDeleteUser;
-use App\Contracts\Actions\Users\RestoreUser;
-use App\Contracts\Actions\Users\UpdateUserPassword;
-use App\Contracts\Actions\Users\UpdateUserRole;
-use App\Enums\PermissionEnum;
-use App\Enums\RoleEnum;
+use App\Domain\Users\Contracts\DeleteUser;
+use App\Domain\Users\Contracts\ForceDeleteUser;
+use App\Domain\Users\Contracts\RestoreUser;
+use App\Domain\Users\Contracts\UpdateUserPassword;
+use App\Domain\Users\Contracts\UpdateUserRole;
+use App\Domain\Users\Enums\PermissionEnum;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRoleUpdateRequest;
-use App\Models\User;
 use App\Services\Users\UsersService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class AdminUserController extends Controller
     /**
      * Shows the user page.
      *
-     * @param User $user
+     * @param \App\Domain\Users\Models\User $user
      *
      * @return Response
      */
@@ -58,9 +58,9 @@ class AdminUserController extends Controller
     /**
      * Updates a user.
      *
-     * @param UserRoleUpdateRequest $request
-     * @param User                  $user
-     * @param UpdateUserRole        $updateRoleAction
+     * @param UserRoleUpdateRequest                      $request
+     * @param \App\Domain\Users\Models\User              $user
+     * @param \App\Domain\Users\Contracts\UpdateUserRole $updateRoleAction
      *
      * @return RedirectResponse
      */
@@ -74,9 +74,9 @@ class AdminUserController extends Controller
     /**
      * Updates a user password.
      *
-     * @param Request            $request
-     * @param User               $user
-     * @param UpdateUserPassword $action
+     * @param Request                                        $request
+     * @param User                                           $user
+     * @param \App\Domain\Users\Contracts\UpdateUserPassword $action
      *
      * @return RedirectResponse
      */
@@ -94,8 +94,8 @@ class AdminUserController extends Controller
     /**
      * Disables a user.
      *
-     * @param User       $user
-     * @param DeleteUser $action
+     * @param \App\Domain\Users\Models\User          $user
+     * @param \App\Domain\Users\Contracts\DeleteUser $action
      *
      * @return void
      */

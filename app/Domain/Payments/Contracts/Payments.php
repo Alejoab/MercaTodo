@@ -5,7 +5,7 @@ namespace App\Domain\Payments\Contracts;
 
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
-use App\Models\User;
+use App\Domain\Users\Models\User;
 use Illuminate\Http\Request;
 
 interface Payments
@@ -14,7 +14,7 @@ interface Payments
      * Creates the user's payment session to the order and return the process url
      *
      * @param Request                         $request
-     * @param User                            $user
+     * @param \App\Domain\Users\Models\User   $user
      * @param \App\Domain\Orders\Models\Order $order
      *
      * @return string

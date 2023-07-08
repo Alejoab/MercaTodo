@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Contracts\Actions\Users;
+namespace App\Domain\Users\Contracts;
 
-use App\Models\User;
+use App\Domain\Users\Models\User;
 
-interface DeleteUser
+interface ForceDeleteUser
 {
     /**
-     * Deletes a user.
+     * Force deletes a user.
      *
      * @param User $user
      *

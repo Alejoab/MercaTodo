@@ -6,7 +6,7 @@ use App\Domain\Customers\Enums\DocumentType;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Customers\Models\Department;
-use App\Models\User;
+use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

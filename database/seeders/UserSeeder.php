@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Domain\Customers\Models\Customer;
-use App\Enums\RoleEnum;
-use App\Models\User;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
