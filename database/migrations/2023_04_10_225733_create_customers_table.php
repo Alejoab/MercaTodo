@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\DocumentType;
-use App\Models\City;
+use App\Domain\Customers\Enums\DocumentType;
+use App\Domain\Customers\Models\City;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

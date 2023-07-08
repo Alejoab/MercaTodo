@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\DocumentType;
-use App\Models\Customer;
+use App\Domain\Customers\Enums\DocumentType;
+use App\Domain\Customers\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

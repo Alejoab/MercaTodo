@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Administrator;
 
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
 use App\Enums\ExportImportStatus;
 use App\Enums\ExportImportType;
 use App\Enums\RoleEnum;
 use App\Exports\ProductsExport;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\City;
-use App\Models\Department;
 use App\Models\ExportImport;
 use App\Models\Product;
 use App\Models\User;

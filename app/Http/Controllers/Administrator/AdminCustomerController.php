@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Contracts\Actions\Customers\UpdateCustomer;
-use App\Enums\DocumentType;
+use App\Domain\Customers\Contracts\UpdateCustomer;
+use App\Domain\Customers\Enums\DocumentType;
+use App\Domain\Customers\Services\CustomersService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\User;
-use App\Services\Customers\CustomersService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -50,9 +50,9 @@ class AdminCustomerController extends Controller
     /**
      * Updates the customer.
      *
-     * @param CustomerUpdateRequest $request
-     * @param User                  $user
-     * @param UpdateCustomer        $updateCustomerAction
+     * @param CustomerUpdateRequest                          $request
+     * @param User                                           $user
+     * @param \App\Domain\Customers\Contracts\UpdateCustomer $updateCustomerAction
      *
      * @return RedirectResponse
      */

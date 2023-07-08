@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Customers\CitiesService;
+use App\Domain\Customers\Services\CitiesService;
 use Illuminate\Database\Eloquent\Collection;
 
 class CityController extends Controller
@@ -10,8 +10,8 @@ class CityController extends Controller
     /**
      * List cities by department.
      *
-     * @param int           $id
-     * @param CitiesService $citiesService
+     * @param int                                          $id
+     * @param \App\Domain\Customers\Services\CitiesService $citiesService
      *
      * @return Collection|array
      */

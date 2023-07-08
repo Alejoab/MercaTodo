@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Customers\Models;
 
-use App\Enums\DocumentType;
+use App\Domain\Customers\Enums\DocumentType;
+use App\Models\User;
+use Database\Factories\CustomerFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,6 +44,11 @@ class Customer extends Model
         = [
             'document_type' => DocumentType::class,
         ];
+
+    protected static function newFactory(): Factory
+    {
+        return CustomerFactory::new();
+    }
 
     /**
      * Defines the relationship with City

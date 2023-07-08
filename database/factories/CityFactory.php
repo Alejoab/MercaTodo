@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\City;
-use App\Models\Department;
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CityFactory extends Factory
 {
+    protected $model = City::class;
+
     /**
      * Define the model's default state.
      *

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\Actions\Customers\UpdateCustomer;
 use App\Contracts\Actions\Users\DeleteUser;
+use App\Domain\Customers\Contracts\UpdateCustomer;
+use App\Domain\Customers\Models\Department;
 use App\Http\Requests\CustomerUpdateRequest;
-use App\Models\Department;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

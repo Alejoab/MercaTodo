@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\Customers;
+namespace App\Domain\Customers\Services;
 
-use App\Models\City;
-use App\Models\Department;
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 

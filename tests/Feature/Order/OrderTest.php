@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Order;
 
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Customer;
+use App\Domain\Customers\Models\Department;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\City;
-use App\Models\Customer;
-use App\Models\Department;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;

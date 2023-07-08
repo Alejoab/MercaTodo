@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Administrator;
 
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
 use App\Enums\ExportImportStatus;
 use App\Enums\ExportImportType;
 use App\Enums\RoleEnum;
-use App\Models\City;
-use App\Models\Department;
 use App\Models\ExportImport;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

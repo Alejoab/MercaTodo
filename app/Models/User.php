@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Domain\Customers\Models\Customer;
 use App\QueryBuilders\UserQueryBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

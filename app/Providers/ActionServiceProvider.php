@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Actions\Customers\CreateCustomerAction;
-use App\Actions\Customers\UpdateCustomerAction;
 use App\Actions\Orders\AcceptOrderAction;
 use App\Actions\Orders\CreateOrderAction;
 use App\Actions\Orders\CreateOrderDetailAction;
@@ -23,8 +21,6 @@ use App\Actions\Users\RestoreUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Actions\Users\UpdateUserPasswordAction;
 use App\Actions\Users\UpdateUserRoleAction;
-use App\Contracts\Actions\Customers\CreateCustomer;
-use App\Contracts\Actions\Customers\UpdateCustomer;
 use App\Contracts\Actions\Orders\AcceptOrder;
 use App\Contracts\Actions\Orders\CreateOrder;
 use App\Contracts\Actions\Orders\CreateOrderDetail;
@@ -48,6 +44,10 @@ use App\Domain\Carts\Actions\AddProductCartAction;
 use App\Domain\Carts\Actions\DeleteProductCartAction;
 use App\Domain\Carts\Contracts\AddProductCart;
 use App\Domain\Carts\Contracts\DeleteProductCart;
+use App\Domain\Customers\Actions\CreateCustomerAction;
+use App\Domain\Customers\Actions\UpdateCustomerAction;
+use App\Domain\Customers\Contracts\CreateCustomer;
+use App\Domain\Customers\Contracts\UpdateCustomer;
 use Illuminate\Support\ServiceProvider;
 
 class ActionServiceProvider extends ServiceProvider

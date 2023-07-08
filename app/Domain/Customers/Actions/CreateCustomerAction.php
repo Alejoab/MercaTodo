@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions\Customers;
+namespace App\Domain\Customers\Actions;
 
 use App\Actions\Users\CreateUserAction;
-use App\Contracts\Actions\Customers\CreateCustomer;
+use App\Domain\Customers\Contracts\CreateCustomer;
+use App\Domain\Customers\Models\Customer;
 use App\Exceptions\ApplicationException;
-use App\Models\Customer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;

@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
 use App\Enums\RoleEnum;
-use App\Models\City;
-use App\Models\Department;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;

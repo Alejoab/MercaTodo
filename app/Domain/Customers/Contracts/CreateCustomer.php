@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Actions\Customers;
+namespace App\Domain\Customers\Contracts;
 
 interface CreateCustomer
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Customers;
+namespace App\Domain\Customers\Services;
 
 use App\Models\User;
 use App\QueryBuilders\UserQueryBuilder;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Actions\Customers;
+namespace App\Domain\Customers\Actions;
 
 use App\Actions\Users\UpdateUserAction;
-use App\Contracts\Actions\Customers\UpdateCustomer;
+use App\Domain\Customers\Contracts\UpdateCustomer;
 use App\Exceptions\ApplicationException;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;

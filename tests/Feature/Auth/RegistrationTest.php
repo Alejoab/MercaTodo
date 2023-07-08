@@ -2,13 +2,12 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Enums\DocumentType;
+use App\Domain\Customers\Enums\DocumentType;
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
 use App\Enums\RoleEnum;
-use App\Models\City;
-use App\Models\Department;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
