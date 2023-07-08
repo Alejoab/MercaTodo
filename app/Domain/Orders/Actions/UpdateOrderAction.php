@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions\Orders;
+namespace App\Domain\Orders\Actions;
 
-use App\Contracts\Actions\Orders\UpdateOrder;
+use App\Domain\Orders\Contracts\UpdateOrder;
+use App\Domain\Orders\Models\Order;
 use App\Exceptions\ApplicationException;
-use App\Models\Order;
 use Throwable;
 
 class UpdateOrderAction implements UpdateOrder

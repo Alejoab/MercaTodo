@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Order;
 
-use App\Actions\Orders\AcceptOrderAction;
-use App\Actions\Orders\CreateOrderAction;
-use App\Actions\Orders\DeleteOrderAction;
-use App\Actions\Orders\RejectOrderAction;
 use App\Domain\Carts\Exceptions\CartException;
 use App\Domain\Carts\Services\CartsService;
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Actions\AcceptOrderAction;
+use App\Domain\Orders\Actions\CreateOrderAction;
+use App\Domain\Orders\Actions\DeleteOrderAction;
+use App\Domain\Orders\Actions\RejectOrderAction;
+use App\Domain\Orders\Enums\OrderStatus;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;

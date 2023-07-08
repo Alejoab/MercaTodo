@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Actions\Orders;
+namespace App\Domain\Orders\Actions;
 
-use App\Contracts\Actions\Orders\RejectOrder;
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Contracts\RejectOrder;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
 use App\Exceptions\ApplicationException;
-use App\Models\Order;
-use App\Models\Order_detail;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 

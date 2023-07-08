@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Contracts\Actions\Orders;
+namespace App\Domain\Orders\Contracts;
 
-use App\Models\Order;
+use App\Domain\Orders\Models\Order;
 
 interface RejectOrder
 {

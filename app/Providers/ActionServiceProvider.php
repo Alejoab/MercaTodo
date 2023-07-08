@@ -2,13 +2,6 @@
 
 namespace App\Providers;
 
-use App\Actions\Orders\AcceptOrderAction;
-use App\Actions\Orders\CreateOrderAction;
-use App\Actions\Orders\CreateOrderDetailAction;
-use App\Actions\Orders\DeleteOrderAction;
-use App\Actions\Orders\RejectOrderAction;
-use App\Actions\Orders\RestoreProductsAction;
-use App\Actions\Orders\UpdateOrderAction;
 use App\Actions\Products\CreateProductAction;
 use App\Actions\Products\DeleteProductAction;
 use App\Actions\Products\ForceDeleteProductAction;
@@ -21,13 +14,6 @@ use App\Actions\Users\RestoreUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Actions\Users\UpdateUserPasswordAction;
 use App\Actions\Users\UpdateUserRoleAction;
-use App\Contracts\Actions\Orders\AcceptOrder;
-use App\Contracts\Actions\Orders\CreateOrder;
-use App\Contracts\Actions\Orders\CreateOrderDetail;
-use App\Contracts\Actions\Orders\DeleteOrder;
-use App\Contracts\Actions\Orders\RejectOrder;
-use App\Contracts\Actions\Orders\RestoreProducts;
-use App\Contracts\Actions\Orders\UpdateOrder;
 use App\Contracts\Actions\Products\CreateProduct;
 use App\Contracts\Actions\Products\DeleteProduct;
 use App\Contracts\Actions\Products\ForceDeleteProduct;
@@ -48,6 +34,20 @@ use App\Domain\Customers\Actions\CreateCustomerAction;
 use App\Domain\Customers\Actions\UpdateCustomerAction;
 use App\Domain\Customers\Contracts\CreateCustomer;
 use App\Domain\Customers\Contracts\UpdateCustomer;
+use App\Domain\Orders\Actions\AcceptOrderAction;
+use App\Domain\Orders\Actions\CreateOrderAction;
+use App\Domain\Orders\Actions\CreateOrderDetailAction;
+use App\Domain\Orders\Actions\DeleteOrderAction;
+use App\Domain\Orders\Actions\RejectOrderAction;
+use App\Domain\Orders\Actions\RestoreProductsAction;
+use App\Domain\Orders\Actions\UpdateOrderAction;
+use App\Domain\Orders\Contracts\AcceptOrder;
+use App\Domain\Orders\Contracts\CreateOrder;
+use App\Domain\Orders\Contracts\CreateOrderDetail;
+use App\Domain\Orders\Contracts\DeleteOrder;
+use App\Domain\Orders\Contracts\RejectOrder;
+use App\Domain\Orders\Contracts\RestoreProducts;
+use App\Domain\Orders\Contracts\UpdateOrder;
 use Illuminate\Support\ServiceProvider;
 
 class ActionServiceProvider extends ServiceProvider

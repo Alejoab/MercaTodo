@@ -1,8 +1,8 @@
 <?php
 
-namespace App\QueryBuilders;
+namespace App\Domain\Orders\QueryBuilders;
 
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,7 +23,7 @@ class OrderQueryBuilder extends Builder
     /**
      * Returns the orders with a given status
      *
-     * @param OrderStatus $status
+     * @param \App\Domain\Orders\Enums\OrderStatus $status
      *
      * @return self
      */

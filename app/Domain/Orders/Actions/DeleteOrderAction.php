@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Actions\Orders;
+namespace App\Domain\Orders\Actions;
 
-use App\Contracts\Actions\Orders\DeleteOrder;
+use App\Domain\Orders\Contracts\DeleteOrder;
+use App\Domain\Orders\Models\Order;
 use App\Exceptions\ApplicationException;
-use App\Models\Order;
-use App\Models\Order_detail;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 

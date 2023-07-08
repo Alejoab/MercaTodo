@@ -2,13 +2,13 @@
 
 namespace App\Services\Payment\PlaceToPay;
 
-use App\Actions\Orders\UpdateOrderAction;
-use App\Contracts\Payments\Payments;
-use App\Enums\OrderStatus;
+use App\Contracts\Payments;
+use App\Domain\Orders\Actions\UpdateOrderAction;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
 use App\Exceptions\ApplicationException;
 use App\Exceptions\CustomException;
 use App\Exceptions\PaymentException;
-use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;

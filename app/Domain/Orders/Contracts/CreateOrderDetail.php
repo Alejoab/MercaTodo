@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Contracts\Actions\Orders;
+namespace App\Domain\Orders\Contracts;
 
-use App\Models\Order_detail;
+use App\Domain\Orders\Models\Order_detail;
 
 interface CreateOrderDetail
 {

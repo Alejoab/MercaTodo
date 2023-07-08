@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Domain\Orders\Models;
 
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\QueryBuilders\OrderQueryBuilder;
 use App\Enums\PaymentMethod;
-use App\QueryBuilders\OrderQueryBuilder;
 use Carbon\Carbon;
+use Database\Factories\CityFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

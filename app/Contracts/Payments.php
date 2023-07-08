@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Contracts\Payments;
+namespace App\Contracts;
 
 
-use App\Enums\OrderStatus;
-use App\Models\Order;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,9 +13,9 @@ interface Payments
     /**
      * Creates the user's payment session to the order and return the process url
      *
-     * @param Request $request
-     * @param User    $user
-     * @param Order   $order
+     * @param Request                         $request
+     * @param User                            $user
+     * @param \App\Domain\Orders\Models\Order $order
      *
      * @return string
      */
@@ -26,7 +26,7 @@ interface Payments
      *
      * @param Order $order
      *
-     * @return OrderStatus
+     * @return \App\Domain\Orders\Enums\OrderStatus
      */
     public function checkPayment(Order $order): OrderStatus;
 }

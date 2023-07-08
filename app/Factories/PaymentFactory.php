@@ -2,7 +2,7 @@
 
 namespace App\Factories;
 
-use App\Contracts\Payments\Payments;
+use App\Contracts\Payments;
 use App\Enums\PaymentMethod;
 use App\Services\Payment\PlaceToPay\PlaceToPayService;
 
@@ -13,7 +13,7 @@ class PaymentFactory
      *
      * @param PaymentMethod $paymentMethod
      *
-     * @return Payments
+     * @return \App\Domain\Orders\Contracts\\App\Contracts\Payments
      */
     public static function create(PaymentMethod $paymentMethod): Payments
     {

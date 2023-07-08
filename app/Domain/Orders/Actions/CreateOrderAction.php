@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions\Orders;
+namespace App\Domain\Orders\Actions;
 
-use App\Contracts\Actions\Orders\CreateOrder;
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Contracts\CreateOrder;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
 use App\Enums\PaymentMethod;
 use App\Exceptions\ApplicationException;
-use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 

@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\Orders\AcceptOrderAction;
-use App\Actions\Orders\RejectOrderAction;
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Actions\AcceptOrderAction;
+use App\Domain\Orders\Actions\RejectOrderAction;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
 use App\Exceptions\ApplicationException;
 use App\Factories\PaymentFactory;
-use App\Models\Order;
 use Illuminate\Console\Command;
 
 class checkPaymentSession extends Command
@@ -37,7 +37,7 @@ class checkPaymentSession extends Command
         $orders = Order::query()->whereActive()->get();
 
         /**
-         * @var Order $order
+         * @var \App\Domain\Orders\Models\Order $order
          */
         foreach ($orders as $order) {
             if ($order->status !== OrderStatus::PENDING) {

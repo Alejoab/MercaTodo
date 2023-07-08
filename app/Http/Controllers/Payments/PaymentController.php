@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Payments;
 
-use App\Actions\Orders\AcceptOrderAction;
-use App\Actions\Orders\DeleteOrderAction;
-use App\Actions\Orders\RejectOrderAction;
-use App\Contracts\Actions\Orders\CreateOrder;
-use App\Contracts\Actions\Orders\DeleteOrder;
 use App\Domain\Carts\Services\CartsService;
-use App\Enums\OrderStatus;
+use App\Domain\Orders\Actions\AcceptOrderAction;
+use App\Domain\Orders\Actions\DeleteOrderAction;
+use App\Domain\Orders\Actions\RejectOrderAction;
+use App\Domain\Orders\Contracts\CreateOrder;
+use App\Domain\Orders\Contracts\DeleteOrder;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
 use App\Exceptions\ApplicationException;
 use App\Exceptions\PaymentException;
 use App\Factories\PaymentFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
 use App\Http\Requests\RetryPaymentRequest;
-use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -103,8 +103,8 @@ class PaymentController extends Controller
     /**
      * Cancels the payment session
      *
-     * @param Request     $request
-     * @param DeleteOrder $deleteOrderAction
+     * @param Request                                  $request
+     * @param \App\Domain\Orders\Contracts\DeleteOrder $deleteOrderAction
      *
      * @return Response|RedirectResponse
      */
@@ -134,7 +134,7 @@ class PaymentController extends Controller
     public function retry(RetryPaymentRequest $request): \Symfony\Component\HttpFoundation\Response
     {
         /**
-         * @var ?Order $order
+         * @var ?\App\Domain\Orders\Models\Order $order
          */
         $order = Order::query()->whereUser($request->user()->id)->find($request->get('orderId'));
 

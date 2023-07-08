@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions\Orders;
+namespace App\Domain\Orders\Actions;
 
-use App\Contracts\Actions\Orders\RestoreProducts;
-use App\Models\Order;
-use App\Models\Order_detail;
+use App\Domain\Orders\Contracts\RestoreProducts;
+use App\Domain\Orders\Models\Order;
+use App\Domain\Orders\Models\Order_detail;
 
 class RestoreProductsAction implements RestoreProducts
 {

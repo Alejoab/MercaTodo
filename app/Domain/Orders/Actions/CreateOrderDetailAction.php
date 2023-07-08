@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions\Orders;
+namespace App\Domain\Orders\Actions;
 
-use App\Contracts\Actions\Orders\CreateOrderDetail;
+use App\Domain\Orders\Contracts\CreateOrderDetail;
+use App\Domain\Orders\Models\Order_detail;
 use App\Exceptions\ApplicationException;
-use App\Models\Order_detail;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -23,7 +23,7 @@ class CreateOrderDetailAction implements CreateOrderDetail
             $product = Product::query()->find($data['product_id']);
             $subtotal = $product->price * $data['quantity'];
             /**
-             * @var Order_detail $oderDetail
+             * @var \App\Domain\Orders\Models\Order_detail $oderDetail
              */
             $oderDetail = Order_detail::query()->create([
                 'order_id' => $data['order_id'],

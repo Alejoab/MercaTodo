@@ -2,8 +2,8 @@
 
 namespace App\Services\Payment\PlaceToPay;
 
-use App\Models\Order;
-use App\Models\Order_detail;
+use App\Domain\Orders\Models\Order;
+use App\Domain\Orders\Models\Order_detail;
 
 class OrderToPayment
 {

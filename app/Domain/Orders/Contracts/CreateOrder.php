@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Contracts\Actions\Orders;
+namespace App\Domain\Orders\Contracts;
 
-use App\Models\Order;
+use App\Domain\Orders\Models\Order;
 
 interface CreateOrder
 {
@@ -13,7 +13,7 @@ interface CreateOrder
      * @param array  $cart
      * @param string $method
      *
-     * @return Order
+     * @return \App\Domain\Orders\Models\Order
      */
     public function execute(int $userId, array $cart, string $method): Order;
 }
