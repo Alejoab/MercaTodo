@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
+use App\Domain\Products\Models\Brand;
+use App\Domain\Products\Models\Category;
+use App\Domain\Products\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -15,6 +15,8 @@ use Intervention\Image\Facades\Image;
  */
 class ProductFactory extends Factory
 {
+    protected $model = Product::class;
+
     /**
      * Define the model's default state.
      *

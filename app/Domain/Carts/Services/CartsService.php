@@ -4,7 +4,7 @@ namespace App\Domain\Carts\Services;
 
 use App\Domain\Carts\Actions\DeleteProductCartAction;
 use App\Domain\Carts\Exceptions\CartException;
-use App\Models\Product;
+use App\Domain\Products\Models\Product;
 use Illuminate\Support\Facades\Cache;
 
 class CartsService

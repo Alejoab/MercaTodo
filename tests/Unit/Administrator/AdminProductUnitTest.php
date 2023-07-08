@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\Administrator;
 
-use App\Actions\Products\CreateBrandAction;
-use App\Actions\Products\CreateCategoryAction;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
+use App\Domain\Products\Actions\CreateBrandAction;
+use App\Domain\Products\Actions\CreateCategoryAction;
+use App\Domain\Products\Models\Brand;
+use App\Domain\Products\Models\Category;
+use App\Domain\Products\Models\Product;
+use App\Domain\Products\Services\ProductImagesService;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
-use App\Services\Products\ProductImagesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Products\CategoriesService;
+use App\Domain\Products\Services\CategoriesService;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoryController extends Controller
@@ -10,7 +10,7 @@ class CategoryController extends Controller
     /**
      * List all categories.
      *
-     * @param CategoriesService $categoriesService
+     * @param \App\Domain\Products\Services\CategoriesService $categoriesService
      *
      * @return Collection
      */

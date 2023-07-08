@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Contracts\Actions\Products\CreateProduct;
-use App\Contracts\Actions\Products\DeleteProduct;
-use App\Contracts\Actions\Products\ForceDeleteProduct;
-use App\Contracts\Actions\Products\RestoreProduct;
-use App\Contracts\Actions\Products\UpdateProduct;
+use App\Domain\Products\Contracts\CreateProduct;
+use App\Domain\Products\Contracts\DeleteProduct;
+use App\Domain\Products\Contracts\ForceDeleteProduct;
+use App\Domain\Products\Contracts\RestoreProduct;
+use App\Domain\Products\Contracts\UpdateProduct;
+use App\Domain\Products\Models\Product;
+use App\Domain\Products\Services\BrandsService;
+use App\Domain\Products\Services\CategoriesService;
+use App\Domain\Products\Services\ProductsService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
-use App\Models\Product;
-use App\Services\Products\BrandsService;
-use App\Services\Products\CategoriesService;
-use App\Services\Products\ProductsService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,10 +24,10 @@ class AdminProductController extends Controller
     /**
      * Shows the index products pages.
      *
-     * @param Request           $request
-     * @param ProductsService   $productsService
-     * @param CategoriesService $categoriesService
-     * @param BrandsService     $brandsService
+     * @param Request                                         $request
+     * @param ProductsService                                 $productsService
+     * @param \App\Domain\Products\Services\CategoriesService $categoriesService
+     * @param \App\Domain\Products\Services\BrandsService     $brandsService
      *
      * @return Response
      */
@@ -57,7 +57,7 @@ class AdminProductController extends Controller
     /**
      * Shows the edit product page.
      *
-     * @param Product $product
+     * @param \App\Domain\Products\Models\Product $product
      *
      * @return Response
      */
@@ -71,8 +71,8 @@ class AdminProductController extends Controller
     /**
      * Creates a new product.
      *
-     * @param ProductRequest $request
-     * @param CreateProduct  $createProductAction
+     * @param ProductRequest                               $request
+     * @param \App\Domain\Products\Contracts\CreateProduct $createProductAction
      *
      * @return RedirectResponse
      */
@@ -86,9 +86,9 @@ class AdminProductController extends Controller
     /**
      * Updates a product.
      *
-     * @param ProductRequest $request
-     * @param Product        $product
-     * @param UpdateProduct  $updateProductAction
+     * @param ProductRequest                               $request
+     * @param \App\Domain\Products\Models\Product          $product
+     * @param \App\Domain\Products\Contracts\UpdateProduct $updateProductAction
      *
      * @return RedirectResponse
      */
@@ -102,8 +102,8 @@ class AdminProductController extends Controller
     /**
      * Disables a product.
      *
-     * @param Product       $product
-     * @param DeleteProduct $deleteProductAction
+     * @param \App\Domain\Products\Models\Product $product
+     * @param DeleteProduct                       $deleteProductAction
      *
      * @return void
      */
@@ -115,8 +115,8 @@ class AdminProductController extends Controller
     /**
      * Restores a product.
      *
-     * @param Product        $product
-     * @param RestoreProduct $restoreProductAction
+     * @param \App\Domain\Products\Models\Product           $product
+     * @param \App\Domain\Products\Contracts\RestoreProduct $restoreProductAction
      *
      * @return void
      */
@@ -128,8 +128,8 @@ class AdminProductController extends Controller
     /**
      * Force deletes a product.
      *
-     * @param Product            $product
-     * @param ForceDeleteProduct $forceDeleteProductAction
+     * @param \App\Domain\Products\Models\Product $product
+     * @param ForceDeleteProduct                  $forceDeleteProductAction
      *
      * @return void
      */
@@ -150,8 +150,8 @@ class AdminProductController extends Controller
     }
 
     /**
-     * @param Request       $request
-     * @param BrandsService $brandsService
+     * @param Request                                     $request
+     * @param \App\Domain\Products\Services\BrandsService $brandsService
      *
      * @return Collection|array
      */

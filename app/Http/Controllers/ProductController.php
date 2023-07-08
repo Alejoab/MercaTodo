@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Services\Products\ProductsService;
+use App\Domain\Products\Models\Product;
+use App\Domain\Products\Services\ProductsService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -28,8 +28,8 @@ class ProductController extends Controller
     /**
      * Lists the products for the customer.
      *
-     * @param Request         $request
-     * @param ProductsService $productsService
+     * @param Request                                       $request
+     * @param \App\Domain\Products\Services\ProductsService $productsService
      *
      * @return LengthAwarePaginator
      */

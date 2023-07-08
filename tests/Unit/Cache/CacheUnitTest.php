@@ -2,12 +2,12 @@
 
 namespace Cache;
 
-use App\Actions\Products\CreateBrandAction;
-use App\Actions\Products\CreateCategoryAction;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Services\Products\BrandsService;
-use App\Services\Products\CategoriesService;
+use App\Domain\Products\Actions\CreateBrandAction;
+use App\Domain\Products\Actions\CreateCategoryAction;
+use App\Domain\Products\Models\Brand;
+use App\Domain\Products\Models\Category;
+use App\Domain\Products\Services\BrandsService;
+use App\Domain\Products\Services\CategoriesService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;

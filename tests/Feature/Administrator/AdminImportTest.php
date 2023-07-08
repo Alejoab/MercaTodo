@@ -4,11 +4,11 @@ namespace Tests\Feature\Administrator;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
+use App\Domain\Products\Enums\ExportImportStatus;
+use App\Domain\Products\Enums\ExportImportType;
+use App\Domain\Products\Models\ExportImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
-use App\Enums\ExportImportStatus;
-use App\Enums\ExportImportType;
-use App\Models\ExportImport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;

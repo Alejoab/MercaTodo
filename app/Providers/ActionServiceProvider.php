@@ -2,16 +2,6 @@
 
 namespace App\Providers;
 
-use App\Actions\Products\CreateProductAction;
-use App\Actions\Products\DeleteProductAction;
-use App\Actions\Products\ForceDeleteProductAction;
-use App\Actions\Products\RestoreProductAction;
-use App\Actions\Products\UpdateProductAction;
-use App\Contracts\Actions\Products\CreateProduct;
-use App\Contracts\Actions\Products\DeleteProduct;
-use App\Contracts\Actions\Products\ForceDeleteProduct;
-use App\Contracts\Actions\Products\RestoreProduct;
-use App\Contracts\Actions\Products\UpdateProduct;
 use App\Domain\Carts\Actions\AddProductCartAction;
 use App\Domain\Carts\Actions\DeleteProductCartAction;
 use App\Domain\Carts\Contracts\AddProductCart;
@@ -34,6 +24,16 @@ use App\Domain\Orders\Contracts\DeleteOrder;
 use App\Domain\Orders\Contracts\RejectOrder;
 use App\Domain\Orders\Contracts\RestoreProducts;
 use App\Domain\Orders\Contracts\UpdateOrder;
+use App\Domain\Products\Actions\CreateProductAction;
+use App\Domain\Products\Actions\DeleteProductAction;
+use App\Domain\Products\Actions\ForceDeleteProductAction;
+use App\Domain\Products\Actions\RestoreProductAction;
+use App\Domain\Products\Actions\UpdateProductAction;
+use App\Domain\Products\Contracts\CreateProduct;
+use App\Domain\Products\Contracts\DeleteProduct;
+use App\Domain\Products\Contracts\ForceDeleteProduct;
+use App\Domain\Products\Contracts\RestoreProduct;
+use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Users\Actions\CreateUserAction;
 use App\Domain\Users\Actions\DeleteUserAction;
 use App\Domain\Users\Actions\ForceDeleteUserAction;

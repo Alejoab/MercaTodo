@@ -4,7 +4,7 @@ namespace App\Domain\Users\Models;
 
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Orders\Models\Order;
-use App\QueryBuilders\UserQueryBuilder;
+use App\Domain\Users\QueryBuilders\UserQueryBuilder;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -80,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @param $query
      *
-     * @return UserQueryBuilder
+     * @return \App\Domain\Users\QueryBuilders\UserQueryBuilder
      */
     public function newEloquentBuilder($query): UserQueryBuilder
     {

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Enums\ExportImportStatus;
-use App\Enums\ExportImportType;
+use App\Console\Jobs\ProductsImport;
+use App\Domain\Products\Enums\ExportImportStatus;
+use App\Domain\Products\Enums\ExportImportType;
+use App\Domain\Products\Models\ExportImport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
-use App\Imports\ProductsImport;
-use App\Models\ExportImport;
 use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
 

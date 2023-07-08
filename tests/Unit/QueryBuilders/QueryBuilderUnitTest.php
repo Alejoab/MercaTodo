@@ -2,10 +2,10 @@
 
 namespace QueryBuilders;
 
+use App\Domain\Products\Models\Brand;
+use App\Domain\Products\Models\Category;
+use App\Domain\Products\Models\Product;
 use App\Domain\Users\Models\User;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

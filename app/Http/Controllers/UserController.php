@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Products\BrandsService;
-use App\Services\Products\CategoriesService;
-use App\Services\Products\ProductsService;
+use App\Domain\Products\Services\BrandsService;
+use App\Domain\Products\Services\CategoriesService;
+use App\Domain\Products\Services\ProductsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,10 +14,10 @@ class UserController extends Controller
     /**
      * Shows the home page for the user.
      *
-     * @param Request           $request
-     * @param ProductsService   $productsService
-     * @param CategoriesService $categoriesService
-     * @param BrandsService     $brandsService
+     * @param Request                                         $request
+     * @param \App\Domain\Products\Services\ProductsService   $productsService
+     * @param \App\Domain\Products\Services\CategoriesService $categoriesService
+     * @param \App\Domain\Products\Services\BrandsService     $brandsService
      *
      * @return Response
      */

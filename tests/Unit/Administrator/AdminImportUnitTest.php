@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Administrator;
 
+use App\Console\Jobs\ProductsImport;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
+use App\Domain\Products\Enums\ExportImportStatus;
+use App\Domain\Products\Enums\ExportImportType;
+use App\Domain\Products\Models\ExportImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
-use App\Enums\ExportImportStatus;
-use App\Enums\ExportImportType;
-use App\Imports\ProductsImport;
-use App\Models\ExportImport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;

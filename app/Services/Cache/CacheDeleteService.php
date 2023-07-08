@@ -2,7 +2,7 @@
 
 namespace App\Services\Cache;
 
-use App\Models\Category;
+use App\Domain\Products\Models\Category;
 use Illuminate\Support\Facades\Cache;
 
 class CacheDeleteService

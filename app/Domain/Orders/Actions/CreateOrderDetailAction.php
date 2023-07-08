@@ -4,8 +4,8 @@ namespace App\Domain\Orders\Actions;
 
 use App\Domain\Orders\Contracts\CreateOrderDetail;
 use App\Domain\Orders\Models\Order_detail;
+use App\Domain\Products\Models\Product;
 use App\Exceptions\ApplicationException;
-use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 

@@ -2,7 +2,7 @@
 
 namespace App\Domain\Orders\Models;
 
-use App\Models\Product;
+use App\Domain\Products\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +45,6 @@ class Order_detail extends Model
         /**
          * @phpstan-ignore-next-line
          */
-        return $this->belongsTo(Product::class)->withTrashed();
+        return $this->belongsTo(\App\Domain\Products\Models\Product::class)->withTrashed();
     }
 }

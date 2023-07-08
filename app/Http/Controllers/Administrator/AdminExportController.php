@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Administrator;
 
-use App\Enums\ExportImportStatus;
-use App\Enums\ExportImportType;
-use App\Exports\ProductsExport;
+use App\Console\Jobs\ProductsExport;
+use App\Domain\Products\Enums\ExportImportStatus;
+use App\Domain\Products\Enums\ExportImportType;
+use App\Domain\Products\Models\ExportImport;
 use App\Http\Controllers\Controller;
-use App\Models\ExportImport;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class AdminExportController extends Controller
         $brand = $request->get('brand');
 
         /**
-         * @var ExportImport $export
+         * @var \App\Domain\Products\Models\ExportImport $export
          */
         $export = ExportImport::query()->firstOrCreate([
             'user_id' => $userId,
