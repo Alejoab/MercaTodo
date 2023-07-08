@@ -2,17 +2,17 @@
 
 namespace Tests\Unit\Order;
 
-use App\Actions\Orders\AcceptOrderAction;
-use App\Actions\Orders\CreateOrderAction;
-use App\Actions\Orders\DeleteOrderAction;
-use App\Actions\Orders\RejectOrderAction;
-use App\Enums\OrderStatus;
-use App\Exceptions\CartException;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\User;
-use App\Services\Carts\CartsService;
+use App\Domain\Carts\Exceptions\CartException;
+use App\Domain\Carts\Services\CartsService;
+use App\Domain\Orders\Actions\AcceptOrderAction;
+use App\Domain\Orders\Actions\CreateOrderAction;
+use App\Domain\Orders\Actions\DeleteOrderAction;
+use App\Domain\Orders\Actions\RejectOrderAction;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Products\Models\Brand;
+use App\Domain\Products\Models\Category;
+use App\Domain\Products\Models\Product;
+use App\Domain\Users\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;

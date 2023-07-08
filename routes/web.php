@@ -1,21 +1,21 @@
 <?php
 
-use App\Enums\PermissionEnum;
-use App\Enums\RoleEnum;
-use App\Http\Controllers\Administrator\AdminController;
-use App\Http\Controllers\Administrator\AdminCustomerController;
-use App\Http\Controllers\Administrator\AdminExportController;
-use App\Http\Controllers\Administrator\AdminImportController;
-use App\Http\Controllers\Administrator\AdminProductController;
-use App\Http\Controllers\Administrator\AdminUserController;
-use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CityController;
-use App\Http\Controllers\Payments\PaymentController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
+use App\Domain\Users\Enums\PermissionEnum;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Http\Controllers\Web\AdminController;
+use App\Http\Controllers\Web\Carts\CartController;
+use App\Http\Controllers\Web\Customers\AdminCustomerController;
+use App\Http\Controllers\Web\Customers\CityController;
+use App\Http\Controllers\Web\Payments\PaymentController;
+use App\Http\Controllers\Web\Products\AdminExportController;
+use App\Http\Controllers\Web\Products\AdminImportController;
+use App\Http\Controllers\Web\Products\AdminProductController;
+use App\Http\Controllers\Web\Products\BrandController;
+use App\Http\Controllers\Web\Products\CategoryController;
+use App\Http\Controllers\Web\Products\ProductController;
+use App\Http\Controllers\Web\Users\AdminUserController;
+use App\Http\Controllers\Web\Users\ProfileController;
+use App\Http\Controllers\Web\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 

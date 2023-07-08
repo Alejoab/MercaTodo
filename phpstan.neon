@@ -3,7 +3,7 @@ parameters:
         - app
     level: 5
     excludePaths:
-        - app/Http/Controllers/Auth
+        - app/Http/Controllers/Web/Auth
         - app/Http/Request/Auth
         - app/Http/Middleware
         - app/Http/Kernel.php

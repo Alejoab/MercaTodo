@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Commands;
 
-use App\Enums\OrderStatus;
-use App\Enums\PaymentMethod;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
+use App\Domain\Payments\Enums\PaymentMethod;
+use App\Domain\Products\Models\Brand;
+use App\Domain\Products\Models\Category;
+use App\Domain\Products\Models\Product;
+use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
