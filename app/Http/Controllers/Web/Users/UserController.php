@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web\Users;
 use App\Domain\Products\Services\BrandsService;
 use App\Domain\Products\Services\CategoriesService;
 use App\Domain\Products\Services\ProductsService;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;

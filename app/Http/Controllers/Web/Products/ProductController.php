@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web\Products;
 
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductsService;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

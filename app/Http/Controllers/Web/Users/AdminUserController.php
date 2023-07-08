@@ -11,7 +11,7 @@ use App\Domain\Users\Enums\PermissionEnum;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Domain\Users\Services\UsersService;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRoleUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

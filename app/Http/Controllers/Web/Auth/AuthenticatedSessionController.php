@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Web\Auth;
 
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;

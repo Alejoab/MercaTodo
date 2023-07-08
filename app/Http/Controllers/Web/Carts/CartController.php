@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web\Carts;
 use App\Domain\Carts\Contracts\AddProductCart;
 use App\Domain\Carts\Contracts\DeleteProductCart;
 use App\Domain\Carts\Services\CartsService;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CartRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
