@@ -248,7 +248,7 @@ const restoreProduct = (id) => {
             </div>
             <div class="mt-7 flex justify-center">
                 <TailwindPagination :data="products" :limit="1"
-                                    @pagination-change-page="getProducts()"></TailwindPagination>
+                                    @pagination-change-page="getProducts"></TailwindPagination>
             </div>
         </div>
     </div>

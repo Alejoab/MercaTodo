@@ -161,7 +161,7 @@ const getBrands = async () => {
                 <TailwindPagination
                     :data="products"
                     :limit="1"
-                    @pagination-change-page="getProducts()"
+                    @pagination-change-page="getProducts"
                 >
                 </TailwindPagination>
             </div>

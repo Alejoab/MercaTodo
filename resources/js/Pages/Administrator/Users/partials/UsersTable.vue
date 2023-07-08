@@ -145,7 +145,7 @@ const restoreUser = async (id) => {
                 </table>
             </div>
             <div class="mt-7 flex justify-center">
-                <TailwindPagination :data="users" :limit="1" @pagination-change-page="getUsers()"></TailwindPagination>
+                <TailwindPagination :data="users" :limit="1" @pagination-change-page="getUsers"></TailwindPagination>
             </div>
         </div>
     </div>
