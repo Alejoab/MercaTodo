@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace App\Domain\Payments\Contracts;
 
 
 use App\Domain\Orders\Enums\OrderStatus;

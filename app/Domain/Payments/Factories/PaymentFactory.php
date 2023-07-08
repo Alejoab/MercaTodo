@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Factories;
+namespace App\Domain\Payments\Factories;
 
-use App\Contracts\Payments;
-use App\Enums\PaymentMethod;
-use App\Services\Payment\PlaceToPay\PlaceToPayService;
+use App\Domain\Payments\Contracts\Payments;
+use App\Domain\Payments\Enums\PaymentMethod;
+use App\Domain\Payments\PlaceToPay\PlaceToPayService;
 
 class PaymentFactory
 {

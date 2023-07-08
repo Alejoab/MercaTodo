@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Exceptions;
+namespace App\Domain\Payments\Exceptions;
+
+use App\Exceptions\CustomException;
 
 class PaymentException extends CustomException
 {

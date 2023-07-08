@@ -7,7 +7,7 @@ use App\Domain\Customers\Models\Customer;
 use App\Domain\Customers\Models\Department;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
-use App\Enums\PaymentMethod;
+use App\Domain\Payments\Enums\PaymentMethod;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;

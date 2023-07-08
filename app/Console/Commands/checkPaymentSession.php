@@ -6,8 +6,8 @@ use App\Domain\Orders\Actions\AcceptOrderAction;
 use App\Domain\Orders\Actions\RejectOrderAction;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
+use App\Domain\Payments\Factories\PaymentFactory;
 use App\Exceptions\ApplicationException;
-use App\Factories\PaymentFactory;
 use Illuminate\Console\Command;
 
 class checkPaymentSession extends Command

@@ -5,7 +5,7 @@ namespace App\Domain\Orders\Actions;
 use App\Domain\Orders\Contracts\CreateOrder;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
-use App\Enums\PaymentMethod;
+use App\Domain\Payments\Enums\PaymentMethod;
 use App\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\DB;
 use Throwable;

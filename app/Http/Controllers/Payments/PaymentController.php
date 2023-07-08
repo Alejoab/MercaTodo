@@ -10,9 +10,9 @@ use App\Domain\Orders\Contracts\CreateOrder;
 use App\Domain\Orders\Contracts\DeleteOrder;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
+use App\Domain\Payments\Exceptions\PaymentException;
+use App\Domain\Payments\Factories\PaymentFactory;
 use App\Exceptions\ApplicationException;
-use App\Exceptions\PaymentException;
-use App\Factories\PaymentFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
 use App\Http\Requests\RetryPaymentRequest;
@@ -34,7 +34,7 @@ class PaymentController extends Controller
      * @param CartsService $cartService
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws PaymentException
+     * @throws \App\Domain\Payments\Exceptions\PaymentException
      * @throws Throwable
      * @throws ApplicationException
      */
@@ -129,7 +129,7 @@ class PaymentController extends Controller
      * @param RetryPaymentRequest $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws PaymentException
+     * @throws \App\Domain\Payments\Exceptions\PaymentException
      */
     public function retry(RetryPaymentRequest $request): \Symfony\Component\HttpFoundation\Response
     {

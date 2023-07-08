@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Services\Payment\PlaceToPay;
+namespace App\Domain\Payments\PlaceToPay;
 
-use App\Contracts\Payments;
 use App\Domain\Orders\Actions\UpdateOrderAction;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
+use App\Domain\Payments\Contracts\Payments;
+use App\Domain\Payments\Exceptions\PaymentException;
 use App\Exceptions\ApplicationException;
 use App\Exceptions\CustomException;
-use App\Exceptions\PaymentException;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -29,7 +29,7 @@ class PlaceToPayService implements Payments
      * @return string
      * @throws ApplicationException
      * @throws CustomException
-     * @throws PaymentException
+     * @throws \App\Domain\Payments\Exceptions\PaymentException
      */
     public function paymentProcess(Request $request, User $user, Order $order): string
     {

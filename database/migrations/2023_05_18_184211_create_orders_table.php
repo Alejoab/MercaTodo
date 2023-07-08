@@ -1,7 +1,7 @@
 <?php
 
 use App\Domain\Orders\Enums\OrderStatus;
-use App\Enums\PaymentMethod;
+use App\Domain\Payments\Enums\PaymentMethod;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

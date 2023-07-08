@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Payment\PlaceToPay;
+namespace App\Domain\Payments\PlaceToPay;
 
 use App\Models\User;
 
