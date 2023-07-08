@@ -5,7 +5,7 @@ namespace App\Domain\Customers\Actions;
 use App\Domain\Customers\Contracts\CreateCustomer;
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Users\Actions\CreateUserAction;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;

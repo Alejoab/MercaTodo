@@ -5,14 +5,14 @@ namespace App\Domain\Orders\Actions;
 use App\Domain\Orders\Contracts\CreateOrderDetail;
 use App\Domain\Orders\Models\Order_detail;
 use App\Domain\Products\Models\Product;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class CreateOrderDetailAction implements CreateOrderDetail
 {
     /**
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function execute(array $data): Order_detail
     {

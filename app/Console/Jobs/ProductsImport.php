@@ -9,7 +9,7 @@ use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Enums\ExportImportStatus;
 use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -39,7 +39,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     }
 
     /**
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function collection(Collection $collection): void
     {

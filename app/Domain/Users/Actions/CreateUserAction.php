@@ -5,7 +5,7 @@ namespace App\Domain\Users\Actions;
 use App\Domain\Users\Contracts\CreateUser;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

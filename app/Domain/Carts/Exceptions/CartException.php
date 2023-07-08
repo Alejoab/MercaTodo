@@ -2,9 +2,7 @@
 
 namespace App\Domain\Carts\Exceptions;
 
-use App\Exceptions\CustomException;
-
-class CartException extends CustomException
+class CartException extends \App\Support\Exceptions\CustomException
 {
 
     public function __construct(string $message)

@@ -8,8 +8,8 @@ use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Contracts\Payments;
 use App\Domain\Payments\Exceptions\PaymentException;
 use App\Domain\Users\Models\User;
-use App\Exceptions\ApplicationException;
-use App\Exceptions\CustomException;
+use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -27,7 +27,7 @@ class PlaceToPayService implements Payments
      * @param Order                         $order
      *
      * @return string
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      * @throws CustomException
      * @throws \App\Domain\Payments\Exceptions\PaymentException
      */

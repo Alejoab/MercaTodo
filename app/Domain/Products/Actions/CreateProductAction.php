@@ -5,7 +5,7 @@ namespace App\Domain\Products\Actions;
 use App\Domain\Products\Contracts\CreateProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductImagesService;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;

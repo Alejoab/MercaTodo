@@ -5,7 +5,7 @@ namespace App\Domain\Customers\Actions;
 use App\Domain\Customers\Contracts\UpdateCustomer;
 use App\Domain\Users\Actions\UpdateUserAction;
 use App\Domain\Users\Models\User;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 

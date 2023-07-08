@@ -2,7 +2,7 @@
 
 namespace App\Domain\Products\Services;
 
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -15,7 +15,7 @@ class ProductImagesService
      * @param UploadedFile $image
      *
      * @return string
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function storeImage(UploadedFile $image): string
     {

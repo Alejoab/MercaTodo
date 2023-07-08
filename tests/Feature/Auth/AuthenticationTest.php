@@ -5,7 +5,7 @@ namespace Tests\Feature\Auth;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
 use App\Domain\Users\Models\User;
-use App\Providers\RouteServiceProvider;
+use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

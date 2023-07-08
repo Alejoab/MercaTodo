@@ -12,10 +12,10 @@ use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Exceptions\PaymentException;
 use App\Domain\Payments\Factories\PaymentFactory;
-use App\Exceptions\ApplicationException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
 use App\Http\Requests\RetryPaymentRequest;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -66,7 +66,7 @@ class PaymentController extends Controller
      * @param Request $request
      *
      * @return Response|RedirectResponse
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function success(Request $request): Response|RedirectResponse
     {

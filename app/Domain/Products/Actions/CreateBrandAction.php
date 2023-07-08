@@ -3,8 +3,8 @@
 namespace App\Domain\Products\Actions;
 
 use App\Domain\Products\Models\Brand;
-use App\Exceptions\ApplicationException;
-use App\Services\Cache\CacheDeleteService;
+use App\Support\Exceptions\ApplicationException;
+use App\Support\Services\CacheDeleteService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Throwable;
@@ -12,7 +12,7 @@ use Throwable;
 class CreateBrandAction
 {
     /**
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function execute($name): Builder|Model
     {

@@ -5,7 +5,7 @@ namespace App\Domain\Orders\Actions;
 use App\Domain\Orders\Contracts\RejectOrder;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -13,7 +13,7 @@ class RejectOrderAction implements RejectOrder
 {
 
     /**
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function execute(Order $order): void
     {

@@ -6,7 +6,7 @@ use App\Domain\Customers\Contracts\CreateCustomer;
 use App\Domain\Customers\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequest;
-use App\Providers\RouteServiceProvider;
+use App\Support\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;

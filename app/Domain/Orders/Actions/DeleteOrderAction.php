@@ -4,7 +4,7 @@ namespace App\Domain\Orders\Actions;
 
 use App\Domain\Orders\Contracts\DeleteOrder;
 use App\Domain\Orders\Models\Order;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Support\Providers;
 
 use App\Domain\Carts\Actions\AddProductCartAction;
 use App\Domain\Carts\Actions\DeleteProductCartAction;

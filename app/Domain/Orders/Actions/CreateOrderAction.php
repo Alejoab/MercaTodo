@@ -6,7 +6,7 @@ use App\Domain\Orders\Contracts\CreateOrder;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Enums\PaymentMethod;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -14,7 +14,7 @@ class CreateOrderAction implements CreateOrder
 {
 
     /**
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function execute(int $userId, array $cart, string $method): Order
     {

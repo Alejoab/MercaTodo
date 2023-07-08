@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Support\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use App\Domain\Users\Enums\RoleEnum;

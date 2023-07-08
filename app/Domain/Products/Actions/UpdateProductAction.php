@@ -5,7 +5,7 @@ namespace App\Domain\Products\Actions;
 use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductImagesService;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -13,7 +13,7 @@ class UpdateProductAction implements UpdateProduct
 {
 
     /**
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function execute(Product $product, array $data): Product
     {

@@ -4,7 +4,7 @@ namespace App\Domain\Users\Actions;
 
 use App\Domain\Users\Contracts\UpdateUserRole;
 use App\Domain\Users\Models\User;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -15,7 +15,7 @@ class UpdateUserRoleAction implements UpdateUserRole
      * @param string                        $role
      * @param array                         $permissions
      *
-     * @throws ApplicationException
+     * @throws \App\Support\Exceptions\ApplicationException
      */
     public function execute(User $user, string $role, array $permissions): void
     {

@@ -4,7 +4,7 @@ namespace App\Domain\Users\Actions;
 
 use App\Domain\Users\Contracts\UpdateUser;
 use App\Domain\Users\Models\User;
-use App\Exceptions\ApplicationException;
+use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
