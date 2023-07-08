@@ -39,7 +39,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     }
 
     /**
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function collection(Collection $collection): void
     {
@@ -49,7 +49,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
             }
 
             /**
-             * @var ?\App\Domain\Products\Models\Product $productFound
+             * @var ?Product $productFound
              */
             $productFound = Product::query()->withTrashed()->where('code', '=', $row['code'])->latest()->first();
 

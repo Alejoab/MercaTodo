@@ -37,7 +37,7 @@ class checkPaymentSession extends Command
         $orders = Order::query()->whereActive()->get();
 
         /**
-         * @var \App\Domain\Orders\Models\Order $order
+         * @var Order $order
          */
         foreach ($orders as $order) {
             if ($order->status !== OrderStatus::PENDING) {

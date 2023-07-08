@@ -29,8 +29,8 @@ class ProductController extends Controller
     /**
      * Lists the products for the customer.
      *
-     * @param Request                                       $request
-     * @param \App\Domain\Products\Services\ProductsService $productsService
+     * @param Request         $request
+     * @param ProductsService $productsService
      *
      * @return LengthAwarePaginator
      */

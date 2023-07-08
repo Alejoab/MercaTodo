@@ -9,8 +9,8 @@ interface UpdateUser
     /**
      * Updates the user's information.
      *
-     * @param \App\Domain\Users\Models\User $user
-     * @param array                         $data
+     * @param User  $user
+     * @param array $data
      *
      * @return void
      */

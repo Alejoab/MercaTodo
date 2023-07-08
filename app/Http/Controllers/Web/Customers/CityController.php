@@ -11,8 +11,8 @@ class CityController extends Controller
     /**
      * List cities by department.
      *
-     * @param int                                          $id
-     * @param \App\Domain\Customers\Services\CitiesService $citiesService
+     * @param int           $id
+     * @param CitiesService $citiesService
      *
      * @return Collection|array
      */

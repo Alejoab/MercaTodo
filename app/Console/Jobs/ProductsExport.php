@@ -47,7 +47,7 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     public function query(): Relation|\Illuminate\Database\Eloquent\Builder|ProductQueryBuilder|Builder
     {
         /**
-         * @var \App\Domain\Products\QueryBuilders\ProductQueryBuilder $products
+         * @var ProductQueryBuilder $products
          */
         $products = Product::query()->withTrashed()
             ->join('brands', 'products.brand_id', '=', 'brands.id')

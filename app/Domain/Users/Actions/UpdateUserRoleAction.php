@@ -11,11 +11,11 @@ use Throwable;
 class UpdateUserRoleAction implements UpdateUserRole
 {
     /**
-     * @param \App\Domain\Users\Models\User $user
-     * @param string                        $role
-     * @param array                         $permissions
+     * @param User   $user
+     * @param string $role
+     * @param array  $permissions
      *
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function execute(User $user, string $role, array $permissions): void
     {

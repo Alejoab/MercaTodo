@@ -23,7 +23,7 @@ class OrderQueryBuilder extends Builder
     /**
      * Returns the orders with a given status
      *
-     * @param \App\Domain\Orders\Enums\OrderStatus $status
+     * @param OrderStatus $status
      *
      * @return self
      */

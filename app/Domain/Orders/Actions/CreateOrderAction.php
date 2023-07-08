@@ -14,7 +14,7 @@ class CreateOrderAction implements CreateOrder
 {
 
     /**
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function execute(int $userId, array $cart, string $method): Order
     {

@@ -13,7 +13,7 @@ class UpdateProductAction implements UpdateProduct
 {
 
     /**
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function execute(Product $product, array $data): Product
     {

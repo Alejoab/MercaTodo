@@ -15,10 +15,10 @@ class UserController extends Controller
     /**
      * Shows the home page for the user.
      *
-     * @param Request                                         $request
-     * @param \App\Domain\Products\Services\ProductsService   $productsService
-     * @param \App\Domain\Products\Services\CategoriesService $categoriesService
-     * @param \App\Domain\Products\Services\BrandsService     $brandsService
+     * @param Request           $request
+     * @param ProductsService   $productsService
+     * @param CategoriesService $categoriesService
+     * @param BrandsService     $brandsService
      *
      * @return Response
      */

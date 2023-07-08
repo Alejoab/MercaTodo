@@ -80,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @param $query
      *
-     * @return \App\Domain\Users\QueryBuilders\UserQueryBuilder
+     * @return UserQueryBuilder
      */
     public function newEloquentBuilder($query): UserQueryBuilder
     {

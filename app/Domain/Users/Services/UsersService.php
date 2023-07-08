@@ -19,7 +19,7 @@ class UsersService
     public function listUsersToTable(?string $search): LengthAwarePaginator
     {
         /**
-         * @var \App\Domain\Users\QueryBuilders\UserQueryBuilder $users
+         * @var UserQueryBuilder $users
          */
         $users = User::query()->withTrashed()
             ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')

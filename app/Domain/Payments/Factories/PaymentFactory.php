@@ -13,7 +13,7 @@ class PaymentFactory
      *
      * @param PaymentMethod $paymentMethod
      *
-     * @return \App\Domain\Orders\Contracts\\App\Contracts\Payments
+     * @return Payments
      */
     public static function create(PaymentMethod $paymentMethod): Payments
     {

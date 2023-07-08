@@ -2,7 +2,9 @@
 
 namespace App\Domain\Payments\Exceptions;
 
-class PaymentException extends \App\Support\Exceptions\CustomException
+use App\Support\Exceptions\CustomException;
+
+class PaymentException extends CustomException
 {
 
     public function __construct(string $message)

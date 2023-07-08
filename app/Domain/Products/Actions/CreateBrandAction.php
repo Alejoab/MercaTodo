@@ -12,7 +12,7 @@ use Throwable;
 class CreateBrandAction
 {
     /**
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function execute($name): Builder|Model
     {

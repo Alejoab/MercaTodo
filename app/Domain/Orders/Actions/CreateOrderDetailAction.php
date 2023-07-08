@@ -12,7 +12,7 @@ use Throwable;
 class CreateOrderDetailAction implements CreateOrderDetail
 {
     /**
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function execute(array $data): Order_detail
     {
@@ -23,7 +23,7 @@ class CreateOrderDetailAction implements CreateOrderDetail
             $product = Product::query()->find($data['product_id']);
             $subtotal = $product->price * $data['quantity'];
             /**
-             * @var \App\Domain\Orders\Models\Order_detail $oderDetail
+             * @var Order_detail $oderDetail
              */
             $oderDetail = Order_detail::query()->create([
                 'order_id' => $data['order_id'],

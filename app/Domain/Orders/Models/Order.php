@@ -12,19 +12,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
- * @property int                                      $id
- * @property string                                   $code
- * @property int                                      $user_id
- * @property OrderStatus                              $status
- * @property float                                    $total
- * @property \App\Domain\Payments\Enums\PaymentMethod $payment_method
- * @property ?int                                     $requestId
- * @property ?string                                  $processUrl
- * @property boolean                                  $active
- * @property Carbon                                   $created_at
- * @property Carbon                                   $updated_at
+ * @property int           $id
+ * @property string        $code
+ * @property int           $user_id
+ * @property OrderStatus   $status
+ * @property float         $total
+ * @property PaymentMethod $payment_method
+ * @property ?int          $requestId
+ * @property ?string       $processUrl
+ * @property boolean       $active
+ * @property Carbon        $created_at
+ * @property Carbon        $updated_at
  *
- * @property Collection                               $order_detail
+ * @property Collection    $order_detail
  *
  * @method static OrderQueryBuilder query()
  */

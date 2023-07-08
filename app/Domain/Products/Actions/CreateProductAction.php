@@ -28,7 +28,7 @@ class CreateProductAction implements CreateProduct
             }
 
             /**
-             * @var \App\Domain\Products\Models\Product $product
+             * @var Product $product
              */
             $product = Product::query()->create([
                 'code' => $data['code'],

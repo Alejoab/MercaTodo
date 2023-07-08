@@ -6,7 +6,7 @@ use App\Domain\Products\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Domain\Products\Models\Category>
+ * @extends Factory<Category>
  */
 class CategoryFactory extends Factory
 {

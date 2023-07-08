@@ -13,9 +13,9 @@ interface Payments
     /**
      * Creates the user's payment session to the order and return the process url
      *
-     * @param Request                         $request
-     * @param \App\Domain\Users\Models\User   $user
-     * @param \App\Domain\Orders\Models\Order $order
+     * @param Request $request
+     * @param User    $user
+     * @param Order   $order
      *
      * @return string
      */
@@ -26,7 +26,7 @@ interface Payments
      *
      * @param Order $order
      *
-     * @return \App\Domain\Orders\Enums\OrderStatus
+     * @return OrderStatus
      */
     public function checkPayment(Order $order): OrderStatus;
 }

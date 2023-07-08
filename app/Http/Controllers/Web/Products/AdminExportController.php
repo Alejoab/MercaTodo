@@ -24,7 +24,7 @@ class AdminExportController extends Controller
         $brand = $request->get('brand');
 
         /**
-         * @var \App\Domain\Products\Models\ExportImport $export
+         * @var ExportImport $export
          */
         $export = ExportImport::query()->firstOrCreate([
             'user_id' => $userId,

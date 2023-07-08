@@ -18,7 +18,7 @@ class CustomersService
     public function listCustomersToTable(?string $search): LengthAwarePaginator
     {
         /**
-         * @var \App\Domain\Users\QueryBuilders\UserQueryBuilder $users
+         * @var UserQueryBuilder $users
          */
         $users = User::withTrashed()
             ->join('customers', 'customers.user_id', '=', 'users.id')

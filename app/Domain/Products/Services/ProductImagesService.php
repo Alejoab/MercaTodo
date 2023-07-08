@@ -15,7 +15,7 @@ class ProductImagesService
      * @param UploadedFile $image
      *
      * @return string
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function storeImage(UploadedFile $image): string
     {

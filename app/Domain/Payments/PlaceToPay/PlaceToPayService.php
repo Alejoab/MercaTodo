@@ -22,14 +22,14 @@ class PlaceToPayService implements Payments
     /**
      * Creates a new placetopay payment session and returns the process url
      *
-     * @param Request                       $request
-     * @param \App\Domain\Users\Models\User $user
-     * @param Order                         $order
+     * @param Request $request
+     * @param User    $user
+     * @param Order   $order
      *
      * @return string
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      * @throws CustomException
-     * @throws \App\Domain\Payments\Exceptions\PaymentException
+     * @throws PaymentException
      */
     public function paymentProcess(Request $request, User $user, Order $order): string
     {

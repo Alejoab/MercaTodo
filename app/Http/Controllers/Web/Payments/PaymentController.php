@@ -34,7 +34,7 @@ class PaymentController extends Controller
      * @param CartsService $cartService
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \App\Domain\Payments\Exceptions\PaymentException
+     * @throws PaymentException
      * @throws Throwable
      * @throws ApplicationException
      */
@@ -66,7 +66,7 @@ class PaymentController extends Controller
      * @param Request $request
      *
      * @return Response|RedirectResponse
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function success(Request $request): Response|RedirectResponse
     {
@@ -103,8 +103,8 @@ class PaymentController extends Controller
     /**
      * Cancels the payment session
      *
-     * @param Request                                  $request
-     * @param \App\Domain\Orders\Contracts\DeleteOrder $deleteOrderAction
+     * @param Request     $request
+     * @param DeleteOrder $deleteOrderAction
      *
      * @return Response|RedirectResponse
      */
@@ -129,12 +129,12 @@ class PaymentController extends Controller
      * @param RetryPaymentRequest $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \App\Domain\Payments\Exceptions\PaymentException
+     * @throws PaymentException
      */
     public function retry(RetryPaymentRequest $request): \Symfony\Component\HttpFoundation\Response
     {
         /**
-         * @var ?\App\Domain\Orders\Models\Order $order
+         * @var ?Order $order
          */
         $order = Order::query()->whereUser($request->user()->id)->find($request->get('orderId'));
 

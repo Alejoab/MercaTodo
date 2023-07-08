@@ -30,8 +30,8 @@ class CartController extends Controller
     /**
      * Adds a product to the user's cart
      *
-     * @param CartRequest                                $request
-     * @param \App\Domain\Carts\Contracts\AddProductCart $addProductCartAction
+     * @param CartRequest    $request
+     * @param AddProductCart $addProductCartAction
      *
      * @return void
      */
@@ -43,8 +43,8 @@ class CartController extends Controller
     /**
      * Deletes a product from the user's cart
      *
-     * @param Request                                       $request
-     * @param \App\Domain\Carts\Contracts\DeleteProductCart $deleteProductCartAction
+     * @param Request           $request
+     * @param DeleteProductCart $deleteProductCartAction
      *
      * @return void
      */

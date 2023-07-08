@@ -12,17 +12,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int                           $id
- * @property string                        $name
- * @property string                        $surname
- * @property DocumentType                  $document_type
- * @property string                        $document
- * @property ?string                       $phone
- * @property string                        $address
- * @property int                           $city_id
- * @property int                           $user_id
+ * @property string       $name
+ * @property string       $surname
+ * @property DocumentType $document_type
+ * @property string       $document
+ * @property ?string      $phone
+ * @property string       $address
+ * @property int          $city_id
+ * @property int          $user_id
  *
- * @property City                          $city
- * @property \App\Domain\Users\Models\User $user
+ * @property City         $city
+ * @property User         $user
  */
 class Customer extends Model
 {
@@ -67,6 +67,6 @@ class Customer extends Model
      */
     public function user(): belongsTo
     {
-        return $this->belongsTo(\App\Domain\Users\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 }

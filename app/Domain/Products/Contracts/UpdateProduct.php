@@ -12,7 +12,7 @@ interface UpdateProduct
      * @param Product $product
      * @param array   $data
      *
-     * @return \App\Domain\Products\Models\Product
+     * @return Product
      */
     public function execute(Product $product, array $data): Product;
 }

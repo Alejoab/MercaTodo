@@ -2,6 +2,7 @@
 
 namespace App\Domain\Customers\Models;
 
+use App\Domain\Users\Models\User;
 use Database\Factories\CityFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,6 +34,6 @@ class City extends Model
 
     public function users(): HasMany
     {
-        return $this->hasMany(\App\Domain\Users\Models\User::class);
+        return $this->hasMany(User::class);
     }
 }

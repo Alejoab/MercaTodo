@@ -45,6 +45,6 @@ class Order_detail extends Model
         /**
          * @phpstan-ignore-next-line
          */
-        return $this->belongsTo(\App\Domain\Products\Models\Product::class)->withTrashed();
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }

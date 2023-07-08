@@ -18,7 +18,7 @@ class CartsService
      */
     public function getCartWithProducts(int $userId): array
     {
-        $action = new \App\Domain\Carts\Actions\DeleteProductCartAction();
+        $action = new DeleteProductCartAction();
         $cart = Cache::get('cart:'.$userId) ?? [];
         $products = [];
 

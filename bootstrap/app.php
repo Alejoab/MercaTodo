@@ -11,6 +11,8 @@
 |
 */
 
+use App\Support\Exceptions\Handler;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -38,7 +40,7 @@ $app->singleton(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    \App\Support\Exceptions\Handler::class
+    Handler::class
 );
 
 /*

@@ -11,7 +11,7 @@ class CategoryController extends Controller
     /**
      * List all categories.
      *
-     * @param \App\Domain\Products\Services\CategoriesService $categoriesService
+     * @param CategoriesService $categoriesService
      *
      * @return Collection
      */

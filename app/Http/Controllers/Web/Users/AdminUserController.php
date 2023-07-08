@@ -42,7 +42,7 @@ class AdminUserController extends Controller
     /**
      * Shows the user page.
      *
-     * @param \App\Domain\Users\Models\User $user
+     * @param User $user
      *
      * @return Response
      */
@@ -58,9 +58,9 @@ class AdminUserController extends Controller
     /**
      * Updates a user.
      *
-     * @param UserRoleUpdateRequest                      $request
-     * @param \App\Domain\Users\Models\User              $user
-     * @param \App\Domain\Users\Contracts\UpdateUserRole $updateRoleAction
+     * @param UserRoleUpdateRequest $request
+     * @param User                  $user
+     * @param UpdateUserRole        $updateRoleAction
      *
      * @return RedirectResponse
      */
@@ -74,9 +74,9 @@ class AdminUserController extends Controller
     /**
      * Updates a user password.
      *
-     * @param Request                                        $request
-     * @param User                                           $user
-     * @param \App\Domain\Users\Contracts\UpdateUserPassword $action
+     * @param Request            $request
+     * @param User               $user
+     * @param UpdateUserPassword $action
      *
      * @return RedirectResponse
      */
@@ -94,8 +94,8 @@ class AdminUserController extends Controller
     /**
      * Disables a user.
      *
-     * @param \App\Domain\Users\Models\User          $user
-     * @param \App\Domain\Users\Contracts\DeleteUser $action
+     * @param User       $user
+     * @param DeleteUser $action
      *
      * @return void
      */

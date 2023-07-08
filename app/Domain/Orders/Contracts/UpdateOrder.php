@@ -9,8 +9,8 @@ interface UpdateOrder
     /**
      * Updates the order
      *
-     * @param \App\Domain\Orders\Models\Order $order
-     * @param array                           $data
+     * @param Order $order
+     * @param array $data
      *
      * @return void
      */

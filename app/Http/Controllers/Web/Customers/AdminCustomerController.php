@@ -35,7 +35,7 @@ class AdminCustomerController extends Controller
     /**
      * Shows the customer update page for administrator.
      *
-     * @param \App\Domain\Users\Models\User $user
+     * @param User $user
      *
      * @return Response
      */
@@ -50,9 +50,9 @@ class AdminCustomerController extends Controller
     /**
      * Updates the customer.
      *
-     * @param CustomerUpdateRequest                          $request
-     * @param \App\Domain\Users\Models\User                  $user
-     * @param \App\Domain\Customers\Contracts\UpdateCustomer $updateCustomerAction
+     * @param CustomerUpdateRequest $request
+     * @param User                  $user
+     * @param UpdateCustomer        $updateCustomerAction
      *
      * @return RedirectResponse
      */

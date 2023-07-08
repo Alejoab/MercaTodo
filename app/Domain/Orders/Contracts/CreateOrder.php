@@ -13,7 +13,7 @@ interface CreateOrder
      * @param array  $cart
      * @param string $method
      *
-     * @return \App\Domain\Orders\Models\Order
+     * @return Order
      */
     public function execute(int $userId, array $cart, string $method): Order;
 }

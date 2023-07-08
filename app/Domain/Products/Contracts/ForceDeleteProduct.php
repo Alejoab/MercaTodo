@@ -9,7 +9,7 @@ interface ForceDeleteProduct
     /**
      * Force deletes a product.
      *
-     * @param \App\Domain\Products\Models\Product $product
+     * @param Product $product
      *
      * @return void
      */

@@ -13,7 +13,7 @@ class RejectOrderAction implements RejectOrder
 {
 
     /**
-     * @throws \App\Support\Exceptions\ApplicationException
+     * @throws ApplicationException
      */
     public function execute(Order $order): void
     {
