@@ -4,13 +4,17 @@ namespace App\Support\Exceptions;
 
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\ValidationException;
 
 class CustomException extends Exception
 {
     protected string $sessionErrorName;
 
-    public function render(): RedirectResponse
+    /**
+     * @throws ValidationException
+     */
+    public function render()
     {
-        return redirect()->back()->withErrors([$this->sessionErrorName => $this->getMessage()]);
+        throw ValidationException::withMessages([$this->sessionErrorName => $this->getMessage()]);
     }
 }
