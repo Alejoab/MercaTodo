@@ -169,7 +169,6 @@ class AdminProductApiTest extends TestCase
         $product->delete();
 
         $response = $this->putJson(route('api.admin.products.restore', $product->id));
-        $response->dump();
         $response->assertStatus(403);
     }
 
