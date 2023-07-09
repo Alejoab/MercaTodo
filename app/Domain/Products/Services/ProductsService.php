@@ -30,19 +30,7 @@ class ProductsService
             ->filterCategory($category)
             ->filterBrand($brand ? [$brand] : null)
             ->contains($search, ['products.name', 'products.code'])
-            ->select(
-                [
-                    'products.id',
-                    'products.code',
-                    'products.name',
-                    'products.price',
-                    'products.stock',
-                    'brands.name as brand_name',
-                    'categories.name as category_name',
-                    'products.deleted_at as status',
-                ]
-            )
-            ->orderBy('products.code', 'desc')
+            ->orderBy('products.id')
             ->paginate(10);
     }
 

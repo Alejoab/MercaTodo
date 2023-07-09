@@ -9,6 +9,7 @@ use App\Domain\Products\Contracts\RestoreProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Resources\ProductResource;
+use App\Domain\Products\Services\ProductsService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Http\JsonResponse;
@@ -16,17 +17,20 @@ use Illuminate\Http\Request;
 
 class AdminProductApiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request, ProductsService $productsService): JsonResponse
     {
-        //
+        $search = $request->get('search');
+        $category = $request->get('category');
+        $brand = $request->get('brand');
+
+        $products = $productsService->listProductsAdmin($search, $category, $brand);
+
+        return response()->json([
+            'message' => 'Products retrieved successfully',
+            'data' => ProductResource::collection($products),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ProductRequest $request, CreateProduct $createProductAction): JsonResponse
     {
         $product = $createProductAction->execute($request->validated());
@@ -37,15 +41,15 @@ class AdminProductApiController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Product $product): JsonResponse
     {
-        //
+        return response()->json([
+            'message' => 'Product retrieved successfully',
+            'data' => new ProductResource($product),
+        ]);
     }
 
-    public function update(ProductRequest $request, Product $product, UpdateProduct $updateProductAction)
+    public function update(ProductRequest $request, Product $product, UpdateProduct $updateProductAction): JsonResponse
     {
         $product = $updateProductAction->execute($product, $request->validated());
 

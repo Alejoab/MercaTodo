@@ -28,6 +28,7 @@ class ProductResource extends JsonResource
             'brand' => new BrandResource($this->brand),
             'price' => $this->price,
             'stock' => $this->stock,
+            'status' => $this->getStatusAttribute($this->deleted_at),
             'created_at' => $this->created_at,
             'updated_at' => $this->when($this->updated_at->ne($this->created_at), $this->updated_at),
         ];

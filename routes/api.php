@@ -22,6 +22,8 @@ $admins = implode('|', [RoleEnum::ADMIN->value, RoleEnum::SUPER_ADMIN->value]);
 Route::post('login', [LoginApiController::class, 'login'])->name('api.login');
 
 Route::prefix('admin/products')->middleware(['auth:sanctum', 'verified', "role:$admins"])->group(function () {
+    Route::get('/', [AdminProductApiController::class, 'index'])->name('api.admin.products.index');
+    Route::get('/{product}', [AdminProductApiController::class, 'show'])->withTrashed()->name('api.admin.products.show');
     Route::middleware(['permission:'.PermissionEnum::CREATE->value])->post('/store', [AdminProductApiController::class, 'store'])->name('api.admin.products.store');
     Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{product}', [AdminProductApiController::class, 'update'])->withTrashed()->name('api.admin.products.update');
     Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}', [AdminProductApiController::class, 'destroy'])->withTrashed()->name('api.admin.products.destroy');
