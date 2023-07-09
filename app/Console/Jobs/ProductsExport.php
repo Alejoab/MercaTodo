@@ -10,11 +10,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
+class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents, ShouldAutoSize, WithStyles, WithColumnWidths
 {
 
     private ?string $search;
@@ -33,14 +37,14 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     public function headings(): array
     {
         return [
-            'code',
-            'name',
-            'description',
-            'price',
-            'stock',
-            'category_name',
-            'brand_name',
-            'status',
+            'CODE',
+            'PRICE',
+            'STOCK',
+            'CATEGORY_NAME',
+            'BRAND_NAME',
+            'STATUS',
+            'NAME',
+            'DESCRIPTION',
         ];
     }
 
@@ -60,13 +64,13 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
             ->select(
                 [
                     'products.code',
-                    'products.name',
-                    'products.description',
                     'products.price',
                     'products.stock',
                     'categories.name as category_name',
                     'brands.name as brand_name',
                     'products.deleted_at as status',
+                    'products.name',
+                    'products.description',
                 ]
             )
             ->orderBy('products.code', 'desc');
@@ -86,5 +90,32 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     {
         $this->export->status = ExportImportStatus::FAILED;
         $this->export->save();
+    }
+
+    public function styles(Worksheet $sheet): array
+    {
+        return [
+            'A:H' => [
+                'alignment' => ['vertical' => 'center',],
+            ],
+            'G:H' => [
+                'alignment' => ['wrapText' => true],
+            ],
+            1 => [
+                'font' => ['bold' => true,],
+                'alignment' => ['horizontal' => 'center',],
+                'fill' => [
+                    'fillType' => 'solid',
+                    'startColor' => ['rgb' => '8DB4E2',],
+                ],
+            ],
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'H' => 70,
+        ];
     }
 }
