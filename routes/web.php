@@ -103,8 +103,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
         Route::middleware(['permission:'.PermissionEnum::CREATE->value])->get('/create', [AdminProductController::class, 'create'])->name('admin.products.create');
         Route::middleware(['permission:'.PermissionEnum::CREATE->value])->post('/create', [AdminProductController::class, 'store'])->name('admin.products.create');
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->get('/{product}', [AdminProductController::class, 'productShow'])->withTrashed()->name('admin.products.show');
-        Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->post('/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
-        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->post('/{product}', [AdminProductController::class, 'update'])->withTrashed()->name('admin.products.update');
+        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}', [AdminProductController::class, 'destroy'])->withTrashed()->name('admin.products.destroy');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->put('/{product}/restore', [AdminProductController::class, 'restore'])->withTrashed()->name('admin.products.restore');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name(
             'admin.products.force-delete'

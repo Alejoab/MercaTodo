@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\Products;
 
 use App\Domain\Products\Contracts\CreateProduct;
+use App\Domain\Products\Contracts\DeleteProduct;
+use App\Domain\Products\Contracts\ForceDeleteProduct;
+use App\Domain\Products\Contracts\RestoreProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Resources\ProductResource;
@@ -42,9 +45,6 @@ class AdminProductApiController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ProductRequest $request, Product $product, UpdateProduct $updateProductAction)
     {
         $product = $updateProductAction->execute($product, $request->validated());
@@ -55,16 +55,30 @@ class AdminProductApiController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Product $product, DeleteProduct $deleteProductAction): JsonResponse
     {
-        //
+        $deleteProductAction->execute($product);
+
+        return response()->json([
+            'message' => 'Product deleted successfully',
+        ]);
     }
 
-    public function restore(string $id)
+    public function restore(Product $product, RestoreProduct $restoreProductAction): JsonResponse
     {
-        //
+        $restoreProductAction->execute($product);
+
+        return response()->json([
+            'message' => 'Product restored successfully',
+        ]);
+    }
+
+    public function forceDelete(Product $product, ForceDeleteProduct $forceDeleteProductAction): JsonResponse
+    {
+        $forceDeleteProductAction->execute($product);
+
+        return response()->json([
+            'message' => 'Product force deleted successfully',
+        ]);
     }
 }

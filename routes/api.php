@@ -23,5 +23,8 @@ Route::post('login', [LoginApiController::class, 'login'])->name('api.login');
 
 Route::prefix('admin/products')->middleware(['auth:sanctum', 'verified', "role:$admins"])->group(function () {
     Route::middleware(['permission:'.PermissionEnum::CREATE->value])->post('/store', [AdminProductApiController::class, 'store'])->name('api.admin.products.store');
-    Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{product}', [AdminProductApiController::class, 'update'])->name('api.admin.products.update');
+    Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{product}', [AdminProductApiController::class, 'update'])->withTrashed()->name('api.admin.products.update');
+    Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}', [AdminProductApiController::class, 'destroy'])->withTrashed()->name('api.admin.products.destroy');
+    Route::middleware(['permission:'.PermissionEnum::DELETE->value])->put('/{product}/restore', [AdminProductApiController::class, 'restore'])->withTrashed()->name('api.admin.products.restore');
+    Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}/force-delete', [AdminProductApiController::class, 'forceDelete'])->withTrashed()->name('api.admin.products.force-delete');
 });
