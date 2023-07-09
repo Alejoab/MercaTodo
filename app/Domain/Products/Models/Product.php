@@ -47,6 +47,12 @@ class Product extends Model
             'image',
         ];
 
+    protected $casts
+        = [
+            'price' => 'float',
+            'stock' => 'int',
+        ];
+
     protected static function newFactory(): Factory
     {
         return ProductFactory::new();

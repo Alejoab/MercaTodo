@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Users;
 
+use App\Domain\Products\Resources\ProductResource;
 use App\Domain\Products\Services\BrandsService;
 use App\Domain\Products\Services\CategoriesService;
 use App\Domain\Products\Services\ProductsService;
@@ -29,8 +30,10 @@ class UserController extends Controller
         $brands = $request->get('brand');
         $sort = $request->get('sortBy');
 
+        $products = $productsService->listProducts($search, $category, $brands, $sort);
+
         return Inertia::render('User/Home', [
-            'products' => $productsService->listProducts($search, $category, $brands, $sort),
+            'products' => ProductResource::collection($products),
             'categories' => $categoriesService->list(),
             'brands' => $brandsService->brandsByCategory($category),
         ]);

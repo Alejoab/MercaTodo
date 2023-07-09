@@ -29,6 +29,7 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'stock' => $this->stock,
             'status' => $this->getStatusAttribute($this->deleted_at),
+            'image' => $this->image,
             'created_at' => $this->created_at,
             'updated_at' => $this->when($this->updated_at->ne($this->created_at), $this->updated_at),
         ];

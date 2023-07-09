@@ -44,7 +44,6 @@ const showFilter = ref(false);
 const getProducts = async (page = 1) => {
     query.value.page = page;
     await router.visit(route('home', query.value), {
-        preserveScroll: true,
         replace: true,
     });
 }

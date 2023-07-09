@@ -3,7 +3,6 @@
 namespace App\Domain\Products\Services;
 
 use App\Domain\Products\Models\Product;
-use App\Domain\Products\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductsService
@@ -19,14 +18,9 @@ class ProductsService
      */
     public function listProductsAdmin(?string $search, ?int $category, ?int $brand): LengthAwarePaginator
     {
-        /**
-         * @var ProductQueryBuilder $products
-         */
-        $products = Product::query()->withTrashed()
-            ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->join('categories', 'products.category_id', '=', 'categories.id');
-
-        return $products
+        return Product::query()
+            ->withTrashed()
+            ->with(['category', 'brand'])
             ->filterCategory($category)
             ->filterBrand($brand ? [$brand] : null)
             ->contains($search, ['products.name', 'products.code'])
@@ -54,25 +48,10 @@ class ProductsService
             3 => ['products.updated_at', 'asc'],
         ];
 
-        /**
-         * @var ProductQueryBuilder $products
-         */
-        $products = Product::query()
-            ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->join('categories', 'products.category_id', '=', 'categories.id');
-
-        return $products
+        return Product::query()
             ->filterCategory($category)
             ->filterBrand($brands)
             ->contains($search, ['products.name', 'products.code', 'brands.name', 'categories.name'])
-            ->select(
-                'products.id',
-                'products.name',
-                'products.price',
-                'products.image',
-                'categories.name as category_name',
-                'brands.name as brand_name',
-            )
             ->orderBy($sorts[$sort][0], $sorts[$sort][1])
             ->paginate(10);
     }

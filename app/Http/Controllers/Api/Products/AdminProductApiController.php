@@ -8,6 +8,8 @@ use App\Domain\Products\Contracts\ForceDeleteProduct;
 use App\Domain\Products\Contracts\RestoreProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
+use App\Domain\Products\Resources\ProductCollection;
+use App\Domain\Products\Resources\ProductCollectionResource;
 use App\Domain\Products\Resources\ProductResource;
 use App\Domain\Products\Services\ProductsService;
 use App\Http\Controllers\Controller;
@@ -27,7 +29,7 @@ class AdminProductApiController extends Controller
 
         return response()->json([
             'message' => 'Products retrieved successfully',
-            'data' => ProductResource::collection($products),
+            'data' => ProductResource::collection($products)->resource,
         ]);
     }
 
