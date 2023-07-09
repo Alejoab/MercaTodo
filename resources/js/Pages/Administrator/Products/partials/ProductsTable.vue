@@ -194,8 +194,8 @@ const restoreProduct = (id) => {
                         <td class="px-1 py-1.5"> {{ product.name }}</td>
                         <td class="px-4 py-1.5"> $ {{ product.price }}</td>
                         <td class="px-4 py-1.5"> {{ product.stock }}</td>
-                        <td class="px-4 py-1.5"> {{ product.category_name }}</td>
-                        <td class="px-4 py-1.5"> {{ product.brand_name }}</td>
+                        <td class="px-4 py-1.5"> {{ product.category.name }}</td>
+                        <td class="px-4 py-1.5"> {{ product.brand.name }}</td>
                         <td class="px-4 py-1.5 text-center"> {{ product.status }}</td>
                         <td v-if="usePage().props.permissions.includes('Update') || usePage().props.permissions.includes('Delete')"
                             class="text-center">
@@ -248,7 +248,7 @@ const restoreProduct = (id) => {
             </div>
             <div class="mt-7 flex justify-center">
                 <TailwindPagination :data="products" :limit="1"
-                                    @pagination-change-page="getProducts()"></TailwindPagination>
+                                    @pagination-change-page="getProducts"></TailwindPagination>
             </div>
         </div>
     </div>

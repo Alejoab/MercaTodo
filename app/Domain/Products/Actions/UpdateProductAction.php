@@ -26,7 +26,7 @@ class UpdateProductAction implements UpdateProduct
             $data['brand_id'] = $brand->getAttribute('id');
             $data['category_id'] = $category->getAttribute('id');
 
-            if ($data['image'] !== null) {
+            if (isset($data['image']) && $data['image'] !== null) {
                 $imageService = new ProductImagesService();
 
                 if ($product->image !== null) {

@@ -44,7 +44,6 @@ const showFilter = ref(false);
 const getProducts = async (page = 1) => {
     query.value.page = page;
     await router.visit(route('home', query.value), {
-        preserveScroll: true,
         replace: true,
     });
 }
@@ -161,7 +160,7 @@ const getBrands = async () => {
                 <TailwindPagination
                     :data="products"
                     :limit="1"
-                    @pagination-change-page="getProducts()"
+                    @pagination-change-page="getProducts"
                 >
                 </TailwindPagination>
             </div>

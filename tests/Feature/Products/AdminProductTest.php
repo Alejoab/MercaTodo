@@ -38,9 +38,6 @@ class AdminProductTest extends TestCase
         $this->customer->assignRole($roleCustomer);
     }
 
-    /**
-     * A basic feature test example.
-     */
     public function test_only_admin_can_render_the_product_creation_view(): void
     {
         $response = $this->actingAs($this->admin)->get(route('admin.products.create'));

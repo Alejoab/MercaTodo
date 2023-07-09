@@ -3,8 +3,8 @@
 namespace App\Support\Exceptions;
 
 use Exception;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class ApplicationException extends Exception
@@ -23,8 +23,11 @@ class ApplicationException extends Exception
         );
     }
 
-    public function render(): RedirectResponse
+    /**
+     * @throws ValidationException
+     */
+    public function render()
     {
-        return redirect()->back()->withErrors(['app' => $this->getMessage()]);
+        throw ValidationException::withMessages(['app' => $this->getMessage()]);
     }
 }

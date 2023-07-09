@@ -23,7 +23,7 @@ class CreateProductAction implements CreateProduct
             $brand = (new CreateBrandAction())->execute($data['brand_name']);
             $category = (new CreateCategoryAction())->execute($data['category_name']);
 
-            if ($data['image']) {
+            if (isset($data['image']) && $data['image'] !== null) {
                 $data['image'] = (new ProductImagesService())->storeImage($data['image']);
             }
 
@@ -33,12 +33,12 @@ class CreateProductAction implements CreateProduct
             $product = Product::query()->create([
                 'code' => $data['code'],
                 'name' => $data['name'],
-                'description' => $data['description'],
+                'description' => $data['description'] ?? null,
                 'price' => $data['price'],
                 'stock' => $data['stock'],
                 'category_id' => $category->getAttribute('id'),
                 'brand_id' => $brand->getAttribute('id'),
-                'image' => $data['image'],
+                'image' => $data['image'] ?? null,
             ]);
 
             Log::info('[CREATE]', [

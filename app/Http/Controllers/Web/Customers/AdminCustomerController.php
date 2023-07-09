@@ -6,7 +6,7 @@ use App\Domain\Customers\Contracts\UpdateCustomer;
 use App\Domain\Customers\Enums\DocumentType;
 use App\Domain\Customers\Services\CustomersService;
 use App\Domain\Users\Models\User;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

@@ -6,7 +6,7 @@ use App\Console\Jobs\ProductsExport;
 use App\Domain\Products\Enums\ExportImportStatus;
 use App\Domain\Products\Enums\ExportImportType;
 use App\Domain\Products\Models\ExportImport;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

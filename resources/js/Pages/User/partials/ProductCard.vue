@@ -40,8 +40,8 @@ const addToCart = () => {
                 <h5 class="font-semibold tracking-tight text-gray-900">{{ product.name }}</h5>
             </a>
 
-            <span class="text-gray-400">{{ product.brand_name }}</span> <br/>
-            <span class="text-gray-400">{{ product.category_name }}</span>
+            <span class="text-gray-400">{{ product.brand.name }}</span> <br/>
+            <span class="text-gray-400">{{ product.category.name }}</span>
 
             <div class="pt-5 flex items-center justify-between">
                 <span class="text-xl font-bold text-gray-900">$ {{ product.price }}</span>

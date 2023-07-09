@@ -8,10 +8,11 @@ use App\Domain\Products\Contracts\ForceDeleteProduct;
 use App\Domain\Products\Contracts\RestoreProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
+use App\Domain\Products\Resources\ProductResource;
 use App\Domain\Products\Services\BrandsService;
 use App\Domain\Products\Services\CategoriesService;
 use App\Domain\Products\Services\ProductsService;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -37,8 +38,10 @@ class AdminProductController extends Controller
         $category = $request->get('category');
         $brand = $request->get('brand');
 
+        $products = $productsService->listProductsAdmin($search, $category, $brand);
+
         return Inertia::render('Administrator/Products/Index', [
-            'products' => fn() => $productsService->listProductsAdmin($search, $category, $brand),
+            'products' => fn() => ProductResource::collection($products),
             'categories' => fn() => $categoriesService->list(),
             'brands' => fn() => $brandsService->brandsByCategory($category),
         ]);

@@ -12,7 +12,7 @@ use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Exceptions\PaymentException;
 use App\Domain\Payments\Factories\PaymentFactory;
-use App\Http\Controllers\Web\Controller;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
 use App\Http\Requests\RetryPaymentRequest;
 use App\Support\Exceptions\ApplicationException;
