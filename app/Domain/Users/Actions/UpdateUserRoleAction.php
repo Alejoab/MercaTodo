@@ -3,6 +3,7 @@
 namespace App\Domain\Users\Actions;
 
 use App\Domain\Users\Contracts\UpdateUserRole;
+use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Exceptions\ApplicationException;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +31,11 @@ class UpdateUserRoleAction implements UpdateUserRole
                 ]);
             }
 
-            $user->syncPermissions($permissions);
+            if ($role === RoleEnum::ADMIN->value) {
+                $user->syncPermissions($permissions);
+            } else {
+                $user->syncPermissions([]);
+            }
 
             $user->save();
         } catch (Throwable $e) {

@@ -63,7 +63,7 @@ const form = useForm({
                 <InputError :message="form.errors.role" class="mt-2"/>
             </div>
 
-            <div class="pt-5 space-y-2" v-if="usePage().props.role === 'Super Admin'">
+            <div class="pt-5 space-y-2" v-if="usePage().props.role === 'Super Admin' && form.role === 'Admin'">
                 <InputLabel value="Permissions"/>
                 <div v-for="permission in permissions">
                     <input id="brand.id"
