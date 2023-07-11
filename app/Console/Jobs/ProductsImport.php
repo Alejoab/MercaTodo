@@ -6,9 +6,9 @@ use App\Domain\Products\Actions\CreateProductAction;
 use App\Domain\Products\Actions\UpdateProductAction;
 use App\Domain\Products\Contracts\CreateProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
-use App\Domain\Products\Enums\ExportImportStatus;
 use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
+use App\Support\Enums\JobsByUserStatus;
 use App\Support\Exceptions\ApplicationException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
@@ -122,7 +122,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 $this->import->save();
             },
             AfterImport::class => function () {
-                $this->import->status = ExportImportStatus::COMPLETED;
+                $this->import->status = JobsByUserStatus::COMPLETED;
                 $this->import->save();
             },
         ];
@@ -130,7 +130,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
 
     public function failed(): void
     {
-        $this->import->status = ExportImportStatus::FAILED;
+        $this->import->status = JobsByUserStatus::FAILED;
         $this->import->save();
     }
 }

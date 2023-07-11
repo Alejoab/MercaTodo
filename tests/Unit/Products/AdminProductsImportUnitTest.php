@@ -5,11 +5,11 @@ namespace Tests\Unit\Administrator;
 use App\Console\Jobs\ProductsImport;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
 use App\Domain\Products\Models\ExportImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
@@ -34,8 +34,8 @@ class AdminProductsImportUnitTest extends TestCase
 
         $this->import = ExportImport::create([
             'user_id' => $this->admin->id,
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 
@@ -52,14 +52,14 @@ class AdminProductsImportUnitTest extends TestCase
     {
         $this->assertDatabaseHas('export_imports', [
             'id' => $this->import->id,
-            'status' => ExportImportStatus::PENDING,
+            'status' => JobsByUserStatus::PENDING,
         ]);
 
         Excel::import(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
 
         $this->assertDatabaseHas('export_imports', [
             'id' => $this->import->id,
-            'status' => ExportImportStatus::COMPLETED,
+            'status' => JobsByUserStatus::COMPLETED,
         ]);
     }
 
@@ -153,6 +153,6 @@ class AdminProductsImportUnitTest extends TestCase
         Excel::import(new ProductsImport($this->import), 'test_4.xlsx', 'tests');
         $this->assertDatabaseCount('products', 0);
         $this->import->refresh();
-        $this->assertEquals(ExportImportStatus::COMPLETED, $this->import->status);
+        $this->assertEquals(JobsByUserStatus::COMPLETED, $this->import->status);
     }
 }

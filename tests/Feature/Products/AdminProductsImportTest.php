@@ -4,11 +4,11 @@ namespace Products;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
 use App\Domain\Products\Models\ExportImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
@@ -129,21 +129,21 @@ class AdminProductsImportTest extends TestCase
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::PENDING->value]);
+        $response->assertJson(['status' => JobsByUserStatus::PENDING->value]);
 
-        $import->status = ExportImportStatus::COMPLETED;
+        $import->status = JobsByUserStatus::COMPLETED;
         $import->save();
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::COMPLETED->value]);
+        $response->assertJson(['status' => JobsByUserStatus::COMPLETED->value]);
 
-        $import->status = ExportImportStatus::FAILED;
+        $import->status = JobsByUserStatus::FAILED;
         $import->save();
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::FAILED->value]);
+        $response->assertJson(['status' => JobsByUserStatus::FAILED->value]);
     }
 
     public function test_check_import_status_with_no_imports()
@@ -164,8 +164,8 @@ class AdminProductsImportTest extends TestCase
 
         $this->assertDatabaseHas('export_imports', [
             'user_id' => $this->admin->id,
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 
@@ -179,13 +179,13 @@ class AdminProductsImportTest extends TestCase
         ]);
 
         $import = ExportImport::query()->first();
-        $import->status = ExportImportStatus::COMPLETED;
+        $import->status = JobsByUserStatus::COMPLETED;
         $import->save();
 
         $this->assertDatabaseCount('export_imports', 1);
         $this->assertDatabaseHas('export_imports', [
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::COMPLETED,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::COMPLETED,
         ]);
 
         $this->postJson(route('admin.products.import'), [
@@ -194,8 +194,8 @@ class AdminProductsImportTest extends TestCase
 
         $this->assertDatabaseCount('export_imports', 1);
         $this->assertDatabaseHas('export_imports', [
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 }

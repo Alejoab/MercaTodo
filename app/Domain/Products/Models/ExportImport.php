@@ -2,18 +2,18 @@
 
 namespace App\Domain\Products\Models;
 
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
 use App\Domain\Products\QueryBuilders\ExportImportQueryBuilder;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int                 $id
- * @property int                 $user_id
- * @property ExportImportType    $type
- * @property ?ExportImportStatus $status
- * @property array               $errors
+ * @property int               $id
+ * @property int               $user_id
+ * @property JobsByUserType    $type
+ * @property ?JobsByUserStatus $status
+ * @property array             $errors
  *
  * @method static ExportImportQueryBuilder query()
  */
@@ -37,8 +37,8 @@ class ExportImport extends Model
     protected $casts
         = [
             'errors' => 'array',
-            'type' => ExportImportType::class,
-            'status' => ExportImportStatus::class,
+            'type' => JobsByUserType::class,
+            'status' => JobsByUserStatus::class,
         ];
 
     public function newEloquentBuilder($query): ExportImportQueryBuilder

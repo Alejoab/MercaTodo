@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Products\Enums;
+namespace App\Support\Enums;
 
-enum ExportImportType: string
+enum JobsByUserType: string
 {
     case EXPORT = 'Export';
     case IMPORT = 'Import';

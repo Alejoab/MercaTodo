@@ -2,8 +2,8 @@
 
 namespace App\Domain\Products\QueryBuilders;
 
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Database\Eloquent\Builder;
 
 class ExportImportQueryBuilder extends Builder
@@ -15,15 +15,15 @@ class ExportImportQueryBuilder extends Builder
 
     public function getExports(): self
     {
-        return $this->where('type', ExportImportType::EXPORT);
+        return $this->where('type', JobsByUserType::EXPORT);
     }
 
     public function getImports(): self
     {
-        return $this->where('type', ExportImportType::IMPORT);
+        return $this->where('type', JobsByUserType::IMPORT);
     }
 
-    public function whereStatus(ExportImportStatus $status): self
+    public function whereStatus(JobsByUserStatus $status): self
     {
         return $this->where('status', $status);
     }

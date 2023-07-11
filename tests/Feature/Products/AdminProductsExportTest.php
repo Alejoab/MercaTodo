@@ -4,14 +4,14 @@ namespace Products;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
@@ -115,21 +115,21 @@ class AdminProductsExportTest extends TestCase
 
         $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::PENDING->value]);
+        $response->assertJson(['status' => JobsByUserStatus::PENDING->value]);
 
-        $export->status = ExportImportStatus::COMPLETED;
+        $export->status = JobsByUserStatus::COMPLETED;
         $export->save();
 
         $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::COMPLETED->value]);
+        $response->assertJson(['status' => JobsByUserStatus::COMPLETED->value]);
 
-        $export->status = ExportImportStatus::FAILED;
+        $export->status = JobsByUserStatus::FAILED;
         $export->save();
 
         $response = $this->getJson(route('admin.products.exports.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::FAILED->value]);
+        $response->assertJson(['status' => JobsByUserStatus::FAILED->value]);
     }
 
     public function test_check_export_status_with_no_exports()
@@ -147,8 +147,8 @@ class AdminProductsExportTest extends TestCase
 
         $this->assertDatabaseHas('export_imports', [
             'user_id' => $this->admin->id,
-            'type' => ExportImportType::EXPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::EXPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 
@@ -159,21 +159,21 @@ class AdminProductsExportTest extends TestCase
         $this->getJson(route('admin.products.export'));
 
         $export = ExportImport::query()->first();
-        $export->status = ExportImportStatus::COMPLETED;
+        $export->status = JobsByUserStatus::COMPLETED;
         $export->save();
 
         $this->assertDatabaseCount('export_imports', 1);
         $this->assertDatabaseHas('export_imports', [
-            'type' => ExportImportType::EXPORT,
-            'status' => ExportImportStatus::COMPLETED,
+            'type' => JobsByUserType::EXPORT,
+            'status' => JobsByUserStatus::COMPLETED,
         ]);
 
         $this->getJson(route('admin.products.export'));
 
         $this->assertDatabaseCount('export_imports', 1);
         $this->assertDatabaseHas('export_imports', [
-            'type' => ExportImportType::EXPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::EXPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 }

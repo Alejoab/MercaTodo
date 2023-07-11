@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Web\Products;
 
 use App\Console\Jobs\ProductsImport;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
 use App\Domain\Products\Models\ExportImport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,14 +22,14 @@ class AdminImportController extends Controller
          */
         $import = ExportImport::query()->firstOrCreate([
             'user_id' => $userId,
-            'type' => ExportImportType::IMPORT,
+            'type' => JobsByUserType::IMPORT,
         ]);
 
-        if ($import->status === ExportImportStatus::PENDING) {
+        if ($import->status === JobsByUserStatus::PENDING) {
             return response()->json(['error' => 'Import is already in progress.'], 400);
         }
 
-        $import->status = ExportImportStatus::PENDING;
+        $import->status = JobsByUserStatus::PENDING;
         $import->errors = [];
         $import->save();
 
@@ -49,9 +49,9 @@ class AdminImportController extends Controller
             ->first();
 
         return match ($import?->getAttribute('status')) {
-            ExportImportStatus::PENDING => response()->json(['status' => ExportImportStatus::PENDING, 'data' => $import->getAttribute('errors'),]),
-            ExportImportStatus::COMPLETED => response()->json(['status' => ExportImportStatus::COMPLETED, 'data' => $import->getAttribute('errors'),]),
-            ExportImportStatus::FAILED => response()->json(['status' => ExportImportStatus::FAILED,]),
+            JobsByUserStatus::PENDING => response()->json(['status' => JobsByUserStatus::PENDING, 'data' => $import->getAttribute('errors'),]),
+            JobsByUserStatus::COMPLETED => response()->json(['status' => JobsByUserStatus::COMPLETED, 'data' => $import->getAttribute('errors'),]),
+            JobsByUserStatus::FAILED => response()->json(['status' => JobsByUserStatus::FAILED,]),
             default => response()->json(),
         };
     }

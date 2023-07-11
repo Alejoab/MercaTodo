@@ -2,10 +2,10 @@
 
 namespace App\Console\Jobs;
 
-use App\Domain\Products\Enums\ExportImportStatus;
 use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\QueryBuilders\ProductQueryBuilder;
+use App\Support\Enums\JobsByUserStatus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
@@ -80,7 +80,7 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     {
         return [
             AfterSheet::class => function () {
-                $this->export->status = ExportImportStatus::COMPLETED;
+                $this->export->status = JobsByUserStatus::COMPLETED;
                 $this->export->save();
             },
         ];
@@ -88,7 +88,7 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
 
     public function failed(): void
     {
-        $this->export->status = ExportImportStatus::FAILED;
+        $this->export->status = JobsByUserStatus::FAILED;
         $this->export->save();
     }
 
