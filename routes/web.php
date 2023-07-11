@@ -91,7 +91,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
     });
 
     Route::prefix('products/exports')->group(function () {
-        Route::get('/', [AdminExportController::class, 'export'])->name('admin.products.export');
+        Route::post('/', [AdminExportController::class, 'export'])->name('admin.products.export');
         Route::get('/check', [AdminExportController::class, 'checkExport'])->name('admin.products.exports.check');
         Route::get('/download', [AdminExportController::class, 'download'])->name('admin.products.export.download');
     });

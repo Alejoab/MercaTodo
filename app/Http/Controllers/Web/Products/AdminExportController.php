@@ -6,6 +6,7 @@ use App\Console\Jobs\ProductsExport;
 use App\Http\Controllers\Controller;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Exceptions\JobsByUserException;
 use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\JsonResponse;
@@ -16,12 +17,15 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminExportController extends Controller
 {
-    public function export(Request $request): jsonResponse
+    /**
+     * @throws JobsByUserException
+     */
+    public function export(Request $request): void
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $search = $request->get('search');
-        $category = $request->get('category');
-        $brand = $request->get('brand');
+        $search = $request->input('search');
+        $category = $request->input('category');
+        $brand = $request->input('brand');
 
         /**
          * @var JobsByUser $export
@@ -32,7 +36,7 @@ class AdminExportController extends Controller
         ]);
 
         if ($export->status === JobsByUserStatus::PENDING) {
-            return response()->json(['error' => 'Export is already in progress.'], 400);
+            throw JobsByUserException::exportActive();
         }
 
         $fileName = "products_export_$userId.xlsx";
@@ -41,8 +45,6 @@ class AdminExportController extends Controller
         $export->save();
 
         Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports');
-
-        return response()->json(['message' => 'Export started.']);
     }
 
     public function checkExport(): JsonResponse

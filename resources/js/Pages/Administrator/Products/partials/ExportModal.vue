@@ -3,6 +3,7 @@ import InputError from "@/Components/InputError.vue";
 import Modal from "@/Components/Modal.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {onMounted, onUnmounted, ref} from "vue";
+import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
     show: {
@@ -15,26 +16,31 @@ const props = defineProps({
     }
 })
 
+const form = useForm({
+    search: props.query.search,
+    category: props.query.category,
+    brand: props.query.brand,
+})
+
 const emit = defineEmits(['close']);
 const close = () => {
     emit('close');
 };
 
 const exportFileName = ref('pending');
-const exportError = ref('');
 let pollingInterval = null;
 
 const exportProducts = () => {
     exportFileName.value = 'pending';
-    exportError.value = '';
 
-    axios.get(route('admin.products.export', props.query))
-        .then((response) => {
+    form.post(route('admin.products.export'), {
+        onSuccess: () => {
             pollingInterval = setInterval(() => checkExport(), 3000)
-        })
-        .catch((error) => {
-            exportError.value = error.response.data.error;
-        });
+        },
+        onError: () => {
+            exportFileName.value = '';
+        }
+    });
 }
 
 const initialPolling = async () => {
@@ -54,14 +60,12 @@ const checkExport = async () => {
     if (response.data.status === 'Completed') {
         clearInterval(pollingInterval);
         exportFileName.value = route('admin.products.export.download');
-        exportError.value = '';
         return true;
     }
 
     if (response.data.status === 'Failed') {
         clearInterval(pollingInterval);
         exportFileName.value = 'failed';
-        exportError.value = 'An error has occurred in the data export. Please try again later';
         return true;
     }
 
@@ -91,8 +95,7 @@ onUnmounted(() => {
                                 @click="exportProducts">Export Products
                 </primary-button>
 
-                <div v-if="!exportFileName || exportFileName === 'failed'"></div>
-                <div v-else-if="exportFileName === 'pending'" class="flex items-center">
+                <div v-if="exportFileName === 'pending'" class="flex items-center">
                     <div class="dots-loading flex items-center">
                         <div></div>
                         <div></div>
@@ -101,9 +104,10 @@ onUnmounted(() => {
                     <p class="ml-2 inline-block align-middle">Generating</p>
                 </div>
 
-                <a v-else :href="exportFileName" class="underline my-auto">Download Export</a>
+                <a v-else-if="exportFileName !== ''" :href="exportFileName" class="underline my-auto">Download
+                    Export</a>
             </div>
-            <InputError :message="exportError" class="mt-3"></InputError>
+            <InputError :message="form.errors.export" class="mt-3"></InputError>
         </div>
     </Modal>
 </template>

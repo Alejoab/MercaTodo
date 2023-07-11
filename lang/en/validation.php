@@ -176,6 +176,7 @@ return [
         ],
         'jobsByUser' => [
             'import_active' => 'You already have an active import.',
+            'export_active' => 'You already have an active export.',
         ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
