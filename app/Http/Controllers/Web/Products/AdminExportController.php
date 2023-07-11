@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Web\Products;
 
 use App\Console\Jobs\ProductsExport;
-use App\Domain\Products\Models\ExportImport;
 use App\Http\Controllers\Controller;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,9 +24,9 @@ class AdminExportController extends Controller
         $brand = $request->get('brand');
 
         /**
-         * @var ExportImport $export
+         * @var JobsByUser $export
          */
-        $export = ExportImport::query()->firstOrCreate([
+        $export = JobsByUser::query()->firstOrCreate([
             'user_id' => $userId,
             'type' => JobsByUserType::EXPORT,
         ]);
@@ -49,7 +49,7 @@ class AdminExportController extends Controller
     {
         $userId = auth()->user()->getAuthIdentifier();
 
-        $export = ExportImport::query()
+        $export = JobsByUser::query()
             ->fromUser($userId)
             ->getExports()
             ->latest()

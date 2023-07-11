@@ -7,12 +7,12 @@ use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
-use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,7 +24,7 @@ class ProductProductsExportUnitTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
-    private ExportImport $export;
+    private JobsByUser $export;
     private string $fileName;
 
     public function setUp(): void
@@ -37,7 +37,7 @@ class ProductProductsExportUnitTest extends TestCase
         $this->admin = User::factory()->create();
         $this->admin->assignRole($roleAdmin);
 
-        $this->export = ExportImport::create([
+        $this->export = JobsByUser::create([
             'user_id' => $this->admin->id,
             'type' => JobsByUserType::EXPORT,
             'status' => JobsByUserStatus::PENDING,
@@ -62,14 +62,14 @@ class ProductProductsExportUnitTest extends TestCase
     {
         Storage::fake('exports');
 
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->export->id,
             'status' => JobsByUserStatus::PENDING,
         ]);
 
         Excel::store(new ProductsExport($this->export, null, null, null), $this->fileName, 'exports');
 
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->export->id,
             'status' => JobsByUserStatus::COMPLETED,
         ]);

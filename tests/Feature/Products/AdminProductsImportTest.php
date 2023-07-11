@@ -4,11 +4,11 @@ namespace Products;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Domain\Products\Models\ExportImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
@@ -125,7 +125,7 @@ class AdminProductsImportTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure(['message']);
 
-        $import = ExportImport::query()->first();
+        $import = JobsByUser::query()->first();
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
@@ -162,7 +162,7 @@ class AdminProductsImportTest extends TestCase
             'file' => $file,
         ]);
 
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseHas('jobs_by_users', [
             'user_id' => $this->admin->id,
             'type' => JobsByUserType::IMPORT,
             'status' => JobsByUserStatus::PENDING,
@@ -178,12 +178,12 @@ class AdminProductsImportTest extends TestCase
             'file' => $file,
         ]);
 
-        $import = ExportImport::query()->first();
+        $import = JobsByUser::query()->first();
         $import->status = JobsByUserStatus::COMPLETED;
         $import->save();
 
-        $this->assertDatabaseCount('export_imports', 1);
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseCount('jobs_by_users', 1);
+        $this->assertDatabaseHas('jobs_by_users', [
             'type' => JobsByUserType::IMPORT,
             'status' => JobsByUserStatus::COMPLETED,
         ]);
@@ -192,8 +192,8 @@ class AdminProductsImportTest extends TestCase
             'file' => $file,
         ]);
 
-        $this->assertDatabaseCount('export_imports', 1);
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseCount('jobs_by_users', 1);
+        $this->assertDatabaseHas('jobs_by_users', [
             'type' => JobsByUserType::IMPORT,
             'status' => JobsByUserStatus::PENDING,
         ]);

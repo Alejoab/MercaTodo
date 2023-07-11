@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Web\Products;
 
 use App\Console\Jobs\ProductsImport;
-use App\Domain\Products\Models\ExportImport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Models\JobsByUser;
 use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -18,9 +18,9 @@ class AdminImportController extends Controller
         $userId = auth()->user()->getAuthIdentifier();
 
         /**
-         * @var ExportImport $import
+         * @var JobsByUser $import
          */
-        $import = ExportImport::query()->firstOrCreate([
+        $import = JobsByUser::query()->firstOrCreate([
             'user_id' => $userId,
             'type' => JobsByUserType::IMPORT,
         ]);
@@ -42,7 +42,7 @@ class AdminImportController extends Controller
     {
         $userId = auth()->user()->getAuthIdentifier();
 
-        $import = ExportImport::query()
+        $import = JobsByUser::query()
             ->fromUser($userId)
             ->getImports()
             ->latest()

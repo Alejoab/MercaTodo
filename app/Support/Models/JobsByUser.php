@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domain\Products\Models;
+namespace App\Support\Models;
 
-use App\Domain\Products\QueryBuilders\ExportImportQueryBuilder;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\QueryBuilders\JobsByUserQueryBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,9 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property ?JobsByUserStatus $status
  * @property array             $errors
  *
- * @method static ExportImportQueryBuilder query()
+ * @method static JobsByUserQueryBuilder query()
  */
-class ExportImport extends Model
+class JobsByUser extends Model
 {
     use HasFactory;
 
@@ -41,8 +41,8 @@ class ExportImport extends Model
             'status' => JobsByUserStatus::class,
         ];
 
-    public function newEloquentBuilder($query): ExportImportQueryBuilder
+    public function newEloquentBuilder($query): JobsByUserQueryBuilder
     {
-        return new ExportImportQueryBuilder($query);
+        return new JobsByUserQueryBuilder($query);
     }
 }

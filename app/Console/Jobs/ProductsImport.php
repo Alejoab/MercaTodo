@@ -6,10 +6,10 @@ use App\Domain\Products\Actions\CreateProductAction;
 use App\Domain\Products\Actions\UpdateProductAction;
 use App\Domain\Products\Contracts\CreateProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
-use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -26,12 +26,12 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, SkipsEmptyRows, WithEvents
 {
 
-    private ExportImport $import;
+    private JobsByUser $import;
     private CreateProduct $createAction;
     private UpdateProduct $updateAction;
     private array $errors = [];
 
-    public function __construct(ExportImport $import)
+    public function __construct(JobsByUser $import)
     {
         $this->import = $import;
         $this->createAction = new CreateProductAction();

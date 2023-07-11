@@ -2,10 +2,10 @@
 
 namespace App\Console\Jobs;
 
-use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\QueryBuilders\ProductQueryBuilder;
 use App\Support\Enums\JobsByUserStatus;
+use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
@@ -24,9 +24,9 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
     private ?string $search;
     private ?int $category;
     private ?int $brand;
-    private ExportImport $export;
+    private JobsByUser $export;
 
-    public function __construct(ExportImport $export, ?string $search, ?int $category, ?int $brand)
+    public function __construct(JobsByUser $export, ?string $search, ?int $category, ?int $brand)
     {
         $this->export = $export;
         $this->search = $search;

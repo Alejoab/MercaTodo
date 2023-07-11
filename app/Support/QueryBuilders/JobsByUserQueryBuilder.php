@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Domain\Products\QueryBuilders;
+namespace App\Support\QueryBuilders;
 
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use Illuminate\Database\Eloquent\Builder;
 
-class ExportImportQueryBuilder extends Builder
+class JobsByUserQueryBuilder extends Builder
 {
     public function fromUser(int $userId): self
     {
