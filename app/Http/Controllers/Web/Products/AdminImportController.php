@@ -7,13 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Exceptions\JobsByUserException;
 use App\Support\Models\JobsByUser;
 use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminImportController extends Controller
 {
-    public function import(ImportRequest $request): JsonResponse
+    /**
+     * @throws JobsByUserException
+     */
+    public function import(ImportRequest $request): void
     {
         $userId = auth()->user()->getAuthIdentifier();
 
@@ -26,7 +30,7 @@ class AdminImportController extends Controller
         ]);
 
         if ($import->status === JobsByUserStatus::PENDING) {
-            return response()->json(['error' => 'Import is already in progress.'], 400);
+            throw JobsByUserException::importActive();
         }
 
         $import->status = JobsByUserStatus::PENDING;
@@ -34,8 +38,6 @@ class AdminImportController extends Controller
         $import->save();
 
         Excel::queueImport(new ProductsImport($import), $request->file('file'));
-
-        return response()->json(['message' => 'Import has been queued.']);
     }
 
     public function checkImport(): JsonResponse

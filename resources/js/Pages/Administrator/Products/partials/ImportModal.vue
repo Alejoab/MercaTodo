@@ -32,18 +32,13 @@ const uploadFile = (e) => {
 const submit = () => {
     message.value = 'pending';
     errors.value = {};
-    axios.post(route('admin.products.import'), form, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    }).then(() => {
-        pollingInterval = setInterval(() => checkImport(), 3000);
-    }).catch((error) => {
-        message.value = '';
-        if (error.response.status === 422) {
-            form.errors.file = error.response.data.errors.file[0];
-        } else {
-            form.errors.file = error.response.data.error;
+
+    form.post(route('admin.products.import'), {
+        onSuccess: () => {
+            pollingInterval = setInterval(() => checkImport(), 3000);
+        },
+        onError: () => {
+            message.value = '';
         }
     });
 }
@@ -99,20 +94,22 @@ onUnmounted(() => {
                 Import Product Data
             </h2>
             <p class="mt-1 text-sm text-gray-600">
-                The file must contain the following fields: code, name, description, price, stock, category_name, brand_name and status. This file must be in CSV or XLSX format.
+                The file must contain the following fields: code, name, description, price, stock, category_name,
+                brand_name and status. This file must be in CSV or XLSX format.
             </p>
             <form class="flex justify-between bg-gray-100 rounded-md p-5 mt-7" @submit.prevent="submit">
                 <div class="my-auto">
                     <input
                         id="importFile"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        class="file:p-2 file:border-none file:rounded-xl"
                         name="File Upload"
                         type="file"
                         @input="uploadFile"
-                        class="file:p-2 file:border-none file:rounded-xl"
                     >
 
                     <InputError :message="form.errors.file" class="mt-2"/>
+                    <InputError :message="form.errors.import" class="mt-2"/>
                 </div>
                 <div v-if="message === 'pending'">
                     <div class="dots-loading items-center inline-block">

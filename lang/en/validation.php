@@ -174,6 +174,9 @@ return [
             'session_expired' => 'The expiration time for the order has passed. Please create a new order.',
             'order_not_found' => 'The order is not found or you are not authorized to do the payment.',
         ],
+        'jobsByUser' => [
+            'import_active' => 'You already have an active import.',
+        ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
