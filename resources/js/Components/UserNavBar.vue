@@ -54,25 +54,15 @@ const showingNavigationDropdown = ref(false);
 
                                 <template #content>
                                     <div v-if="$page.props.isAdmin">
-                                        <DropdownLink :href="route('admin')"> Administrator</DropdownLink>
-                                        <DropdownLink :href="route('admin.users')" class="pl-8 flex">
-                                            <div class="border border-indigo-100 mr-3"></div>
-                                            Users
-                                        </DropdownLink>
-                                        <DropdownLink :href="route('admin.customers')" class="pl-8 flex">
-                                            <div class="border border-indigo-100 mr-3"></div>
-                                            Customers
-                                        </DropdownLink>
-                                        <DropdownLink :href="route('admin.products')" class="pl-8 flex">
-                                            <div class="border border-indigo-100 mr-3"></div>
-                                            Products
-                                        </DropdownLink>
+                                        <DropdownLink :href="route('admin')">Administrator</DropdownLink>
+                                        <DropdownLink :href="route('admin.users')" class="pl-8 flex"><div class="border border-indigo-100 mr-3"></div>Users</DropdownLink>
+                                        <DropdownLink :href="route('admin.customers')" class="pl-8 flex"><div class="border border-indigo-100 mr-3"></div>Customers</DropdownLink>
+                                        <DropdownLink :href="route('admin.products')" class="pl-8 flex"><div class="border border-indigo-100 mr-3"></div>Products</DropdownLink>
+                                        <DropdownLink :href="route('admin.reports')" class="pl-8 flex"><div class="border border-indigo-100 mr-3"></div>Reports</DropdownLink>
                                     </div>
                                     <DropdownLink :href="route('profile.edit')"> Profile</DropdownLink>
                                     <DropdownLink :href="route('order.history')"> Order History</DropdownLink>
-                                    <DropdownLink :href="route('logout')" as="button" method="post">
-                                        Log Out
-                                    </DropdownLink>
+                                    <DropdownLink :href="route('logout')" as="button" method="post">Log Out</DropdownLink>
                                 </template>
                             </Dropdown>
                         </div>
@@ -138,7 +128,7 @@ const showingNavigationDropdown = ref(false);
         <!-- Responsive Navigation Menu -->
         <div
             :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-            class="sm:hidden"
+            class="lg:hidden"
         >
             <!-- Responsive Settings Options -->
             <div v-if="$page.props.auth.user" class="pt-4 pb-1 border-t border-gray-200">

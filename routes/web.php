@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\Products\AdminProductController;
 use App\Http\Controllers\Web\Products\BrandController;
 use App\Http\Controllers\Web\Products\CategoryController;
 use App\Http\Controllers\Web\Products\ProductController;
+use App\Http\Controllers\Web\Reports\AdminReportController;
 use App\Http\Controllers\Web\Users\AdminUserController;
 use App\Http\Controllers\Web\Users\ProfileController;
 use App\Http\Controllers\Web\Users\UserController;
@@ -110,9 +111,11 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->post('/{product}', [AdminProductController::class, 'update'])->withTrashed()->name('admin.products.update');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}', [AdminProductController::class, 'destroy'])->withTrashed()->name('admin.products.destroy');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->put('/{product}/restore', [AdminProductController::class, 'restore'])->withTrashed()->name('admin.products.restore');
-        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name(
-            'admin.products.force-delete'
-        );
+        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name('admin.products.force-delete');
+    });
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [AdminReportController::class, 'index'])->name('admin.reports');
     });
 });
 
