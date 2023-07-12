@@ -6,10 +6,11 @@ use App\Support\Enums\JobsByUserStatus;
 use App\Support\Models\JobsByUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
 class CompleteJobsByUser implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, Dispatchable;
 
     private JobsByUser $job;
 

@@ -9,6 +9,7 @@ use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
@@ -48,14 +49,14 @@ class AdminProductsImportUnitTest extends TestCase
         Excel::assertQueued('test_1.xlsx', 'tests');
     }
 
-    public function test_import_change_value_in_database(): void
+    public function test_change_status_of_the_job_in_database(): void
     {
         $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->import->id,
             'status' => JobsByUserStatus::PENDING,
         ]);
 
-        Excel::import(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
+        CompleteJobsByUser::dispatch($this->import);
 
         $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->import->id,
@@ -152,7 +153,5 @@ class AdminProductsImportUnitTest extends TestCase
     {
         Excel::import(new ProductsImport($this->import), 'test_4.xlsx', 'tests');
         $this->assertDatabaseCount('products', 0);
-        $this->import->refresh();
-        $this->assertEquals(JobsByUserStatus::COMPLETED, $this->import->status);
     }
 }

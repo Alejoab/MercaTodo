@@ -12,6 +12,7 @@ use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -60,14 +61,12 @@ class ProductProductsExportUnitTest extends TestCase
 
     public function test_export_change_value_in_database(): void
     {
-        Storage::fake('exports');
-
         $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->export->id,
             'status' => JobsByUserStatus::PENDING,
         ]);
 
-        Excel::store(new ProductsExport($this->export, null, null, null), $this->fileName, 'exports');
+        CompleteJobsByUser::dispatch($this->export);
 
         $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->export->id,
