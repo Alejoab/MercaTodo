@@ -5,6 +5,7 @@ namespace App\Domain\Orders\QueryBuilders;
 use App\Domain\Orders\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class OrderQueryBuilder extends Builder
 {
@@ -54,5 +55,18 @@ class OrderQueryBuilder extends Builder
     public function whereUser(int $userId): self
     {
         return $this->where('user_id', $userId);
+    }
+
+    public function whereDateBetween(?Carbon $from, ?Carbon $to): self
+    {
+        $from = $from?->format('Y-m-d');
+        $to = $to?->format('Y-m-d');
+
+        return $this->when($from, function ($query, $from) {
+            $query->whereDate('orders.created_at', '>=', $from);
+        })
+            ->when($to, function ($query, $to) {
+                $query->whereDate('orders.created_at', '<=', $to);
+            });
     }
 }
