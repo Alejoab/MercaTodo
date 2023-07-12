@@ -24,9 +24,9 @@ const form = useForm({
     <UserLayout>
         <div class="max-w-7xl mx-auto lg:p-8 md:p-8 p-4 bg-white shadow sm:rounded-lg">
             <h1 class="text-xl font-bold">Generate Reports</h1>
-            <form class="mt-7 flex flex-col md:flex-row space-y-10 md:space-y-0">
+            <form class="mt-7 flex flex-col md:flex-row space-y-10 md:space-y-0" @submit.prevent="form.post(route('admin.reports.generate'))">
                 <div class="w-full">
-                    <div class="flex justify-between w-full">
+                    <div class="grid grid-cols-2 w-full">
                         <div>
                             <InputLabel class="mb-3" for="from" value="From"></InputLabel>
                             <input
@@ -68,6 +68,7 @@ const form = useForm({
                 </div>
                 <div class="w-full text-end">
                     <primary-button>Generate</primary-button>
+                    <InputError :message="form.errors.report" class="mt-5"></InputError>
                 </div>
             </form>
         </div>

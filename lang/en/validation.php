@@ -175,6 +175,7 @@ return [
             'order_not_found' => 'The order is not found or you are not authorized to do the payment.',
         ],
         'jobsByUser' => [
+            'report_active' => 'You already have an active report.',
             'import_active' => 'You already have an active import.',
             'export_active' => 'You already have an active export.',
         ],
