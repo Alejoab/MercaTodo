@@ -53,11 +53,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
     }
 
     public function test_xlsx_files_are_allowed_to_import(): void
@@ -65,11 +64,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.xlsx');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
     }
 
     public function test_xls_files_are_allowed_to_import(): void
@@ -77,11 +75,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.xls');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
     }
 
     public function test_no_spreadsheet_files_are_not_allowed_to_import(): void
@@ -89,11 +86,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.png');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
-        $response->assertStatus(422);
-        $response->assertJsonStructure(['errors']);
+        $response->assertSessionHasErrors();
     }
 
     public function test_try_import_when_an_import_is_already_queued(): void
@@ -101,17 +97,15 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
-        $response->assertStatus(400);
-        $response->assertJsonStructure(['error']);
+        $response->assertSessionHasErrors();
     }
 
     public function test_check_import_status(): void
@@ -119,11 +113,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
         $import = JobsByUser::query()->first();
 
@@ -158,7 +151,7 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $this->postJson(route('admin.products.import'), [
+        $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
 
@@ -174,7 +167,7 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $this->postJson(route('admin.products.import'), [
+        $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
 
@@ -188,7 +181,7 @@ class AdminProductsImportTest extends TestCase
             'status' => JobsByUserStatus::COMPLETED,
         ]);
 
-        $this->postJson(route('admin.products.import'), [
+        $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
 

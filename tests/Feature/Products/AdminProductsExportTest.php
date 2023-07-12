@@ -49,7 +49,7 @@ class AdminProductsExportTest extends TestCase
 
     public function test_only_admin_can_export_products(): void
     {
-        $response = $this->actingAs($this->user)->get(route('admin.products.export'));
+        $response = $this->actingAs($this->user)->post(route('admin.products.export'));
 
         $response->assertStatus(403);
     }
@@ -58,10 +58,9 @@ class AdminProductsExportTest extends TestCase
     {
         Excel::fake();
 
-        $response = $this->getJson(route('admin.products.export'));
+        $response = $this->postJson(route('admin.products.export'));
 
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
         Excel::assertQueued("products_export_{$this->admin->id}.xlsx", 'exports', function ($export) {
             return $export->query()->count() === 5;
@@ -76,14 +75,9 @@ class AdminProductsExportTest extends TestCase
 
         $count = Product::query()->filterCategory($filter)->count();
 
-        $response = $this->getJson(
-            route('admin.products.export', [
-                'category' => $filter,
-            ])
-        );
+        $response = $this->postJson(route('admin.products.export', ['category' => $filter,]));
 
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
         Excel::assertQueued("products_export_{$this->admin->id}.xlsx", 'exports', function ($export) use ($count) {
             return $export->query()->count() === $count;
@@ -94,22 +88,19 @@ class AdminProductsExportTest extends TestCase
     {
         Excel::fake();
 
-        $response = $this->getJson(route('admin.products.export'));
+        $response = $this->post(route('admin.products.export'));
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
-        $response = $this->getJson(route('admin.products.export'));
-        $response->assertStatus(400);
-        $response->assertJsonStructure(['error']);
+        $response = $this->post(route('admin.products.export'));
+        $response->assertSessionHasErrors();
     }
 
     public function test_check_export_status(): void
     {
         Excel::fake();
 
-        $response = $this->getJson(route('admin.products.export'));
+        $response = $this->post(route('admin.products.export'));
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
         $export = JobsByUser::query()->first();
 
@@ -143,7 +134,7 @@ class AdminProductsExportTest extends TestCase
     {
         Excel::fake();
 
-        $this->getJson(route('admin.products.export'));
+        $this->post(route('admin.products.export'));
 
         $this->assertDatabaseHas('jobs_by_users', [
             'user_id' => $this->admin->id,
@@ -156,7 +147,7 @@ class AdminProductsExportTest extends TestCase
     {
         Excel::fake();
 
-        $this->getJson(route('admin.products.export'));
+        $this->post(route('admin.products.export'));
 
         $export = JobsByUser::query()->first();
         $export->status = JobsByUserStatus::COMPLETED;
@@ -168,7 +159,7 @@ class AdminProductsExportTest extends TestCase
             'status' => JobsByUserStatus::COMPLETED,
         ]);
 
-        $this->getJson(route('admin.products.export'));
+        $this->post(route('admin.products.export'));
 
         $this->assertDatabaseCount('jobs_by_users', 1);
         $this->assertDatabaseHas('jobs_by_users', [
