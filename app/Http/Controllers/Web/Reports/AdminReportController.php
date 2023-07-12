@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Reports;
 
 use App\Domain\Reports\Enums\ReportType;
+use App\Domain\Reports\Jobs\ReportExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
 use App\Support\Enums\JobsByUserStatus;
@@ -11,6 +12,7 @@ use App\Support\Exceptions\JobsByUserException;
 use App\Support\Models\JobsByUser;
 use Inertia\Inertia;
 use Inertia\Response;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminReportController extends Controller
 {
@@ -29,18 +31,22 @@ class AdminReportController extends Controller
         $userId = auth()->user()->getAuthIdentifier();
 
         /**
-         * @var JobsByUser $import
+         * @var JobsByUser $report
          */
-        $import = JobsByUser::query()->firstOrCreate([
+        $report = JobsByUser::query()->firstOrCreate([
             'user_id' => $userId,
             'type' => JobsByUserType::REPORT,
         ]);
 
-        if ($import->status === JobsByUserStatus::PENDING) {
+        if ($report->status === JobsByUserStatus::PENDING) {
             throw JobsByUserException::reportActive();
         }
 
-        $import->status = JobsByUserStatus::PENDING;
-        $import->save();
+        $report->status = JobsByUserStatus::PENDING;
+        $report->save();
+
+        $fileName = "report-$userId.xlsx";
+
+        Excel::queue(new ReportExport($report, $request->input('reports'), $request->date('from'), $request->date('to')), $fileName, 'exports')
     }
 }
