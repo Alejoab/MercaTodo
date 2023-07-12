@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Domain\Products\Models\Brand;
+use App\Domain\Orders\Models\Order;
 use Illuminate\Database\Seeder;
 
-class BrandSeeder extends Seeder
+class OrderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Brand::factory(config('seeders.brands'))->create();
+        Order::factory()->count(config('seeders.orders'))->create();
     }
 }

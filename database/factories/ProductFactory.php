@@ -37,8 +37,8 @@ class ProductFactory extends Factory
             'name' => $this->faker->sentence(1),
             'description' => $this->faker->paragraph(),
             'image' => $imageName,
-            'price' => $this->faker->randomFloat(2, 1, 1000),
-            'stock' => $this->faker->numberBetween(0, 1000),
+            'price' => $this->faker->randomFloat(2, 1, 50),
+            'stock' => $this->faker->numberBetween(0, 100),
         ];
     }
 }

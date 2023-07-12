@@ -12,6 +12,6 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::factory(env('PRODUCT_SEEDER'))->create();
+        Product::factory(config('seeders.products'))->create();
     }
 }

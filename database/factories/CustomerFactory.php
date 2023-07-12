@@ -25,11 +25,7 @@ class CustomerFactory extends Factory
             'name' => fake()->name(),
             'surname' => fake()->lastName(),
             'document_type' => fake()->randomElement(DocumentType::cases()),
-            'document' => fake()->unique()->numberBetween(
-                1000000000,
-                9999999999
-            ),
-            'phone' => fake()->numberBetween(1000000000, 9999999999),
+            'document' => fake()->unique()->randomNumber(6, true),
             'address' => fake()->address(),
             'city_id' => fake()->randomElement(City::all())->id,
         ];

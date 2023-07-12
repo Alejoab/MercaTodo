@@ -3,6 +3,8 @@
 namespace App\Domain\Orders\Models;
 
 use App\Domain\Products\Models\Product;
+use Database\Factories\OrderDetailFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +36,11 @@ class Order_detail extends Model
             'amount',
             'subtotal',
         ];
+
+    protected static function newFactory(): Factory
+    {
+        return OrderDetailFactory::new();
+    }
 
     public function order(): BelongsTo
     {

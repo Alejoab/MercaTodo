@@ -6,6 +6,8 @@ use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\QueryBuilders\OrderQueryBuilder;
 use App\Domain\Payments\Enums\PaymentMethod;
 use Carbon\Carbon;
+use Database\Factories\OrderFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,6 +52,11 @@ class Order extends Model
             'payment_method' => PaymentMethod::class,
             'active' => 'boolean',
         ];
+
+    protected static function newFactory(): Factory
+    {
+        return OrderFactory::new();
+    }
 
     public function order_detail(): HasMany
     {
