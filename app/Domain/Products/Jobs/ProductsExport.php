@@ -12,13 +12,11 @@ use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents, ShouldAutoSize, WithStyles, WithColumnWidths
+class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAutoSize, WithStyles, WithColumnWidths
 {
 
     private ?string $search;
@@ -69,16 +67,6 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
                 ]
             )
             ->orderBy('products.code', 'desc');
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function () {
-                $this->export->status = JobsByUserStatus::COMPLETED;
-                $this->export->save();
-            },
-        ];
     }
 
     public function failed(): void

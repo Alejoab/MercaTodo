@@ -8,6 +8,7 @@ use App\Http\Requests\ImportRequest;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\JobsByUserException;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Http\JsonResponse;
 use Maatwebsite\Excel\Facades\Excel;
@@ -37,7 +38,10 @@ class AdminImportController extends Controller
         $import->errors = [];
         $import->save();
 
-        Excel::queueImport(new ProductsImport($import), $request->file('file'));
+        Excel::queueImport(new ProductsImport($import), $request->file('file'))
+            ->chain([
+                new CompleteJobsByUser($import),
+            ]);
     }
 
     public function checkImport(): JsonResponse

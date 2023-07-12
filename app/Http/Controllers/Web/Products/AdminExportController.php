@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\JobsByUserException;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\JsonResponse;
@@ -44,7 +45,10 @@ class AdminExportController extends Controller
         $export->status = JobsByUserStatus::PENDING;
         $export->save();
 
-        Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports');
+        Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports')
+            ->chain([
+                new CompleteJobsByUser($export),
+            ]);
     }
 
     public function checkExport(): JsonResponse

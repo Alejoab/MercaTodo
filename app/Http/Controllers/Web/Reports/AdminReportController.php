@@ -9,6 +9,7 @@ use App\Http\Requests\ReportRequest;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\JobsByUserException;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -48,5 +49,8 @@ class AdminReportController extends Controller
         $fileName = "report-$userId.xlsx";
 
         Excel::queue(new ReportExport($report, $request->input('reports'), $request->date('from'), $request->date('to')), $fileName, 'exports')
+            ->chain([
+                new CompleteJobsByUser($report),
+            ]);
     }
 }

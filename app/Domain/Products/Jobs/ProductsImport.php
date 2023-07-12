@@ -20,7 +20,6 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, SkipsEmptyRows, WithEvents
@@ -119,10 +118,6 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
             AfterSheet::class => function () {
                 $this->import->refresh();
                 $this->import->errors += $this->errors;
-                $this->import->save();
-            },
-            AfterImport::class => function () {
-                $this->import->status = JobsByUserStatus::COMPLETED;
                 $this->import->save();
             },
         ];
