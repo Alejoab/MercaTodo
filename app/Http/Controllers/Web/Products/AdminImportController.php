@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Web\Products;
 
-use App\Console\Jobs\ProductsImport;
+use App\Domain\Products\Jobs\ProductsImport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
 use App\Support\Enums\JobsByUserStatus;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Jobs;
+namespace App\Domain\Products\Jobs;
 
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\QueryBuilders\ProductQueryBuilder;
@@ -50,17 +50,12 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, WithEvents
 
     public function query(): Relation|\Illuminate\Database\Eloquent\Builder|ProductQueryBuilder|Builder
     {
-        /**
-         * @var ProductQueryBuilder $products
-         */
-        $products = Product::query()->withTrashed()
-            ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->join('categories', 'products.category_id', '=', 'categories.id');
-
-        return $products
+        return Product::query()->withTrashed()
             ->filterCategory($this->category)
             ->filterBrand($this->brand ? [$this->brand] : null)
             ->contains($this->search, ['products.name', 'products.code'])
+            ->join('brands', 'products.brand_id', '=', 'brands.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select(
                 [
                     'products.code',

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Web\Products;
 
-use App\Console\Jobs\ProductsExport;
+use App\Domain\Products\Jobs\ProductsExport;
 use App\Http\Controllers\Controller;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;

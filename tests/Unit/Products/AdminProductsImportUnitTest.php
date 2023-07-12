@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Administrator;
 
-use App\Console\Jobs\ProductsImport;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
+use App\Domain\Products\Jobs\ProductsImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;

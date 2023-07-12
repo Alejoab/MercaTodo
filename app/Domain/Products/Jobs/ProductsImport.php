@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Jobs;
+namespace App\Domain\Products\Jobs;
 
 use App\Domain\Products\Actions\CreateProductAction;
 use App\Domain\Products\Actions\UpdateProductAction;
