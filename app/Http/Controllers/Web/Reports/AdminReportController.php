@@ -11,9 +11,13 @@ use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\JobsByUserException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminReportController extends Controller
 {
@@ -52,5 +56,40 @@ class AdminReportController extends Controller
             ->chain([
                 new CompleteJobsByUser($report),
             ]);
+    }
+
+    public function checkReport(): JsonResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+
+        $import = JobsByUser::query()
+            ->fromUser($userId)
+            ->getReports()
+            ->latest()
+            ->first();
+
+        return match ($import?->getAttribute('status')) {
+            JobsByUserStatus::PENDING => response()->json(['status' => JobsByUserStatus::PENDING,]),
+            JobsByUserStatus::COMPLETED => response()->json(['status' => JobsByUserStatus::COMPLETED,]),
+            JobsByUserStatus::FAILED => response()->json(['status' => JobsByUserStatus::FAILED,]),
+            default => response()->json(),
+        };
+    }
+
+    public function download(): StreamedResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+        $fileName = "report-$userId.xlsx";
+
+        /**
+         * @var FilesystemAdapter $disk
+         */
+        $disk = Storage::disk('exports');
+
+        if (!$disk->exists($fileName)) {
+            abort(404);
+        }
+
+        return $disk->download($fileName);
     }
 }

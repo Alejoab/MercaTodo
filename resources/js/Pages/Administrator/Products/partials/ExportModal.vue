@@ -48,6 +48,7 @@ const initialPolling = async () => {
         pollingInterval = setInterval(() => checkExport(), 3000);
     }
 }
+
 const checkExport = async () => {
     const response = await axios.get(route('admin.products.exports.check'));
 
