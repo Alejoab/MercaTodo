@@ -1,43 +1,35 @@
 <?php
 
-namespace Tests\Unit\Administrator;
+namespace Tests\Unit\Products;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Jobs\ProductsImport;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class AdminProductsImportUnitTest extends TestCase
+class AdminProductsImportUnitTest extends UserTestCase
 {
     use RefreshDatabase;
 
-    private User $admin;
     private JobsByUser $import;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
-        Department::factory(1)->create();
-        City::factory(1)->create();
-        $this->admin = User::factory()->create();
-        $this->admin->assignRole($roleAdmin);
-
-        $this->import = JobsByUser::create([
+        /**
+         * @var JobsByUser $job
+         */
+        $job = JobsByUser::query()->create([
             'user_id' => $this->admin->id,
             'type' => JobsByUserType::IMPORT,
             'status' => JobsByUserStatus::PENDING,
         ]);
+        $this->import = $job;
     }
 
     public function test_import_products_with_queue(): void
