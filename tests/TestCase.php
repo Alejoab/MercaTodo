@@ -15,9 +15,4 @@ abstract class TestCase extends BaseTestCase
         Storage::fake('product_images');
         Storage::fake('exports');
     }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
 }
