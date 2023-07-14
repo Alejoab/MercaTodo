@@ -24,4 +24,9 @@ class JobsByUserException extends CustomException
     {
         return new self(trans('validation.custom.jobsByUser.export_active'), 'export');
     }
+
+    public static function salesActive(): self
+    {
+        return new self(trans('validation.custom.jobsByUser.sales_active'), 'sales');
+    }
 }

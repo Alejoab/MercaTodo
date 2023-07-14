@@ -178,6 +178,7 @@ return [
             'report_active' => 'You already have an active report.',
             'import_active' => 'You already have an active import.',
             'export_active' => 'You already have an active export.',
+            'sales_active' => 'You already have an active sales report.',
         ],
         'attribute-name' => [
             'rule-name' => 'custom-message',

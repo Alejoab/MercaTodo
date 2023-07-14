@@ -115,6 +115,9 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
         Route::post('/', [AdminReportController::class, 'generate'])->name('admin.reports.generate');
         Route::get('/check', [AdminReportController::class, 'checkReport'])->name('admin.reports.check');
         Route::get('/download', [AdminReportController::class, 'download'])->name('admin.reports.download');
+        Route::post('/sales', [AdminReportController::class, 'generateSales'])->name('admin.reports.sales.generate');
+        Route::get('/check/sales', [AdminReportController::class, 'checkSales'])->name('admin.reports.sales.check');
+        Route::get('/download/sales', [AdminReportController::class, 'downloadSales'])->name('admin.reports.sales.download');
     });
 });
 

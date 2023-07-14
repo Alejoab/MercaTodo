@@ -28,6 +28,11 @@ class JobsByUserQueryBuilder extends Builder
         return $this->where('type', JobsByUserType::REPORT);
     }
 
+    public function getSales(): self
+    {
+        return $this->where('type', JobsByUserType::SALES);
+    }
+
     public function whereStatus(JobsByUserStatus $status): self
     {
         return $this->where('status', $status);

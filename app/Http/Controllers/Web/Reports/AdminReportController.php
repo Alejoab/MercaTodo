@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Web\Reports;
 
 use App\Domain\Reports\Enums\ReportType;
 use App\Domain\Reports\Jobs\ReportExport;
+use App\Domain\Reports\Jobs\SalesExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
+use App\Http\Requests\SalesRequest;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\JobsByUserException;
@@ -62,18 +64,83 @@ class AdminReportController extends Controller
     {
         $userId = auth()->user()->getAuthIdentifier();
 
-        $import = JobsByUser::query()
+        $report = JobsByUser::query()
             ->fromUser($userId)
             ->getReports()
             ->latest()
             ->first();
 
-        return match ($import?->getAttribute('status')) {
+        return match ($report?->getAttribute('status')) {
             JobsByUserStatus::PENDING => response()->json(['status' => JobsByUserStatus::PENDING,]),
             JobsByUserStatus::COMPLETED => response()->json(['status' => JobsByUserStatus::COMPLETED,]),
             JobsByUserStatus::FAILED => response()->json(['status' => JobsByUserStatus::FAILED,]),
             default => response()->json(),
         };
+    }
+
+    /**
+     * @throws JobsByUserException
+     */
+    public function generateSales(SalesRequest $request): void
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+
+        /**
+         * @var JobsByUser $sales +}}
+         */
+        $sales = JobsByUser::query()->firstOrCreate([
+            'user_id' => $userId,
+            'type' => JobsByUserType::SALES,
+        ]);
+
+        if ($sales->status === JobsByUserStatus::PENDING) {
+            throw JobsByUserException::salesActive();
+        }
+
+        $sales->status = JobsByUserStatus::PENDING;
+        $sales->save();
+
+        $fileName = "sales-$userId.xlsx";
+
+        Excel::queue(new SalesExport($sales, $request->date('from'), $request->date('to')), $fileName, 'exports')
+            ->chain([
+                new CompleteJobsByUser($sales),
+            ]);
+    }
+
+    public function checkSales(): JsonResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+
+        $sales = JobsByUser::query()
+            ->fromUser($userId)
+            ->getSales()
+            ->latest()
+            ->first();
+
+        return match ($sales?->getAttribute('status')) {
+            JobsByUserStatus::PENDING => response()->json(['status' => JobsByUserStatus::PENDING,]),
+            JobsByUserStatus::COMPLETED => response()->json(['status' => JobsByUserStatus::COMPLETED,]),
+            JobsByUserStatus::FAILED => response()->json(['status' => JobsByUserStatus::FAILED,]),
+            default => response()->json(),
+        };
+    }
+
+    public function downloadSales(): StreamedResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+        $fileName = "sales-$userId.xlsx";
+
+        /**
+         * @var FilesystemAdapter $disk
+         */
+        $disk = Storage::disk('exports');
+
+        if (!$disk->exists($fileName)) {
+            abort(404);
+        }
+
+        return $disk->download($fileName);
     }
 
     public function download(): StreamedResponse
