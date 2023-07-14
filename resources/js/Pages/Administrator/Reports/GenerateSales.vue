@@ -16,11 +16,11 @@ const form = useForm({
 
 const submit = () => {
     isLoading.value = true;
-    salesFile.value = '';
 
     form.post(route('admin.reports.sales.generate'), {
         preserveScroll: true,
         onSuccess: () => {
+            salesFile.value = '';
             pollingInterval = setInterval(() => checkSales(), 10000);
         },
         onError: () => {

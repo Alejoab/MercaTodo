@@ -24,11 +24,11 @@ const form = useForm({
 
 const submit = () => {
     isLoading.value = true;
-    reportFile.value = '';
 
     form.post(route('admin.reports.generate'), {
         preserveScroll: true,
         onSuccess: () => {
+            reportFile.value = '';
             pollingInterval = setInterval(() => checkReport(), 3000);
         },
         onError: () => {
