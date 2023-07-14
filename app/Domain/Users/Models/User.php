@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string   $email
  * @property ?Carbon  $email_verified_at
  * @property string   $password
+ * @property ?Carbon $deleted_at
  *
  * @property Customer $customer
  *

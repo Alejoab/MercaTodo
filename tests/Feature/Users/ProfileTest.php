@@ -14,7 +14,6 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
-
     public function setUp(): void
     {
         parent::setUp();
@@ -63,8 +62,7 @@ class ProfileTest extends TestCase
         $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(
-    ): void
+    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
         $user = User::factory()->create();
         $customer = Customer::factory()->create(['user_id' => $user->id]);

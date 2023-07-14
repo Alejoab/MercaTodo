@@ -2,48 +2,21 @@
 
 namespace Products;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class AdminProductsImportTest extends TestCase
+class AdminProductsImportTest extends UserTestCase
 {
     use RefreshDatabase;
 
-    private User $user;
-    private User $admin;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
-        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
-
-        Department::factory(1)->create();
-        City::factory(1)->create();
-
-        $this->user = User::factory()->create();
-        $this->user->assignRole($roleCustomer);
-
-        $this->admin = User::factory()->create();
-        $this->admin->assignRole($roleAdmin);
-
-        $this->actingAs($this->admin);
-    }
-
     public function test_only_admin_can_import_products(): void
     {
-        $response = $this->actingAs($this->user)->post(route('admin.products.import'));
+        $response = $this->actingAs($this->customer)->post(route('admin.products.import'));
 
         $response->assertStatus(403);
     }

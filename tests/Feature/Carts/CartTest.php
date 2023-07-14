@@ -2,37 +2,17 @@
 
 namespace Carts;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class CartTest extends TestCase
+class CartTest extends UserTestCase
 {
     use RefreshDatabase;
-
-    private User $admin;
-    private User $customer;
-
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
-
-        Department::factory(1)->create();
-        City::factory(1)->create();
-
-        $this->customer = User::factory()->create();
-        $this->customer->assignRole($roleCustomer);
-    }
 
     public function test_the_application_returns_a_successful_response(): void
     {
@@ -42,14 +22,19 @@ class CartTest extends TestCase
 
     public function test_only_logged_in_users_can_see_the_cart(): void
     {
+        Auth::logout();
         $response = $this->get(route('cart'));
         $response->assertStatus(302);
     }
 
     public function test_a_customer_can_add_a_product_to_the_cart(): void
     {
-        Category::factory(1)->create();
-        Brand::factory(1)->create();
+        Category::factory()->create();
+        Brand::factory()->create();
+
+        /**
+         * @var Product $product
+         */
         $product = Product::factory()->create();
 
         $response = $this->actingAs($this->customer)->post(route('cart.add'), [
@@ -69,8 +54,12 @@ class CartTest extends TestCase
 
     public function test_a_customer_can_update_a_product_in_the_cart(): void
     {
-        Category::factory(1)->create();
-        Brand::factory(1)->create();
+        Category::factory()->create();
+        Brand::factory()->create();
+
+        /**
+         * @var Product $product
+         */
         $product = Product::factory()->create();
 
         $this->actingAs($this->customer)->post(route('cart.add'), [
@@ -100,6 +89,10 @@ class CartTest extends TestCase
     {
         Category::factory(1)->create();
         Brand::factory(1)->create();
+
+        /**
+         * @var Product $product
+         */
         $product = Product::factory()->create();
 
         $this->actingAs($this->customer)->post(route('cart.add'), [
@@ -129,8 +122,12 @@ class CartTest extends TestCase
 
     public function test_dont_add_a_product_with_invalid_quantity(): void
     {
-        Category::factory(1)->create();
-        Brand::factory(1)->create();
+        Category::factory()->create();
+        Brand::factory()->create();
+
+        /**
+         * @var Product $product
+         */
         $product = Product::factory()->create();
 
         $response = $this->actingAs($this->customer)->post(route('cart.add'), [

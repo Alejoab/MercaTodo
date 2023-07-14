@@ -2,41 +2,15 @@
 
 namespace Tests\Feature\Products;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class AdminProductApiTest extends TestCase
+class AdminProductApiTest extends UserTestCase
 {
     use RefreshDatabase;
-
-    private User $admin;
-    private User $customer;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
-        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
-
-        Department::factory(1)->create();
-        City::factory(1)->create();
-
-        $this->admin = User::factory()->create();
-        $this->admin->assignRole($roleAdmin);
-
-        $this->customer = User::factory()->create();
-        $this->customer->assignRole($roleCustomer);
-
-        $this->actingAs($this->admin);
-    }
 
     public function test_only_admin_can_create_new_products(): void
     {
