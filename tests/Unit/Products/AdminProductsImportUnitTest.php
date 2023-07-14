@@ -2,14 +2,15 @@
 
 namespace Tests\Unit\Administrator;
 
-use App\Console\Jobs\ProductsImport;
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
-use App\Domain\Products\Models\ExportImport;
+use App\Domain\Products\Jobs\ProductsImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
+use App\Support\Jobs\CompleteJobsByUser;
+use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
@@ -20,7 +21,7 @@ class AdminProductsImportUnitTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
-    private ExportImport $import;
+    private JobsByUser $import;
 
     public function setUp(): void
     {
@@ -32,10 +33,10 @@ class AdminProductsImportUnitTest extends TestCase
         $this->admin = User::factory()->create();
         $this->admin->assignRole($roleAdmin);
 
-        $this->import = ExportImport::create([
+        $this->import = JobsByUser::create([
             'user_id' => $this->admin->id,
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 
@@ -48,18 +49,18 @@ class AdminProductsImportUnitTest extends TestCase
         Excel::assertQueued('test_1.xlsx', 'tests');
     }
 
-    public function test_import_change_value_in_database(): void
+    public function test_change_status_of_the_job_in_database(): void
     {
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->import->id,
-            'status' => ExportImportStatus::PENDING,
+            'status' => JobsByUserStatus::PENDING,
         ]);
 
-        Excel::import(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
+        CompleteJobsByUser::dispatch($this->import);
 
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseHas('jobs_by_users', [
             'id' => $this->import->id,
-            'status' => ExportImportStatus::COMPLETED,
+            'status' => JobsByUserStatus::COMPLETED,
         ]);
     }
 
@@ -152,7 +153,5 @@ class AdminProductsImportUnitTest extends TestCase
     {
         Excel::import(new ProductsImport($this->import), 'test_4.xlsx', 'tests');
         $this->assertDatabaseCount('products', 0);
-        $this->import->refresh();
-        $this->assertEquals(ExportImportStatus::COMPLETED, $this->import->status);
     }
 }

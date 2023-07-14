@@ -18,7 +18,6 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @throws ValidationException
      */
     public function store(CustomerRequest $request, CreateCustomer $action): RedirectResponse
     {

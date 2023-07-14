@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Products\Enums;
+namespace App\Support\Enums;
 
-enum ExportImportStatus: string
+enum JobsByUserStatus: string
 {
     case PENDING = 'Pending';
     case COMPLETED = 'Completed';

@@ -4,11 +4,11 @@ namespace Products;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Department;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
-use App\Domain\Products\Models\ExportImport;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
+use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
@@ -53,11 +53,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
     }
 
     public function test_xlsx_files_are_allowed_to_import(): void
@@ -65,11 +64,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.xlsx');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
     }
 
     public function test_xls_files_are_allowed_to_import(): void
@@ -77,11 +75,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.xls');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
     }
 
     public function test_no_spreadsheet_files_are_not_allowed_to_import(): void
@@ -89,11 +86,10 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.png');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
-        $response->assertStatus(422);
-        $response->assertJsonStructure(['errors']);
+        $response->assertSessionHasErrors();
     }
 
     public function test_try_import_when_an_import_is_already_queued(): void
@@ -101,17 +97,15 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
-        $response->assertStatus(400);
-        $response->assertJsonStructure(['error']);
+        $response->assertSessionHasErrors();
     }
 
     public function test_check_import_status(): void
@@ -119,31 +113,30 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $response = $this->postJson(route('admin.products.import'), [
+        $response = $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
         $response->assertOk();
-        $response->assertJsonStructure(['message']);
 
-        $import = ExportImport::query()->first();
+        $import = JobsByUser::query()->first();
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::PENDING->value]);
+        $response->assertJson(['status' => JobsByUserStatus::PENDING->value]);
 
-        $import->status = ExportImportStatus::COMPLETED;
+        $import->status = JobsByUserStatus::COMPLETED;
         $import->save();
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::COMPLETED->value]);
+        $response->assertJson(['status' => JobsByUserStatus::COMPLETED->value]);
 
-        $import->status = ExportImportStatus::FAILED;
+        $import->status = JobsByUserStatus::FAILED;
         $import->save();
 
         $response = $this->getJson(route('admin.products.import.check'));
         $response->assertOk();
-        $response->assertJson(['status' => ExportImportStatus::FAILED->value]);
+        $response->assertJson(['status' => JobsByUserStatus::FAILED->value]);
     }
 
     public function test_check_import_status_with_no_imports()
@@ -158,14 +151,14 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $this->postJson(route('admin.products.import'), [
+        $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
 
-        $this->assertDatabaseHas('export_imports', [
+        $this->assertDatabaseHas('jobs_by_users', [
             'user_id' => $this->admin->id,
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::PENDING,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 
@@ -174,28 +167,28 @@ class AdminProductsImportTest extends TestCase
         Excel::fake();
         $file = UploadedFile::fake()->create('test_1.csv');
 
-        $this->postJson(route('admin.products.import'), [
+        $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
 
-        $import = ExportImport::query()->first();
-        $import->status = ExportImportStatus::COMPLETED;
+        $import = JobsByUser::query()->first();
+        $import->status = JobsByUserStatus::COMPLETED;
         $import->save();
 
-        $this->assertDatabaseCount('export_imports', 1);
-        $this->assertDatabaseHas('export_imports', [
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::COMPLETED,
+        $this->assertDatabaseCount('jobs_by_users', 1);
+        $this->assertDatabaseHas('jobs_by_users', [
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::COMPLETED,
         ]);
 
-        $this->postJson(route('admin.products.import'), [
+        $this->post(route('admin.products.import'), [
             'file' => $file,
         ]);
 
-        $this->assertDatabaseCount('export_imports', 1);
-        $this->assertDatabaseHas('export_imports', [
-            'type' => ExportImportType::IMPORT,
-            'status' => ExportImportStatus::PENDING,
+        $this->assertDatabaseCount('jobs_by_users', 1);
+        $this->assertDatabaseHas('jobs_by_users', [
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::PENDING,
         ]);
     }
 }

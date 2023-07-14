@@ -34,13 +34,11 @@ class UserSeeder extends Seeder
             'user_id' => $adminUser->id,
         ]);
 
-
         /**
          * Create a random users in the database with the role of customer.
          */
-        User::factory(env('USER_SEEDER'))->create()->each(function ($user) {
+        User::factory()->count(config('seeders.users'))->has(Customer::factory())->create()->each(function ($user) {
             $user->assignRole(RoleEnum::CUSTOMER->value);
-            Customer::factory()->create(['user_id' => $user->id]);
         });
     }
 }

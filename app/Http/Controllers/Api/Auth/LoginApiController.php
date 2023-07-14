@@ -6,18 +6,17 @@ use App\Domain\Users\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class LoginApiController extends Controller
 {
+    /**
+     * @throws ValidationException
+     */
     public function login(LoginRequest $request): JsonResponse
     {
-        if (!Auth::attempt($request->only(['email', 'password']))) {
-            return response()->json([
-                'message' => trans('auth.failed'),
-            ], 422);
-        }
+        $request->authenticate();
 
         $user = User::query()->where('email', $request->get('email'))->first();
         $token = $user->createToken(Str::random())->plainTextToken;

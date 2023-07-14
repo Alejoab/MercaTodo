@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Console\Jobs;
+namespace App\Domain\Products\Jobs;
 
 use App\Domain\Products\Actions\CreateProductAction;
 use App\Domain\Products\Actions\UpdateProductAction;
 use App\Domain\Products\Contracts\CreateProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Models\ExportImport;
 use App\Domain\Products\Models\Product;
+use App\Support\Enums\JobsByUserStatus;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -20,18 +20,17 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\AfterSheet;
 
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, SkipsEmptyRows, WithEvents
 {
 
-    private ExportImport $import;
+    private JobsByUser $import;
     private CreateProduct $createAction;
     private UpdateProduct $updateAction;
     private array $errors = [];
 
-    public function __construct(ExportImport $import)
+    public function __construct(JobsByUser $import)
     {
         $this->import = $import;
         $this->createAction = new CreateProductAction();
@@ -121,16 +120,12 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 $this->import->errors += $this->errors;
                 $this->import->save();
             },
-            AfterImport::class => function () {
-                $this->import->status = ExportImportStatus::COMPLETED;
-                $this->import->save();
-            },
         ];
     }
 
     public function failed(): void
     {
-        $this->import->status = ExportImportStatus::FAILED;
+        $this->import->status = JobsByUserStatus::FAILED;
         $this->import->save();
     }
 }

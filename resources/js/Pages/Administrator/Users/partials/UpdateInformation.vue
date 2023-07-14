@@ -47,7 +47,7 @@ const form = useForm({
                 <InputError :message="form.errors.email" class="mt-2"/>
             </div>
 
-            <div class="pt-5 space-y-2">
+            <div class="pt-5 space-y-2" v-if="usePage().props.role === 'Super Admin'">
                 <InputLabel value="Roles"/>
                 <div v-for="role in roles" class="flex items-center">
                     <input :id="role"
@@ -55,7 +55,6 @@ const form = useForm({
                            :value="role"
                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2 "
                            type="radio"
-                           v-if="usePage().props.role === 'Super Admin' || role !== 'Super Admin'"
                     >
                     <label :for="role" class="ml-2 text-sm font-medium" v-if="usePage().props.role === 'Super Admin' || role !== 'Super Admin'">{{ role }}</label>
                 </div>
@@ -63,7 +62,7 @@ const form = useForm({
                 <InputError :message="form.errors.role" class="mt-2"/>
             </div>
 
-            <div class="pt-5 space-y-2" v-if="usePage().props.role === 'Super Admin'">
+            <div class="pt-5 space-y-2" v-if="usePage().props.role === 'Super Admin' && form.role === 'Admin'">
                 <InputLabel value="Permissions"/>
                 <div v-for="permission in permissions">
                     <input id="brand.id"

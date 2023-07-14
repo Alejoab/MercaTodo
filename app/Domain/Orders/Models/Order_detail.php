@@ -2,7 +2,10 @@
 
 namespace App\Domain\Orders\Models;
 
+use App\Domain\Orders\QueryBuilders\OrderDetailQueryBuilder;
 use App\Domain\Products\Models\Product;
+use Database\Factories\OrderDetailFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property Order    $order
  * @property ?Product $product
+ *
+ * @method static OrderDetailQueryBuilder query()
  */
 class Order_detail extends Model
 {
@@ -35,6 +40,11 @@ class Order_detail extends Model
             'subtotal',
         ];
 
+    protected static function newFactory(): Factory
+    {
+        return OrderDetailFactory::new();
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
@@ -46,5 +56,10 @@ class Order_detail extends Model
          * @phpstan-ignore-next-line
          */
         return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    public function newEloquentBuilder($query): OrderDetailQueryBuilder
+    {
+        return new OrderDetailQueryBuilder($query);
     }
 }

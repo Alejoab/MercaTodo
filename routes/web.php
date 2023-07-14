@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\Products\AdminProductController;
 use App\Http\Controllers\Web\Products\BrandController;
 use App\Http\Controllers\Web\Products\CategoryController;
 use App\Http\Controllers\Web\Products\ProductController;
+use App\Http\Controllers\Web\Reports\AdminReportController;
 use App\Http\Controllers\Web\Users\AdminUserController;
 use App\Http\Controllers\Web\Users\ProfileController;
 use App\Http\Controllers\Web\Users\UserController;
@@ -72,7 +73,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
     Route::prefix('users')->group(function () {
         Route::get('/', [AdminUserController::class, 'index'])->name('admin.users');
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->get('/{user}', [AdminUserController::class, 'userShow'])->withTrashed()->name('admin.user.show');
-        Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
+        Route::middleware('role:Super Admin')->put('/{user}', [AdminUserController::class, 'userUpdate'])->withTrashed()->name('admin.user.update');
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->put('/{user}/password', [AdminUserController::class, 'userUpdatePassword'])->withTrashed()->name('admin.user.update.password');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{user}', [AdminUserController::class, 'userDestroy'])->name('admin.user.destroy');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->put('/{user}/restore', [AdminUserController::class, 'userRestore'])->withTrashed()->name('admin.user.restore');
@@ -86,7 +87,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
     });
 
     Route::prefix('products/exports')->group(function () {
-        Route::get('/', [AdminExportController::class, 'export'])->name('admin.products.export');
+        Route::post('/', [AdminExportController::class, 'export'])->name('admin.products.export');
         Route::get('/check', [AdminExportController::class, 'checkExport'])->name('admin.products.exports.check');
         Route::get('/download', [AdminExportController::class, 'download'])->name('admin.products.export.download');
     });
@@ -106,9 +107,17 @@ Route::prefix('admin')->middleware(['auth', 'verified', "role:$admins"])->group(
         Route::middleware(['permission:'.PermissionEnum::UPDATE->value])->post('/{product}', [AdminProductController::class, 'update'])->withTrashed()->name('admin.products.update');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}', [AdminProductController::class, 'destroy'])->withTrashed()->name('admin.products.destroy');
         Route::middleware(['permission:'.PermissionEnum::DELETE->value])->put('/{product}/restore', [AdminProductController::class, 'restore'])->withTrashed()->name('admin.products.restore');
-        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name(
-            'admin.products.force-delete'
-        );
+        Route::middleware(['permission:'.PermissionEnum::DELETE->value])->delete('/{product}/force-delete', [AdminProductController::class, 'forceDelete'])->withTrashed()->name('admin.products.force-delete');
+    });
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [AdminReportController::class, 'index'])->name('admin.reports');
+        Route::post('/', [AdminReportController::class, 'generate'])->name('admin.reports.generate');
+        Route::get('/check', [AdminReportController::class, 'checkReport'])->name('admin.reports.check');
+        Route::get('/download', [AdminReportController::class, 'download'])->name('admin.reports.download');
+        Route::post('/sales', [AdminReportController::class, 'generateSales'])->name('admin.reports.sales.generate');
+        Route::get('/check/sales', [AdminReportController::class, 'checkSales'])->name('admin.reports.sales.check');
+        Route::get('/download/sales', [AdminReportController::class, 'downloadSales'])->name('admin.reports.sales.download');
     });
 });
 

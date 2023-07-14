@@ -141,7 +141,6 @@ class OrderUnitTest extends TestCase
         $this->assertNotNull($this->product->deleted_at);
     }
 
-
     public function test_delete_order(): void
     {
         $createOrder = new CreateOrderAction();

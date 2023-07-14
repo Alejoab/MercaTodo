@@ -141,11 +141,11 @@ class PaymentController extends Controller
         if (!$order) {
             throw PaymentException::orderNotFound();
         }
-        if ($order->status === OrderStatus::PENDING) {
-            return Inertia::location($order->processUrl);
-        }
         if (!$order->active) {
             throw PaymentException::orderNotActive();
+        }
+        if ($order->status === OrderStatus::PENDING) {
+            return Inertia::location($order->processUrl);
         }
         if (Order::query()->getLast($request->user()->id) !== null) {
             throw PaymentException::sessionActive();

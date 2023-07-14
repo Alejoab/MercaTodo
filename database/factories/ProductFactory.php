@@ -28,17 +28,17 @@ class ProductFactory extends Factory
         $image = Image::canvas(800, 800)->fill($color)->encode('jpg');
         $imageName = Str::random(40).'.jpg';
 
-        Storage::disk('product_images')->put("$imageName", $image);
+        Storage::disk('product_images')->put($imageName, $image);
 
         return [
             'code' => $this->faker->unique()->randomNumber(6, true),
             'category_id' => Category::query()->inRandomOrder()->first()->getAttribute('id'),
             'brand_id' => Brand::query()->inRandomOrder()->first()->getAttribute('id'),
-            'name' => $this->faker->sentence(3),
+            'name' => $this->faker->sentence(1),
             'description' => $this->faker->paragraph(),
             'image' => $imageName,
-            'price' => $this->faker->randomFloat(2, 1, 1000),
-            'stock' => $this->faker->numberBetween(0, 1000),
+            'price' => $this->faker->randomFloat(2, 1, 50),
+            'stock' => $this->faker->numberBetween(0, 100),
         ];
     }
 }

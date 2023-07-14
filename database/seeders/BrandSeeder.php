@@ -12,6 +12,6 @@ class BrandSeeder extends Seeder
      */
     public function run(): void
     {
-        Brand::factory(env('BRAND_SEEDER'))->create();
+        Brand::factory(config('seeders.brands'))->create();
     }
 }

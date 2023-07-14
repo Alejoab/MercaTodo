@@ -1,7 +1,7 @@
 <?php
 
-use App\Domain\Products\Enums\ExportImportStatus;
-use App\Domain\Products\Enums\ExportImportType;
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\JobsByUserType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,11 +12,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('export_imports', function (Blueprint $table) {
+        Schema::create('jobs_by_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->enum('type', array_column(ExportImportType::cases(), 'value'));
-            $table->enum('status', array_column(ExportImportStatus::cases(), 'value'))->nullable();
+            $table->enum('type', array_column(JobsByUserType::cases(), 'value'));
+            $table->enum('status', array_column(JobsByUserStatus::cases(), 'value'))->nullable();
             $table->json('errors')->nullable();
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('export_imports');
+        Schema::dropIfExists('jobs_by_users');
     }
 };
