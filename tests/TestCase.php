@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 abstract class TestCase extends BaseTestCase
@@ -13,13 +12,12 @@ abstract class TestCase extends BaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-        Storage::disk('product_images')->makeDirectory('');
+        Storage::fake('product_images');
+        Storage::fake('exports');
     }
 
     protected function tearDown(): void
     {
-        Storage::disk('product_images')->deleteDirectory('');
-        Cache::flush();
         parent::tearDown();
     }
 }
