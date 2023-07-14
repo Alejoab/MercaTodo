@@ -29,13 +29,14 @@ class OrderFactory extends Factory
             'status' => $this->faker->randomElement(array_column(OrderStatus::cases(), 'value')),
             'payment_method' => $this->faker->randomElement(array_column(PaymentMethod::cases(), 'value')),
             'active' => false,
+            'created_at' => $this->faker->dateTimeBetween('-1 year'),
         ];
     }
 
     public function configure(): static
     {
-        return $this->afterCreating(function (Order $order) {
-            Order_detail::factory()->count(rand(1, 3))->create(['order_id' => $order->id])->each(function ($order_detail) use ($order) {
+        return $this->afterCreating(function ($order) {
+            Order_detail::factory()->count(rand(1, 3))->create(['order_id' => $order->id, 'created_at' => $order->created_at])->each(function ($order_detail) use ($order) {
                 $order->total += $order_detail->subtotal;
             });
             $order->save();

@@ -35,6 +35,7 @@ class OrderDetailFactory extends Factory
             'quantity' => $quantity,
             'amount' => $product->price,
             'subtotal' => $product->price * $quantity,
+            'created_at' => $this->faker->dateTimeBetween('-1 year'),
         ];
     }
 }

@@ -16,6 +16,7 @@ const form = useForm({
 
 const submit = () => {
     isLoading.value = true;
+    salesFile.value = '';
 
     form.post(route('admin.reports.sales.generate'), {
         preserveScroll: true,
