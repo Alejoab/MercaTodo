@@ -4,6 +4,7 @@ namespace App\Domain\Reports\Classes;
 
 use App\Domain\Orders\Models\Order_detail;
 use App\Domain\Orders\QueryBuilders\OrderDetailQueryBuilder;
+use App\Domain\Reports\Enums\ReportType;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
@@ -51,6 +52,6 @@ class SalesByBrand extends BaseReport
 
     public function title(): string
     {
-        return 'Sales by Brand';
+        return ReportType::R2->value;
     }
 }
