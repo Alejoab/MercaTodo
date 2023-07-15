@@ -110,6 +110,7 @@ onUnmounted(() => {
 
                     <InputError :message="form.errors.file" class="mt-2"/>
                     <InputError :message="form.errors.import" class="mt-2"/>
+                    <InputError :message="form.errors.app" class="mt-3"></InputError>
                 </div>
                 <div v-if="message === 'pending'">
                     <div class="dots-loading items-center inline-block">

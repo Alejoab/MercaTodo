@@ -138,6 +138,7 @@ onUnmounted(() => {
                     </svg>
                     Loading
                 </primary-button>
+                <InputError :message="form.errors.app" class="mt-3"></InputError>
                 <InputError :message="form.errors.report" class="mt-5"></InputError>
                 <p class="mt-5"><a v-if="reportFile" :href="reportFile" class="underline my-auto">Download Export</a>
                 </p>
