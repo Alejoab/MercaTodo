@@ -41,8 +41,8 @@ class AdminExportController extends Controller
         }
 
         $fileName = "products_export_$userId.xlsx";
-
         $export->status = JobsByUserStatus::PENDING;
+        $export->file_name = $fileName;
         $export->save();
 
         Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports')
@@ -72,14 +72,14 @@ class AdminExportController extends Controller
     public function download(): StreamedResponse
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "products_export_$userId.xlsx";
+        $fileName = JobsByUser::query()->fromUser($userId)->getExports()->latest()->first()?->getAttribute('file_name');
 
         /**
          * @var FilesystemAdapter $disk
          */
         $disk = Storage::disk('exports');
 
-        if (!$disk->exists($fileName)) {
+        if ($fileName === null || !$disk->exists($fileName)) {
             abort(404);
         }
 

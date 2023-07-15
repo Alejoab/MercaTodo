@@ -49,10 +49,10 @@ class AdminReportController extends Controller
             throw JobsByUserException::reportActive();
         }
 
+        $fileName = "report_$userId.xlsx";
         $report->status = JobsByUserStatus::PENDING;
+        $report->file_name = $fileName;
         $report->save();
-
-        $fileName = "report-$userId.xlsx";
 
         Excel::queue(new ReportExport($report, $request->input('reports'), $request->date('from'), $request->date('to')), $fileName, 'exports')
             ->chain([
@@ -78,6 +78,23 @@ class AdminReportController extends Controller
         };
     }
 
+    public function download(): StreamedResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+        $fileName = JobsByUser::query()->fromUser($userId)->getReports()->latest()->first()?->getAttribute('file_name');
+
+        /**
+         * @var FilesystemAdapter $disk
+         */
+        $disk = Storage::disk('exports');
+
+        if ($fileName === null || !$disk->exists($fileName)) {
+            abort(404);
+        }
+
+        return $disk->download($fileName);
+    }
+
     /**
      * @throws JobsByUserException
      */
@@ -86,7 +103,7 @@ class AdminReportController extends Controller
         $userId = auth()->user()->getAuthIdentifier();
 
         /**
-         * @var JobsByUser $sales +}}
+         * @var JobsByUser $sales
          */
         $sales = JobsByUser::query()->firstOrCreate([
             'user_id' => $userId,
@@ -97,10 +114,10 @@ class AdminReportController extends Controller
             throw JobsByUserException::salesActive();
         }
 
+        $fileName = "sales_$userId.xlsx";
         $sales->status = JobsByUserStatus::PENDING;
+        $sales->file_name = $fileName;
         $sales->save();
-
-        $fileName = "sales-$userId.xlsx";
 
         Excel::queue(new SalesExport($sales, $request->date('from'), $request->date('to')), $fileName, 'exports')
             ->chain([
@@ -129,31 +146,14 @@ class AdminReportController extends Controller
     public function downloadSales(): StreamedResponse
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "sales-$userId.xlsx";
+        $fileName = JobsByUser::query()->fromUser($userId)->getSales()->latest()->first()->getAttribute('file_name');
 
         /**
          * @var FilesystemAdapter $disk
          */
         $disk = Storage::disk('exports');
 
-        if (!$disk->exists($fileName)) {
-            abort(404);
-        }
-
-        return $disk->download($fileName);
-    }
-
-    public function download(): StreamedResponse
-    {
-        $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "report-$userId.xlsx";
-
-        /**
-         * @var FilesystemAdapter $disk
-         */
-        $disk = Storage::disk('exports');
-
-        if (!$disk->exists($fileName)) {
+        if ($fileName === null || !$disk->exists($fileName)) {
             abort(404);
         }
 

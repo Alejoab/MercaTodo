@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property JobsByUserType    $type
  * @property ?JobsByUserStatus $status
  * @property array             $errors
+ * @property ?string           $file_name
  *
  * @method static JobsByUserQueryBuilder query()
  */
