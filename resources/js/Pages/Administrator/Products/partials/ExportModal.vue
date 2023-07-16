@@ -66,7 +66,8 @@ const checkExport = async () => {
 
     if (response.data.status === 'Failed') {
         clearInterval(pollingInterval);
-        exportFileName.value = 'failed';
+        form.errors.export = 'Export failed. Please try again.';
+        exportFileName.value = '';
         return true;
     }
 

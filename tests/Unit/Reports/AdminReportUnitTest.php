@@ -86,32 +86,32 @@ class AdminReportUnitTest extends UserTestCase
 
     public function test_sales_by_category(): void
     {
-        $report = new SalesByCategory(null, null);
+        $report = new SalesByCategory($this->report, null, null);
 
         $this->assertLessThanOrEqual(2, $report->query()->get()->count());
     }
 
     public function test_sales_by_brand(): void
     {
-        $report = new SalesByBrand(null, null);
+        $report = new SalesByBrand($this->report, null, null);
         $this->assertLessThanOrEqual(2, $report->query()->get()->count());
     }
 
     public function test_sales_by_department(): void
     {
-        $report = new SalesByDepartment(null, null);
+        $report = new SalesByDepartment($this->report, null, null);
         $this->assertEquals(1, $report->query()->get()->count());
     }
 
     public function test_sales_by_payment_method_and_status(): void
     {
-        $report = new SalesByPaymentMethodAndStatus(null, null);
+        $report = new SalesByPaymentMethodAndStatus($this->report, null, null);
         $this->assertLessThanOrEqual(6, $report->query()->get()->count());
     }
 
     public function test_sales_by_product(): void
     {
-        $report = new SalesByProduct(null, null);
+        $report = new SalesByProduct($this->report, null, null);
         $this->assertLessThanOrEqual(5, $report->query()->get()->count());
     }
 }

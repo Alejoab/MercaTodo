@@ -29,9 +29,9 @@ class ReportExport implements WithMultipleSheets, ShouldQueue
     {
         $sheets = [];
 
-        foreach ($this->reports as $report) {
-            $report = ReportType::from($report);
-            $sheets[] = ReportFactory::create($report, $this->from, $this->to);
+        foreach ($this->reports as $reportType) {
+            $reportType = ReportType::from($reportType);
+            $sheets[] = ReportFactory::create($reportType, $this->report, $this->from, $this->to);
         }
 
         return $sheets;

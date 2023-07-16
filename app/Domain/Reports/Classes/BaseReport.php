@@ -2,7 +2,10 @@
 
 namespace App\Domain\Reports\Classes;
 
+use App\Support\Enums\JobsByUserStatus;
+use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -12,6 +15,16 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 abstract class BaseReport implements FromQuery, WithHeadings, WithTitle, ShouldQueue, ShouldAutoSize, WithStyles
 {
+    protected JobsByUser $report;
+    protected ?Carbon $from;
+    protected ?Carbon $to;
+
+    public function __construct(JobsByUser $report, ?Carbon $from, ?Carbon $to)
+    {
+        $this->report = $report;
+        $this->from = $from;
+        $this->to = $to;
+    }
 
     public abstract function query();
 
@@ -31,5 +44,11 @@ abstract class BaseReport implements FromQuery, WithHeadings, WithTitle, ShouldQ
                 ],
             ],
         ];
+    }
+
+    public function failed(): void
+    {
+        $this->report->status = JobsByUserStatus::FAILED;
+        $this->report->save();
     }
 }

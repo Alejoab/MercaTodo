@@ -24,7 +24,7 @@ class SalesExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAutoSiz
 
     public function __construct(JobsByUser $sales, ?Carbon $from, ?Carbon $to)
     {
-        $this->$sales = $sales;
+        $this->sales = $sales;
         $this->from = $from;
         $this->to = $to;
     }
