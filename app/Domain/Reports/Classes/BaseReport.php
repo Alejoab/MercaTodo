@@ -9,11 +9,12 @@ use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-abstract class BaseReport implements FromQuery, WithHeadings, WithTitle, ShouldQueue, ShouldAutoSize, WithStyles
+abstract class BaseReport implements FromQuery, WithHeadings, WithTitle, ShouldQueue, ShouldAutoSize, WithStyles, WithStrictNullComparison
 {
     protected JobsByUser $report;
     protected ?Carbon $from;

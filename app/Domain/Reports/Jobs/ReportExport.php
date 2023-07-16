@@ -9,8 +9,9 @@ use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class ReportExport implements WithMultipleSheets, ShouldQueue
+class ReportExport implements WithMultipleSheets, ShouldQueue, WithStrictNullComparison
 {
     private JobsByUser $report;
     private array $reports;

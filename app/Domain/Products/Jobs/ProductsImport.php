@@ -43,6 +43,11 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     public function collection(Collection $collection): void
     {
         foreach ($collection as $row) {
+
+            if (!isset($row['description'])) {
+                $row['description'] = null;
+            }
+
             if (!$this->isValid($row->toArray())) {
                 continue;
             }
@@ -93,13 +98,13 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 'stock' => ['required', 'integer', 'min:0'],
                 'category_name' => ['required', 'string', 'max:255'],
                 'brand_name' => ['required', 'string', 'max:255'],
-                'status' => ['nullable', Rule::in(['Active', 'Inactive'])],
+                'status' => ['required', Rule::in(['Active', 'Inactive'])],
             ])->validate();
 
             return true;
         } catch (ValidationException $e) {
             $errors = [
-                $row['code'] => $e->errors(),
+                $row['code'] ?? '' => $e->errors(),
             ];
             $this->errors += $errors;
 

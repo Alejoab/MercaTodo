@@ -56,8 +56,8 @@ const checkSales = async () => {
 }
 
 const initialPolling = async () => {
+    isLoading.value = true;
     if (!await checkSales()) {
-        isLoading.value = true;
         pollingInterval = setInterval(() => checkSales(), 10000);
     }
 }

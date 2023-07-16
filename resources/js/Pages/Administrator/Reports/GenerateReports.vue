@@ -64,8 +64,8 @@ const checkReport = async () => {
 }
 
 const initialPolling = async () => {
+    isLoading.value = true;
     if (!await checkReport()) {
-        isLoading.value = true;
         pollingInterval = setInterval(() => checkReport(), 3000);
     }
 }
