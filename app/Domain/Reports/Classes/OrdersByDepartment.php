@@ -9,16 +9,19 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-class SalesByPaymentMethodAndStatus extends BaseReport
+class OrdersByDepartment extends BaseReport
 {
     public function query(): OrderDetailQueryBuilder|Relation|\Illuminate\Database\Eloquent\Builder|Builder
     {
         return Order::query()
             ->whereDateBetween($this->from, $this->to)
-            ->groupBy('orders.payment_method', 'orders.status')
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->join('customers', 'customers.user_id', '=', 'users.id')
+            ->join('cities', 'customers.city_id', '=', 'cities.id')
+            ->join('departments', 'cities.department_id', '=', 'departments.id')
+            ->groupBy('departments.name')
             ->select([
-                'orders.payment_method',
-                'orders.status',
+                'departments.name',
                 DB::raw('COUNT(*) as sales_count'),
                 DB::raw('SUM(orders.total) as total_sales'),
                 DB::raw('AVG(orders.total) as average_sale'),
@@ -28,9 +31,8 @@ class SalesByPaymentMethodAndStatus extends BaseReport
     public function headings(): array
     {
         return [
-            'PAYMENT METHOD',
-            'STATUS',
-            'SALES COUNT',
+            'DEPARTMENT',
+            'ORDERS COUNT',
             'TOTAL SALES',
             'AVERAGE SALE',
         ];
@@ -38,6 +40,6 @@ class SalesByPaymentMethodAndStatus extends BaseReport
 
     public function title(): string
     {
-        return ReportType::R4->value;
+        return ReportType::R5->value;
     }
 }

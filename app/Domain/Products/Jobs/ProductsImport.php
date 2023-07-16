@@ -83,6 +83,8 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
 
             if ($row['status'] === 'Inactive') {
                 $product->delete();
+            } else {
+                $product->restore();
             }
         }
     }
