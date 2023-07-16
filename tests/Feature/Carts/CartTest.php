@@ -35,7 +35,7 @@ class CartTest extends UserTestCase
         /**
          * @var Product $product
          */
-        $product = Product::factory()->create();
+        $product = Product::factory()->create(['stock' => 100]);
 
         $response = $this->actingAs($this->customer)->post(route('cart.add'), [
             'product_id' => $product->id,
@@ -60,7 +60,7 @@ class CartTest extends UserTestCase
         /**
          * @var Product $product
          */
-        $product = Product::factory()->create();
+        $product = Product::factory()->create(['stock' => 100]);
 
         $this->actingAs($this->customer)->post(route('cart.add'), [
             'product_id' => $product->id,
@@ -93,7 +93,7 @@ class CartTest extends UserTestCase
         /**
          * @var Product $product
          */
-        $product = Product::factory()->create();
+        $product = Product::factory()->create(['stock' => 100]);
 
         $this->actingAs($this->customer)->post(route('cart.add'), [
             'product_id' => $product->id,
@@ -128,7 +128,7 @@ class CartTest extends UserTestCase
         /**
          * @var Product $product
          */
-        $product = Product::factory()->create();
+        $product = Product::factory()->create(['stock' => 100]);
 
         $response = $this->actingAs($this->customer)->post(route('cart.add'), [
             'product_id' => $product->id,
@@ -139,7 +139,7 @@ class CartTest extends UserTestCase
 
         $response = $this->actingAs($this->customer)->post(route('cart.add'), [
             'product_id' => $product->id,
-            'quantity' => $product->stock + 1,
+            'quantity' => 101,
         ]);
 
         $response->assertSessionHasErrors();
