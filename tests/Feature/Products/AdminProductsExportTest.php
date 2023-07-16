@@ -7,7 +7,9 @@ use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\UserTestCase;
@@ -43,6 +45,10 @@ class AdminProductsExportTest extends UserTestCase
         Excel::assertQueued("products_export_{$this->admin->id}.xlsx", 'exports', function ($export) {
             return $export->query()->count() === 5;
         });
+
+        Excel::assertQueuedWithChain([
+            CompleteJobsByUser::class,
+        ]);
     }
 
     public function test_export_products_with_filters(): void
@@ -53,7 +59,7 @@ class AdminProductsExportTest extends UserTestCase
 
         $count = Product::query()->filterCategory($filter)->count();
 
-        $response = $this->postJson(route('admin.products.export', ['category' => $filter,]));
+        $response = $this->post(route('admin.products.export', ['category' => $filter,]));
 
         $response->assertOk();
 
@@ -143,6 +149,27 @@ class AdminProductsExportTest extends UserTestCase
         $this->assertDatabaseHas('jobs_by_users', [
             'type' => JobsByUserType::EXPORT,
             'status' => JobsByUserStatus::PENDING,
+        ]);
+    }
+
+    public function test_try_to_download_an_export_when_this_was_not_generated(): void
+    {
+        $response = $this->get(route('admin.products.export.download'));
+        $response->assertNotFound();
+    }
+
+    public function test_change_status_of_the_job_when_this_has_failed(): void
+    {
+        Excel::fake();
+        Excel::shouldReceive('queue')->once()->andReturn(new Exception());
+
+        $response = $this->post(route('admin.products.export'));
+
+        $response->assertSessionHasErrors(['app']);
+        $this->assertDatabaseHas('jobs_by_users', [
+            'user_id' => $this->admin->id,
+            'type' => JobsByUserType::EXPORT,
+            'status' => JobsByUserStatus::FAILED,
         ]);
     }
 }

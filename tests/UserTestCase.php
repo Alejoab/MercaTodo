@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use Spatie\Permission\Models\Role;
@@ -19,9 +17,6 @@ class UserTestCase extends TestCase
 
         $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
         $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
-
-        Department::factory()->create();
-        City::factory()->create();
 
         /**
          * @var User $admin

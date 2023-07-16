@@ -28,6 +28,7 @@ class JobsByUser extends Model
             'status',
             'errors',
             'type',
+            'file_name',
         ];
 
     protected $attributes

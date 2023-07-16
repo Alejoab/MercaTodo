@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Order;
 
+use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Customer;
+use App\Domain\Customers\Models\Department;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Enums\PaymentMethod;
@@ -24,6 +26,9 @@ class OrderTest extends UserTestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Department::factory()->create();
+        City::factory()->create();
 
         Customer::factory()->create([
             'user_id' => $this->customer->id,

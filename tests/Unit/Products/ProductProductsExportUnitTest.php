@@ -64,4 +64,9 @@ class ProductProductsExportUnitTest extends UserTestCase
         ]);
     }
 
+    public function test_export_values(): void
+    {
+        $export = new ProductsExport($this->export, null, null, null);
+        $this->assertEquals(5, $export->query()->count());
+    }
 }

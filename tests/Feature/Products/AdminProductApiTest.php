@@ -263,4 +263,11 @@ class AdminProductApiTest extends UserTestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_status_404_when_product_not_found(): void
+    {
+        $response = $this->getJson(route('api.admin.products.show', -1));
+
+        $response->assertNotFound();
+    }
 }

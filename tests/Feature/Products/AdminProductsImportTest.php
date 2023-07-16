@@ -4,7 +4,9 @@ namespace Products;
 
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
@@ -63,6 +65,21 @@ class AdminProductsImportTest extends UserTestCase
             'file' => $file,
         ]);
         $response->assertSessionHasErrors();
+    }
+
+    public function test_import_with_queue(): void
+    {
+        Excel::fake();
+        $file = UploadedFile::fake()->create('test_1.csv');
+
+        $response = $this->post(route('admin.products.import'), [
+            'file' => $file,
+        ]);
+        $response->assertOk();
+
+        Excel::assertQueuedWithChain([
+            CompleteJobsByUser::class,
+        ]);
     }
 
     public function test_try_import_when_an_import_is_already_queued(): void
@@ -162,6 +179,23 @@ class AdminProductsImportTest extends UserTestCase
         $this->assertDatabaseHas('jobs_by_users', [
             'type' => JobsByUserType::IMPORT,
             'status' => JobsByUserStatus::PENDING,
+        ]);
+    }
+
+    public function test_change_status_of_the_job_when_this_has_failed(): void
+    {
+        Excel::fake();
+        Excel::shouldReceive('queueImport')->once()->andReturn(new Exception());
+
+        $response = $this->post(route('admin.products.import'), [
+            'file' => UploadedFile::fake()->create('test_1.csv'),
+        ]);
+
+        $response->assertSessionHasErrors(['app']);
+        $this->assertDatabaseHas('jobs_by_users', [
+            'user_id' => $this->admin->id,
+            'type' => JobsByUserType::IMPORT,
+            'status' => JobsByUserStatus::FAILED,
         ]);
     }
 }
