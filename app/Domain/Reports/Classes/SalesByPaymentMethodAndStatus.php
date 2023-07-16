@@ -10,7 +10,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class SalesByPaymentMethod extends BaseReport
+class SalesByPaymentMethodAndStatus extends BaseReport
 {
     private ?Carbon $from;
     private ?Carbon $to;

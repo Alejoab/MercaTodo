@@ -162,7 +162,7 @@ class AdminReportController extends Controller
     public function downloadSales(): StreamedResponse
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $fileName = JobsByUser::query()->fromUser($userId)->getSales()->latest()->first()->getAttribute('file_name');
+        $fileName = JobsByUser::query()->fromUser($userId)->getSales()->latest()->first()?->getAttribute('file_name');
 
         /**
          * @var FilesystemAdapter $disk
