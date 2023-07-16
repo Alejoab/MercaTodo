@@ -91,4 +91,6 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    'export_expiration' => 60, // minutes
+
 ];
