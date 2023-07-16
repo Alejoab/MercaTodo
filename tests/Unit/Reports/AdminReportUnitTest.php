@@ -11,8 +11,8 @@ use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
 use App\Domain\Reports\Classes\SalesByBrand;
 use App\Domain\Reports\Classes\SalesByCategory;
-use App\Domain\Reports\Classes\SalesByDepartment;
-use App\Domain\Reports\Classes\SalesByPaymentMethodAndStatus;
+use App\Domain\Reports\Classes\OrdersByDepartment;
+use App\Domain\Reports\Classes\OrdersByPaymentMethodAndStatus;
 use App\Domain\Reports\Classes\SalesByProduct;
 use App\Domain\Reports\Enums\ReportType;
 use App\Domain\Reports\Jobs\ReportExport;
@@ -99,13 +99,13 @@ class AdminReportUnitTest extends UserTestCase
 
     public function test_sales_by_department(): void
     {
-        $report = new SalesByDepartment($this->report, null, null);
+        $report = new OrdersByDepartment($this->report, null, null);
         $this->assertEquals(1, $report->query()->get()->count());
     }
 
     public function test_sales_by_payment_method_and_status(): void
     {
-        $report = new SalesByPaymentMethodAndStatus($this->report, null, null);
+        $report = new OrdersByPaymentMethodAndStatus($this->report, null, null);
         $this->assertLessThanOrEqual(6, $report->query()->get()->count());
     }
 
