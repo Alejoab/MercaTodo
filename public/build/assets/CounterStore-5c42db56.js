@@ -1,0 +1,1 @@
+import{D as a}from"./app-32a5c4fa.js";const e=a("counter",{state:()=>({count:0}),actions:{async increment(){let t=await axios(route("cart.count"));this.count=t.data},async syncCartCount(){let t=await axios(route("cart.count"));this.count=t.data}}});export{e as u};
