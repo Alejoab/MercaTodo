@@ -26,9 +26,9 @@ class UserController extends Controller
     public function index(Request $request, ProductsService $productsService, CategoriesService $categoriesService, BrandsService $brandsService): Response
     {
         $search = $request->get('search');
-        $category = $request->get('category');
+        $category = $request->integer('category') === 0 ? null : $request->integer('category');
         $brands = $request->get('brand');
-        $sort = $request->get('sortBy');
+        $sort = $request->integer('sortBy');
 
         $products = $productsService->listProducts($search, $category, $brands, $sort);
 

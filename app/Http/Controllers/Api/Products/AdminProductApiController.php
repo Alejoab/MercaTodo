@@ -20,8 +20,8 @@ class AdminProductApiController extends Controller
     public function index(Request $request, ProductsService $productsService): JsonResponse
     {
         $search = $request->get('search');
-        $category = $request->get('category');
-        $brand = $request->get('brand');
+        $category = $request->integer('category') === 0 ? null : $request->integer('category');
+        $brand = $request->integer('brand') === 0 ? null : $request->integer('brand');
 
         $products = $productsService->listProductsAdmin($search, $category, $brand);
 
