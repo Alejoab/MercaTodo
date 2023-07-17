@@ -66,7 +66,8 @@ const checkExport = async () => {
 
     if (response.data.status === 'Failed') {
         clearInterval(pollingInterval);
-        exportFileName.value = 'failed';
+        form.errors.export = 'Export failed. Please try again.';
+        exportFileName.value = '';
         return true;
     }
 
@@ -109,6 +110,7 @@ onUnmounted(() => {
                     Export</a>
             </div>
             <InputError :message="form.errors.export" class="mt-3"></InputError>
+            <InputError :message="form.errors.app" class="mt-3"></InputError>
         </div>
     </Modal>
 </template>

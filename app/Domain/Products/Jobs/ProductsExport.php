@@ -13,10 +13,11 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAutoSize, WithStyles, WithColumnWidths
+class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAutoSize, WithStyles, WithColumnWidths, WithStrictNullComparison
 {
 
     private ?string $search;

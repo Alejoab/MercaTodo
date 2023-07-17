@@ -9,8 +9,9 @@ use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class ReportExport implements WithMultipleSheets, ShouldQueue
+class ReportExport implements WithMultipleSheets, ShouldQueue, WithStrictNullComparison
 {
     private JobsByUser $report;
     private array $reports;
@@ -29,9 +30,9 @@ class ReportExport implements WithMultipleSheets, ShouldQueue
     {
         $sheets = [];
 
-        foreach ($this->reports as $report) {
-            $report = ReportType::from($report);
-            $sheets[] = ReportFactory::create($report, $this->from, $this->to);
+        foreach ($this->reports as $reportType) {
+            $reportType = ReportType::from($reportType);
+            $sheets[] = ReportFactory::create($reportType, $this->report, $this->from, $this->to);
         }
 
         return $sheets;

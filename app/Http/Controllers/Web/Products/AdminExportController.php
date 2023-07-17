@@ -6,6 +6,7 @@ use App\Domain\Products\Jobs\ProductsExport;
 use App\Http\Controllers\Controller;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Exceptions\ApplicationException;
 use App\Support\Exceptions\JobsByUserException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
@@ -15,11 +16,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 class AdminExportController extends Controller
 {
     /**
      * @throws JobsByUserException
+     * @throws ApplicationException
      */
     public function export(Request $request): void
     {
@@ -41,14 +44,21 @@ class AdminExportController extends Controller
         }
 
         $fileName = "products_export_$userId.xlsx";
-
         $export->status = JobsByUserStatus::PENDING;
+        $export->file_name = $fileName;
         $export->save();
 
-        Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports')
-            ->chain([
-                new CompleteJobsByUser($export),
-            ]);
+        try {
+            Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports')
+                ->chain([
+                    new CompleteJobsByUser($export),
+                ]);
+        } catch (Throwable $e) {
+            $export->status = JobsByUserStatus::FAILED;
+            $export->save();
+            throw new ApplicationException($e, []);
+        }
+
     }
 
     public function checkExport(): JsonResponse
@@ -72,14 +82,14 @@ class AdminExportController extends Controller
     public function download(): StreamedResponse
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "products_export_$userId.xlsx";
+        $fileName = JobsByUser::query()->fromUser($userId)->getExports()->latest()->first()?->getAttribute('file_name');
 
         /**
          * @var FilesystemAdapter $disk
          */
         $disk = Storage::disk('exports');
 
-        if (!$disk->exists($fileName)) {
+        if ($fileName === null || !$disk->exists($fileName)) {
             abort(404);
         }
 

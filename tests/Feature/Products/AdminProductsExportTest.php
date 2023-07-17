@@ -2,54 +2,34 @@
 
 namespace Products;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class AdminProductsExportTest extends TestCase
+class AdminProductsExportTest extends UserTestCase
 {
     use RefreshDatabase;
-
-    private User $user;
-    private User $admin;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
-        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
-
-        Department::factory(1)->create();
-        City::factory(1)->create();
-
-        $this->user = User::factory()->create();
-        $this->user->assignRole($roleCustomer);
-
-        $this->admin = User::factory()->create();
-        $this->admin->assignRole($roleAdmin);
-
         Brand::factory()->count(2)->create();
         Category::factory()->count(2)->create();
         Product::factory()->count(5)->create();
-
-        $this->actingAs($this->admin);
     }
 
     public function test_only_admin_can_export_products(): void
     {
-        $response = $this->actingAs($this->user)->post(route('admin.products.export'));
+        $response = $this->actingAs($this->customer)->post(route('admin.products.export'));
 
         $response->assertStatus(403);
     }
@@ -65,6 +45,10 @@ class AdminProductsExportTest extends TestCase
         Excel::assertQueued("products_export_{$this->admin->id}.xlsx", 'exports', function ($export) {
             return $export->query()->count() === 5;
         });
+
+        Excel::assertQueuedWithChain([
+            CompleteJobsByUser::class,
+        ]);
     }
 
     public function test_export_products_with_filters(): void
@@ -75,7 +59,7 @@ class AdminProductsExportTest extends TestCase
 
         $count = Product::query()->filterCategory($filter)->count();
 
-        $response = $this->postJson(route('admin.products.export', ['category' => $filter,]));
+        $response = $this->post(route('admin.products.export', ['category' => $filter,]));
 
         $response->assertOk();
 
@@ -165,6 +149,27 @@ class AdminProductsExportTest extends TestCase
         $this->assertDatabaseHas('jobs_by_users', [
             'type' => JobsByUserType::EXPORT,
             'status' => JobsByUserStatus::PENDING,
+        ]);
+    }
+
+    public function test_try_to_download_an_export_when_this_was_not_generated(): void
+    {
+        $response = $this->get(route('admin.products.export.download'));
+        $response->assertNotFound();
+    }
+
+    public function test_change_status_of_the_job_when_this_has_failed(): void
+    {
+        Excel::fake();
+        Excel::shouldReceive('queue')->once()->andReturn(new Exception());
+
+        $response = $this->post(route('admin.products.export'));
+
+        $response->assertSessionHasErrors(['app']);
+        $this->assertDatabaseHas('jobs_by_users', [
+            'user_id' => $this->admin->id,
+            'type' => JobsByUserType::EXPORT,
+            'status' => JobsByUserStatus::FAILED,
         ]);
     }
 }

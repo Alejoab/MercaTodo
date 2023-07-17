@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:check-payment-session')->everyMinute();
+        $schedule->command('app:delete-export-files')->everyTenMinutes();
     }
 
     /**

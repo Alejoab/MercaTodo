@@ -4,22 +4,13 @@ namespace App\Domain\Reports\Classes;
 
 use App\Domain\Orders\Models\Order_detail;
 use App\Domain\Orders\QueryBuilders\OrderDetailQueryBuilder;
+use App\Domain\Reports\Enums\ReportType;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class SalesByBrand extends BaseReport
 {
-    private ?Carbon $from;
-    private ?Carbon $to;
-
-    public function __construct(?Carbon $from, ?Carbon $to)
-    {
-        $this->from = $from;
-        $this->to = $to;
-    }
-
     public function query(): OrderDetailQueryBuilder|Relation|\Illuminate\Database\Eloquent\Builder|Builder
     {
         return Order_detail::query()
@@ -51,6 +42,6 @@ class SalesByBrand extends BaseReport
 
     public function title(): string
     {
-        return 'Sales by Brand';
+        return ReportType::R2->value;
     }
 }

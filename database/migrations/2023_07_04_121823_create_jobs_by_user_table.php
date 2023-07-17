@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->enum('type', array_column(JobsByUserType::cases(), 'value'));
             $table->enum('status', array_column(JobsByUserStatus::cases(), 'value'))->nullable();
             $table->json('errors')->nullable();
+            $table->string('file_name')->nullable();
             $table->timestamps();
         });
     }

@@ -4,22 +4,13 @@ namespace App\Domain\Reports\Classes;
 
 use App\Domain\Orders\Models\Order;
 use App\Domain\Orders\QueryBuilders\OrderDetailQueryBuilder;
+use App\Domain\Reports\Enums\ReportType;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class SalesByDepartment extends BaseReport
+class OrdersByDepartment extends BaseReport
 {
-    private ?Carbon $from;
-    private ?Carbon $to;
-
-    public function __construct(?Carbon $from, ?Carbon $to)
-    {
-        $this->from = $from;
-        $this->to = $to;
-    }
-
     public function query(): OrderDetailQueryBuilder|Relation|\Illuminate\Database\Eloquent\Builder|Builder
     {
         return Order::query()
@@ -41,7 +32,7 @@ class SalesByDepartment extends BaseReport
     {
         return [
             'DEPARTMENT',
-            'SALES COUNT',
+            'ORDERS COUNT',
             'TOTAL SALES',
             'AVERAGE SALE',
         ];
@@ -49,6 +40,6 @@ class SalesByDepartment extends BaseReport
 
     public function title(): string
     {
-        return 'Sales by Department';
+        return ReportType::R5->value;
     }
 }

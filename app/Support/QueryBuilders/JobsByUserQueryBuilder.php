@@ -33,9 +33,9 @@ class JobsByUserQueryBuilder extends Builder
         return $this->where('type', JobsByUserType::SALES);
     }
 
-    public function whereStatus(JobsByUserStatus $status): self
+    public function whereCompletedStatus(): self
     {
-        return $this->where('status', $status);
+        return $this->where('status', JobsByUserStatus::COMPLETED)->orWhere('status', JobsByUserStatus::FAILED);
     }
 
 }

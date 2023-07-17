@@ -1,39 +1,20 @@
 <?php
 
-namespace Tests\Unit\Administrator;
+namespace Tests\Unit\Products;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Actions\CreateBrandAction;
 use App\Domain\Products\Actions\CreateCategoryAction;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductImagesService;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class AdminProductUnitTest extends TestCase
+class AdminProductUnitTest extends UserTestCase
 {
     use RefreshDatabase;
-
-    private User $admin;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
-
-        Department::factory(1)->create();
-        City::factory(1)->create();
-
-        $this->admin = User::factory()->create();
-        $this->admin->assignRole($roleAdmin);
-    }
 
     public function test_a_brand_is_not_store_twice(): void
     {

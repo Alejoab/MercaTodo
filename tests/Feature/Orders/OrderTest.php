@@ -15,34 +15,41 @@ use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class OrderTest extends TestCase
+class OrderTest extends UserTestCase
 {
     use RefreshDatabase;
 
-    private User $user;
     private Product $product;
-    private Customer $customer;
 
     public function setUp(): void
     {
         parent::setUp();
 
+        Department::factory()->create();
+        City::factory()->create();
+
+        Customer::factory()->create([
+            'user_id' => $this->customer->id,
+        ]);
+
         Brand::factory()->create();
         Category::factory()->create();
-        Department::factory(1)->create();
-        City::factory(1)->create();
 
-        $this->user = User::factory()->create();
-        $this->customer = Customer::factory()->create(['user_id' => $this->user->getKey()]);
-        $this->product = Product::factory()->create([
+        /**
+         * @var Product $product
+         */
+        $product = Product::factory()->create([
             'name' => 'Product 1',
             'price' => 100,
             'stock' => 3,
         ]);
 
-        Cache::put('cart:'.$this->user->getKey(), [$this->product->getKey() => 3]);
+        $this->product = $product;
+        Cache::put('cart:'.$this->customer->id, [$this->product->id => 3]);
+
+        $this->actingAs($this->customer);
     }
 
     public function test_buy(): void
@@ -62,7 +69,7 @@ class OrderTest extends TestCase
             ]
         );
 
-        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+        $response = $this->post(route('cart.buy'), [
             'paymentMethod' => 'PlaceToPay',
         ]);
 
@@ -71,7 +78,7 @@ class OrderTest extends TestCase
         $this->assertDatabaseCount('order_details', 1);
 
         $this->assertDatabaseHas('orders', [
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'total' => 300,
             'status' => 'Pending',
             'requestId' => 1,
@@ -95,9 +102,8 @@ class OrderTest extends TestCase
             ]
         );
 
-
         Order::query()->create([
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -106,12 +112,12 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->get(route('payment.success'));
+        $response = $this->get(route('payment.success'));
         $response->assertOk();
 
         $this->assertDatabaseCount('orders', 1);
         $this->assertDatabaseHas('orders', [
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::ACCEPTED,
@@ -123,8 +129,11 @@ class OrderTest extends TestCase
 
     public function test_retry_payment_when_the_session_is_still_active(): void
     {
+        /**
+         * @var Order $order
+         */
         $order = Order::query()->create([
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -133,7 +142,7 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+        $response = $this->post(route('payment.retry'), [
             'orderId' => $order->id,
         ]);
 
@@ -141,7 +150,7 @@ class OrderTest extends TestCase
 
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -168,8 +177,11 @@ class OrderTest extends TestCase
             ]
         );
 
+        /**
+         * @var Order $order
+         */
         $order = Order::query()->create([
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::REJECTED,
@@ -178,7 +190,7 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+        $response = $this->post(route('payment.retry'), [
             'orderId' => $order->id,
         ]);
 
@@ -186,7 +198,7 @@ class OrderTest extends TestCase
 
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -198,8 +210,11 @@ class OrderTest extends TestCase
 
     public function test_retry_payment_when_order_is_not_active(): void
     {
+        /**
+         * @var Order $order
+         */
         $order = Order::query()->create([
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::REJECTED,
@@ -209,7 +224,7 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+        $response = $this->post(route('payment.retry'), [
             'orderId' => $order->id,
         ]);
 
@@ -218,9 +233,16 @@ class OrderTest extends TestCase
 
     public function test_retry_payment_when_the_user_is_not_the_owner_of_it(): void
     {
+        /**
+         * @var User $user2
+         */
         $user2 = User::factory()->create();
+
+        /**
+         * @var Order $order
+         */
         $order = Order::query()->create([
-            'user_id' => $user2->getKey(),
+            'user_id' => $user2->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::REJECTED,
@@ -230,7 +252,7 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('payment.retry'), [
+        $response = $this->post(route('payment.retry'), [
             'orderId' => $order->id,
         ]);
 
@@ -240,7 +262,7 @@ class OrderTest extends TestCase
     public function test_cancel_payment(): void
     {
         Order::query()->create([
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -249,7 +271,7 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->get(route('payment.cancel'));
+        $response = $this->get(route('payment.cancel'));
         $response->assertOk();
 
         $this->assertDatabaseCount('orders', 0);
@@ -258,7 +280,7 @@ class OrderTest extends TestCase
     public function test_try_buy_with_an_active_session(): void
     {
         Order::query()->create([
-            'user_id' => $this->user->getKey(),
+            'user_id' => $this->customer->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -267,7 +289,7 @@ class OrderTest extends TestCase
             'processUrl' => 'https://test-route.com',
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+        $response = $this->post(route('cart.buy'), [
             'paymentMethod' => 'PlaceToPay',
         ]);
 
@@ -276,20 +298,20 @@ class OrderTest extends TestCase
 
     public function test_try_access_success_route_without_an_payment_active_session(): void
     {
-        $response = $this->actingAs($this->user)->get(route('payment.success'));
+        $response = $this->get(route('payment.success'));
         $response->assertRedirect(route('home'));
     }
 
     public function test_try_access_cancel_route_without_an_payment_active_session(): void
     {
-        $response = $this->actingAs($this->user)->get(route('payment.cancel'));
+        $response = $this->get(route('payment.cancel'));
         $response->assertRedirect(route('home'));
     }
 
     public function test_try_to_buy_a_cart_with_a_deleted_product(): void
     {
         $this->product->forceDelete();
-        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+        $response = $this->post(route('cart.buy'), [
             'paymentMethod' => 'PlaceToPay',
         ]);
 
@@ -299,7 +321,7 @@ class OrderTest extends TestCase
     public function test_try_to_buy_a_cart_with_empty_cart(): void
     {
         Cache::flush();
-        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+        $response = $this->post(route('cart.buy'), [
             'paymentMethod' => 'PlaceToPay',
         ]);
 
@@ -310,7 +332,7 @@ class OrderTest extends TestCase
     {
         $this->product->stock = 2;
         $this->product->save();
-        $response = $this->actingAs($this->user)->post(route('cart.buy'), [
+        $response = $this->post(route('cart.buy'), [
             'paymentMethod' => 'PlaceToPay',
         ]);
 

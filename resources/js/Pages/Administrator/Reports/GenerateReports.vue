@@ -64,8 +64,8 @@ const checkReport = async () => {
 }
 
 const initialPolling = async () => {
+    isLoading.value = true;
     if (!await checkReport()) {
-        isLoading.value = true;
         pollingInterval = setInterval(() => checkReport(), 3000);
     }
 }
@@ -138,6 +138,7 @@ onUnmounted(() => {
                     </svg>
                     Loading
                 </primary-button>
+                <InputError :message="form.errors.app" class="mt-3"></InputError>
                 <InputError :message="form.errors.report" class="mt-5"></InputError>
                 <p class="mt-5"><a v-if="reportFile" :href="reportFile" class="underline my-auto">Download Export</a>
                 </p>

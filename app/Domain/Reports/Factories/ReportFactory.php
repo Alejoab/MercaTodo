@@ -5,22 +5,23 @@ namespace App\Domain\Reports\Factories;
 use App\Domain\Reports\Classes\BaseReport;
 use App\Domain\Reports\Classes\SalesByBrand;
 use App\Domain\Reports\Classes\SalesByCategory;
-use App\Domain\Reports\Classes\SalesByDepartment;
-use App\Domain\Reports\Classes\SalesByPaymentMethod;
+use App\Domain\Reports\Classes\OrdersByDepartment;
+use App\Domain\Reports\Classes\OrdersByPaymentMethodAndStatus;
 use App\Domain\Reports\Classes\SalesByProduct;
 use App\Domain\Reports\Enums\ReportType;
+use App\Support\Models\JobsByUser;
 use Illuminate\Support\Carbon;
 
 class ReportFactory
 {
-    public static function create(ReportType $report, ?Carbon $from, ?Carbon $to): BaseReport
+    public static function create(ReportType $report, JobsByUser $reportInstance, ?Carbon $from, ?Carbon $to): BaseReport
     {
         return match ($report) {
-            ReportType::R1 => new SalesByCategory($from, $to),
-            ReportType::R2 => new SalesByBrand($from, $to),
-            ReportType::R3 => new SalesByProduct($from, $to),
-            ReportType::R4 => new SalesByPaymentMethod($from, $to),
-            ReportType::R5 => new SalesByDepartment($from, $to),
+            ReportType::R1 => new SalesByCategory($reportInstance, $from, $to),
+            ReportType::R2 => new SalesByBrand($reportInstance, $from, $to),
+            ReportType::R3 => new SalesByProduct($reportInstance, $from, $to),
+            ReportType::R4 => new OrdersByPaymentMethodAndStatus($reportInstance, $from, $to),
+            ReportType::R5 => new OrdersByDepartment($reportInstance, $from, $to),
         };
     }
 }

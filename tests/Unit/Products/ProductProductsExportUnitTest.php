@@ -1,15 +1,11 @@
 <?php
 
-namespace Tests\Unit\Administrator;
+namespace Tests\Unit\Products;
 
-use App\Domain\Customers\Models\City;
-use App\Domain\Customers\Models\Department;
 use App\Domain\Products\Jobs\ProductsExport;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
-use App\Domain\Users\Enums\RoleEnum;
-use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Jobs\CompleteJobsByUser;
@@ -17,14 +13,12 @@ use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class ProductProductsExportUnitTest extends TestCase
+class ProductProductsExportUnitTest extends UserTestCase
 {
     use RefreshDatabase;
 
-    private User $admin;
     private JobsByUser $export;
     private string $fileName;
 
@@ -32,28 +26,24 @@ class ProductProductsExportUnitTest extends TestCase
     {
         parent::setUp();
 
-        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
-        Department::factory(1)->create();
-        City::factory(1)->create();
-        $this->admin = User::factory()->create();
-        $this->admin->assignRole($roleAdmin);
+        Brand::factory()->count(2)->create();
+        Category::factory()->count(2)->create();
+        Product::factory()->count(5)->create();
 
-        $this->export = JobsByUser::create([
+        /**
+         * @var JobsByUser $export
+         */
+        $export = JobsByUser::create([
             'user_id' => $this->admin->id,
             'type' => JobsByUserType::EXPORT,
             'status' => JobsByUserStatus::PENDING,
         ]);
+        $this->export = $export;
         $this->fileName = "test.xlsx";
-
-        Brand::factory()->count(2)->create();
-        Category::factory()->count(2)->create();
-        Product::factory()->count(5)->create();
     }
 
     public function test_store_export(): void
     {
-        Storage::fake('exports');
-
         Excel::store(new ProductsExport($this->export, null, null, null), $this->fileName, 'exports');
 
         Storage::disk('exports')->assertExists($this->fileName);
@@ -74,4 +64,9 @@ class ProductProductsExportUnitTest extends TestCase
         ]);
     }
 
+    public function test_export_values(): void
+    {
+        $export = new ProductsExport($this->export, null, null, null);
+        $this->assertEquals(5, $export->query()->count());
+    }
 }

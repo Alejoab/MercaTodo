@@ -121,7 +121,7 @@ getDepartments();
                     v-model="form.document"
                     required
                     autocomplete="document"
-                    maxlength="11"
+                    maxlength="10"
                     v-on:keypress="isNumber($event)"
                 />
 

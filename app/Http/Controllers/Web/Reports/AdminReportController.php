@@ -10,6 +10,7 @@ use App\Http\Requests\ReportRequest;
 use App\Http\Requests\SalesRequest;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Exceptions\ApplicationException;
 use App\Support\Exceptions\JobsByUserException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
@@ -20,6 +21,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 class AdminReportController extends Controller
 {
@@ -32,6 +34,7 @@ class AdminReportController extends Controller
 
     /**
      * @throws JobsByUserException
+     * @throws ApplicationException
      */
     public function generate(ReportRequest $request): void
     {
@@ -49,15 +52,21 @@ class AdminReportController extends Controller
             throw JobsByUserException::reportActive();
         }
 
+        $fileName = "report_$userId.xlsx";
         $report->status = JobsByUserStatus::PENDING;
+        $report->file_name = $fileName;
         $report->save();
 
-        $fileName = "report-$userId.xlsx";
-
-        Excel::queue(new ReportExport($report, $request->input('reports'), $request->date('from'), $request->date('to')), $fileName, 'exports')
-            ->chain([
-                new CompleteJobsByUser($report),
-            ]);
+        try {
+            Excel::queue(new ReportExport($report, $request->input('reports'), $request->date('from'), $request->date('to')), $fileName, 'exports')
+                ->chain([
+                    new CompleteJobsByUser($report),
+                ]);
+        } catch (Throwable $e) {
+            $report->status = JobsByUserStatus::FAILED;
+            $report->save();
+            throw new ApplicationException($e, []);
+        }
     }
 
     public function checkReport(): JsonResponse
@@ -78,15 +87,33 @@ class AdminReportController extends Controller
         };
     }
 
+    public function download(): StreamedResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+        $fileName = JobsByUser::query()->fromUser($userId)->getReports()->latest()->first()?->getAttribute('file_name');
+
+        /**
+         * @var FilesystemAdapter $disk
+         */
+        $disk = Storage::disk('exports');
+
+        if ($fileName === null || !$disk->exists($fileName)) {
+            abort(404);
+        }
+
+        return $disk->download($fileName);
+    }
+
     /**
      * @throws JobsByUserException
+     * @throws ApplicationException
      */
     public function generateSales(SalesRequest $request): void
     {
         $userId = auth()->user()->getAuthIdentifier();
 
         /**
-         * @var JobsByUser $sales +}}
+         * @var JobsByUser $sales
          */
         $sales = JobsByUser::query()->firstOrCreate([
             'user_id' => $userId,
@@ -97,15 +124,21 @@ class AdminReportController extends Controller
             throw JobsByUserException::salesActive();
         }
 
+        $fileName = "sales_$userId.xlsx";
         $sales->status = JobsByUserStatus::PENDING;
+        $sales->file_name = $fileName;
         $sales->save();
 
-        $fileName = "sales-$userId.xlsx";
-
-        Excel::queue(new SalesExport($sales, $request->date('from'), $request->date('to')), $fileName, 'exports')
-            ->chain([
-                new CompleteJobsByUser($sales),
-            ]);
+        try {
+            Excel::queue(new SalesExport($sales, $request->date('from'), $request->date('to')), $fileName, 'exports')
+                ->chain([
+                    new CompleteJobsByUser($sales),
+                ]);
+        } catch (Throwable $e) {
+            $sales->status = JobsByUserStatus::FAILED;
+            $sales->save();
+            throw new ApplicationException($e, []);
+        }
     }
 
     public function checkSales(): JsonResponse
@@ -129,31 +162,14 @@ class AdminReportController extends Controller
     public function downloadSales(): StreamedResponse
     {
         $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "sales-$userId.xlsx";
+        $fileName = JobsByUser::query()->fromUser($userId)->getSales()->latest()->first()?->getAttribute('file_name');
 
         /**
          * @var FilesystemAdapter $disk
          */
         $disk = Storage::disk('exports');
 
-        if (!$disk->exists($fileName)) {
-            abort(404);
-        }
-
-        return $disk->download($fileName);
-    }
-
-    public function download(): StreamedResponse
-    {
-        $userId = auth()->user()->getAuthIdentifier();
-        $fileName = "report-$userId.xlsx";
-
-        /**
-         * @var FilesystemAdapter $disk
-         */
-        $disk = Storage::disk('exports');
-
-        if (!$disk->exists($fileName)) {
+        if ($fileName === null || !$disk->exists($fileName)) {
             abort(404);
         }
 

@@ -56,8 +56,8 @@ const checkSales = async () => {
 }
 
 const initialPolling = async () => {
+    isLoading.value = true;
     if (!await checkSales()) {
-        isLoading.value = true;
         pollingInterval = setInterval(() => checkSales(), 10000);
     }
 }
@@ -116,6 +116,7 @@ onUnmounted(() => {
                     Loading
                 </primary-button>
                 <InputError :message="form.errors.sales" class="mt-5"></InputError>
+                <InputError :message="form.errors.app" class="mt-3"></InputError>
                 <p class="mt-5"><a v-if="salesFile" :href="salesFile" class="underline my-auto">Download Export</a></p>
             </div>
         </form>

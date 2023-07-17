@@ -4,22 +4,13 @@ namespace App\Domain\Reports\Classes;
 
 use App\Domain\Orders\Models\Order;
 use App\Domain\Orders\QueryBuilders\OrderDetailQueryBuilder;
+use App\Domain\Reports\Enums\ReportType;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class SalesByPaymentMethod extends BaseReport
+class OrdersByPaymentMethodAndStatus extends BaseReport
 {
-    private ?Carbon $from;
-    private ?Carbon $to;
-
-    public function __construct(?Carbon $from, ?Carbon $to)
-    {
-        $this->from = $from;
-        $this->to = $to;
-    }
-
     public function query(): OrderDetailQueryBuilder|Relation|\Illuminate\Database\Eloquent\Builder|Builder
     {
         return Order::query()
@@ -39,7 +30,7 @@ class SalesByPaymentMethod extends BaseReport
         return [
             'PAYMENT METHOD',
             'STATUS',
-            'SALES COUNT',
+            'ORDERS COUNT',
             'TOTAL SALES',
             'AVERAGE SALE',
         ];
@@ -47,6 +38,6 @@ class SalesByPaymentMethod extends BaseReport
 
     public function title(): string
     {
-        return 'Sales by Payment Method';
+        return ReportType::R4->value;
     }
 }
