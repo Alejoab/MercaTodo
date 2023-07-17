@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
-use App\Models\User;
+use App\Domain\Customers\Models\Customer;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,7 +21,7 @@ class UserSeeder extends Seeder
         $adminUser = User::factory()->create([
             'email' => env('ADMIN_EMAIL'),
             'password' => Hash::make(env('ADMIN_PASSWORD')),
-        ])->assignRole('Administrator');
+        ])->assignRole(RoleEnum::SUPER_ADMIN->value);
 
         Customer::factory()->create([
             'name' => env('ADMIN_NAME'),
@@ -33,13 +34,11 @@ class UserSeeder extends Seeder
             'user_id' => $adminUser->id,
         ]);
 
-
         /**
          * Create a random users in the database with the role of customer.
          */
-        User::factory(env('USER_SEEDER'))->create()->each(function ($user) {
-            $user->assignRole('Customer');
-            Customer::factory()->create(['user_id' => $user->id]);
+        User::factory()->count(config('seeders.users'))->has(Customer::factory())->create()->each(function ($user) {
+            $user->assignRole(RoleEnum::CUSTOMER->value);
         });
     }
 }

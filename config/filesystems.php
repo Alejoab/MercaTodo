@@ -42,6 +42,18 @@ return [
             'throw' => false,
         ],
 
+        'exports' => [
+            'driver' => 'local',
+            'root' => storage_path('app/exports'),
+            'throw' => false,
+        ],
+
+        'tests' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tests'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -78,5 +90,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
+
+    'export_expiration' => 60, // minutes
 
 ];

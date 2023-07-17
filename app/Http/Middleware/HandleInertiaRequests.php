@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Domain\Users\Enums\RoleEnum;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -34,7 +35,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'isAdmin' => $request->user()?->hasrole('Administrator'),
+            'isAdmin' => $request->user()?->hasrole(RoleEnum::SUPER_ADMIN->value) || $request->user()?->hasrole(RoleEnum::ADMIN->value),
+            'role' => $request->user()?->getRoleNames()->first(),
+            'permissions' => array_column($request->user()?->getAllPermissions()->toArray() ?? [], 'name'),
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy())->toArray(), [
                     'location' => $request->url(),

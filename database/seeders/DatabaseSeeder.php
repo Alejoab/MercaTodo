@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
          * Insert the cities, states and roles in the database
          */
         Storage::disk('product_images')->deleteDirectory('') && Storage::disk('product_images')->makeDirectory('');
+        Storage::disk('exports')->deleteDirectory('');
         Cache::flush();
 
         $this->call([
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             BrandSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

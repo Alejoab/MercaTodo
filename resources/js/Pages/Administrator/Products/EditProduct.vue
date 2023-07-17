@@ -1,6 +1,6 @@
 <script setup>
 import UserLayout from "@/Layouts/UserLayout.vue";
-import {Head} from "@inertiajs/vue3";
+import {Head, usePage} from "@inertiajs/vue3";
 import UpdateProductInformation from "@/Pages/Administrator/Products/partials/UpdateProductInformation.vue";
 import ProductActionsAdmin from "@/Pages/Administrator/Products/partials/ProductActionsAdmin.vue";
 
@@ -20,7 +20,7 @@ const props = defineProps({
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <UpdateProductInformation :product="props.product"></UpdateProductInformation>
             </div>
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div v-if="usePage().props.permissions.includes('Delete')" class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <ProductActionsAdmin :product="props.product"></ProductActionsAdmin>
             </div>
         </div>

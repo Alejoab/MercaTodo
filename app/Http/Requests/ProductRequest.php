@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Product;
+use App\Domain\Products\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +27,7 @@ class ProductRequest extends FormRequest
             'stock' => ['required', 'integer', 'min:0'],
             'category_name' => ['required', 'string', 'max:255'],
             'brand_name' => ['required', 'string', 'max:255'],
-            'image' => [Rule::requiredIf(!$product), 'nullable', 'image'],
+            'image' => ['nullable', 'image'],
         ];
     }
 }

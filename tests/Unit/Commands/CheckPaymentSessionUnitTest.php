@@ -2,44 +2,28 @@
 
 namespace Tests\Unit\Commands;
 
-use App\Enums\OrderStatus;
-use App\Enums\PaymentMethod;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
+use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
+use App\Domain\Payments\Enums\PaymentMethod;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
-use Tests\TestCase;
+use Tests\UserTestCase;
 
-class CheckPaymentSessionUnitTest extends TestCase
+class CheckPaymentSessionUnitTest extends UserTestCase
 {
     use RefreshDatabase;
 
-    use RefreshDatabase;
-
-    private User $user;
-    private Product $product;
     private Order $order;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        Brand::factory()->create();
-        Category::factory()->create();
-
-        $this->user = User::factory()->create();
-
-        $this->product = Product::factory()->create([
-            'name' => 'Product 1',
-            'price' => 100,
-            'stock' => 3,
-        ]);
-
-        $this->order = Order::create([
-            'user_id' => $this->user->getKey(),
+        /**
+         * @var Order $order
+         */
+        $order = Order::query()->create([
+            'user_id' => $this->admin->id,
             'code' => '123456',
             'total' => 300,
             'status' => OrderStatus::PENDING,
@@ -47,6 +31,7 @@ class CheckPaymentSessionUnitTest extends TestCase
             'requestId' => 1,
             'processUrl' => 'https://test-route.com',
         ]);
+        $this->order = $order;
     }
 
     public function test_command_check_payment_session()
@@ -68,7 +53,7 @@ class CheckPaymentSessionUnitTest extends TestCase
         $this->artisan('app:check-payment-session');
 
         $this->assertDatabaseHas('orders', [
-            'id' => $this->order->getKey(),
+            'id' => $this->order->id,
             'status' => OrderStatus::ACCEPTED,
             'active' => false,
         ]);
@@ -82,7 +67,7 @@ class CheckPaymentSessionUnitTest extends TestCase
         $this->artisan('app:check-payment-session');
 
         $this->assertDatabaseHas('orders', [
-            'id' => $this->order->getKey(),
+            'id' => $this->order->id,
             'status' => OrderStatus::REJECTED,
             'active' => true,
         ]);
@@ -97,7 +82,7 @@ class CheckPaymentSessionUnitTest extends TestCase
         $this->artisan('app:check-payment-session');
 
         $this->assertDatabaseHas('orders', [
-            'id' => $this->order->getKey(),
+            'id' => $this->order->id,
             'status' => OrderStatus::REJECTED,
             'active' => false,
         ]);

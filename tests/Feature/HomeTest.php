@@ -3,9 +3,10 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\City;
-use App\Models\Department;
-use App\Models\User;
+use App\Domain\Customers\Models\City;
+use App\Domain\Customers\Models\Department;
+use App\Domain\Users\Enums\RoleEnum;
+use App\Domain\Users\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -20,8 +21,8 @@ class HomeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $roleAdmin = Role::create(['name' => 'Administrator']);
-        $roleCustomer = Role::create(['name' => 'Customer']);
+        $roleAdmin = Role::create(['name' => RoleEnum::SUPER_ADMIN->value]);
+        $roleCustomer = Role::create(['name' => RoleEnum::CUSTOMER->value]);
 
         Department::factory(1)->create();
         City::factory(1)->create();

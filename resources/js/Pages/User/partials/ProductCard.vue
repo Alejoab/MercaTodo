@@ -32,7 +32,7 @@ const addToCart = () => {
     <div class="w-full bg-white max-w-xs rounded-2xl flex flex-col">
         <div class="h-full flex items-center">
             <a :href="route('products.show', product.id)">
-                <img :alt="product.name" :src="'/storage/product_images/' + product.image" class="p-8 rounded-t-lg"/>
+                <img :alt="product.name" :src="product.image ? '/storage/product_images/' + product.image : '/default/no_product_image.png'" class="p-8 rounded-t-lg"/>
             </a>
         </div>
         <div class="px-5 pb-5">
@@ -40,8 +40,8 @@ const addToCart = () => {
                 <h5 class="font-semibold tracking-tight text-gray-900">{{ product.name }}</h5>
             </a>
 
-            <span class="text-gray-400">{{ product.brand_name }}</span> <br/>
-            <span class="text-gray-400">{{ product.category_name }}</span>
+            <span class="text-gray-400">{{ product.brand.name }}</span> <br/>
+            <span class="text-gray-400">{{ product.category.name }}</span>
 
             <div class="pt-5 flex items-center justify-between">
                 <span class="text-xl font-bold text-gray-900">$ {{ product.price }}</span>

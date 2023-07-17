@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Domain\Users\Enums\PermissionEnum;
+use App\Domain\Users\Enums\RoleEnum;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
@@ -13,7 +15,16 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create(['name' => 'Administrator']);
-        Role::create(['name' => 'Customer']);
+        foreach (PermissionEnum::cases() as $permission) {
+            Permission::create(['name' => $permission->value]);
+        }
+
+        foreach (RoleEnum::cases() as $role) {
+            $roleDB = Role::create(['name' => $role->value]);
+
+            if ($role === RoleEnum::SUPER_ADMIN) {
+                $roleDB->syncPermissions(array_column(PermissionEnum::cases(), 'value'));
+            }
+        }
     }
 }

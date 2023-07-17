@@ -1,5 +1,11 @@
 <?php
 
+use App\Support\Providers\ActionServiceProvider;
+use App\Support\Providers\AppServiceProvider;
+use App\Support\Providers\AuthServiceProvider;
+use App\Support\Providers\EventServiceProvider;
+use App\Support\Providers\RouteServiceProvider;
+use App\Support\Providers\TelescopeServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -189,12 +195,13 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\ActionServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
+        // App\Support\Providers\BroadcastServiceProvider::class,
+        EventServiceProvider::class,
+        RouteServiceProvider::class,
+        TelescopeServiceProvider::class,
+        ActionServiceProvider::class,
 
     ],
 
