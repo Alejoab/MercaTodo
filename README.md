@@ -56,8 +56,8 @@ In order to run the application, you must do the following:
 - Run `npm install` to install the dependencies
 - Run `php artisan key:generate` to generate the application key.
 - Run `php artisan migrate:fresh --seed` to create the database tables.
+- Run `php artisan storage:link` to make the images available to the application.
 - Run `php artisan serve` to start the application.
-- Run - `php artisan storage:link` to make the images available to the application.
 - Run `php artisan schedule:work` to check the order status periodically and delete the export files.
 - Run `php artisan queue:work` to export and import processes.
 
