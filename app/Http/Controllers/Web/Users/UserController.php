@@ -28,7 +28,7 @@ class UserController extends Controller
         $search = $request->get('search');
         $category = $request->integer('category') === 0 ? null : $request->integer('category');
         $brands = $request->get('brand');
-        $sort = $request->integer('sortBy');
+        $sort = $request->input('sortBy') !== null ? $request->integer('sortBy') : 2;
 
         $products = $productsService->listProducts($search, $category, $brands, $sort);
 
