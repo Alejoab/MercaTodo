@@ -16,6 +16,7 @@ class AdminProductsImportUnitTest extends UserTestCase
     use RefreshDatabase;
 
     private JobsByUser $import;
+    private string $basePath = 'tests/Resources/';
 
     public function setUp(): void
     {
@@ -36,9 +37,9 @@ class AdminProductsImportUnitTest extends UserTestCase
     {
         Excel::fake();
 
-        Excel::queueImport(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
+        Excel::queueImport(new ProductsImport($this->import), 'test_1.xlsx', 'Resources');
 
-        Excel::assertQueued('test_1.xlsx', 'tests');
+        Excel::assertQueued('test_1.xlsx', 'Resources');
     }
 
     public function test_change_status_of_the_job_in_database(): void
@@ -58,7 +59,7 @@ class AdminProductsImportUnitTest extends UserTestCase
 
     public function test_import_process_when_create_data(): void
     {
-        Excel::import(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_1.xlsx', );
 
         $this->assertDatabaseCount('products', 1);
         $this->assertDatabaseHas('products', [
@@ -83,8 +84,8 @@ class AdminProductsImportUnitTest extends UserTestCase
 
     public function test_import_process_when_update_data(): void
     {
-        Excel::import(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
-        Excel::import(new ProductsImport($this->import), 'test_2.xlsx', 'tests');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_1.xlsx');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_2.xlsx');
 
         $this->assertDatabaseCount('products', 2);
         $this->assertDatabaseHas('products', [
@@ -115,7 +116,7 @@ class AdminProductsImportUnitTest extends UserTestCase
 
     public function test_no_rollback_database_transaction_when_a_row_failed(): void
     {
-        Excel::import(new ProductsImport($this->import), 'test_3.xlsx', 'tests');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_3.xlsx');
 
         $this->assertDatabaseCount('products', 1);
         $this->assertDatabaseHas('products', [
@@ -129,21 +130,21 @@ class AdminProductsImportUnitTest extends UserTestCase
 
     public function test_no_store_errors_in_database_when_the_import_process_finished_properly(): void
     {
-        Excel::import(new ProductsImport($this->import), 'test_1.xlsx', 'tests');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_1.xlsx');
         $this->import->refresh();
         $this->assertEquals([], $this->import->errors);
     }
 
     public function test_store_errors_in_database_when_the_import_process_failed(): void
     {
-        Excel::import(new ProductsImport($this->import), 'test_3.xlsx', 'tests');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_3.xlsx');
         $this->import->refresh();
         $this->assertNotEmpty($this->import->errors);
     }
 
     public function test_import_data_from_a_empty_file(): void
     {
-        Excel::import(new ProductsImport($this->import), 'test_4.xlsx', 'tests');
+        Excel::import(new ProductsImport($this->import), $this->basePath.'test_4.xlsx');
         $this->assertDatabaseCount('products', 0);
     }
 }
