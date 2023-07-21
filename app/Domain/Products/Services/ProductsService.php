@@ -23,7 +23,7 @@ class ProductsService
             ->with(['category', 'brand'])
             ->filterCategory($category)
             ->filterBrand($brand ? [$brand] : null)
-            ->contains($search, ['products.name', 'products.code'])
+            ->searchWith($search, ['product.name', 'product.code'])
             ->orderBy('products.id')
             ->paginate(10);
     }
@@ -51,7 +51,7 @@ class ProductsService
         return Product::query()
             ->filterCategory($category)
             ->filterBrand($brands)
-            ->contains($search, ['products.name', 'products.code', 'brands.name', 'categories.name'])
+            ->searchWith($search, ['product.name', 'product.code', 'brand.name', 'category.name'])
             ->orderBy($sorts[$sort][0], $sorts[$sort][1])
             ->paginate(10);
     }

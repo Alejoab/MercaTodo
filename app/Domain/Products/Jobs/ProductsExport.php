@@ -49,10 +49,11 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAuto
 
     public function query(): Relation|\Illuminate\Database\Eloquent\Builder|ProductQueryBuilder|Builder
     {
-        return Product::query()->withTrashed()
+        return Product::query()
+            ->withTrashed()
             ->filterCategory($this->category)
             ->filterBrand($this->brand ? [$this->brand] : null)
-            ->contains($this->search, ['products.name', 'products.code'])
+            ->searchJoin($this->search, ['products.name', 'products.code'])
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select(
