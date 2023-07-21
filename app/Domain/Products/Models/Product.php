@@ -3,6 +3,7 @@
 namespace App\Domain\Products\Models;
 
 use App\Domain\Products\QueryBuilders\ProductQueryBuilder;
+use App\Support\Enums\ModelStatus;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,7 +71,7 @@ class Product extends Model
 
     public function getStatusAttribute($value): string
     {
-        return !$value ? 'Active' : 'Inactive';
+        return !$value ? ModelStatus::ACTIVE->value : ModelStatus::INACTIVE->value;
     }
 
     public function newEloquentBuilder($query): ProductQueryBuilder
