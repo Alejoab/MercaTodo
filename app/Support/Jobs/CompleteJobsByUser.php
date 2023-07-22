@@ -3,10 +3,12 @@
 namespace App\Support\Jobs;
 
 use App\Support\Enums\JobsByUserStatus;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Mail;
 
 class CompleteJobsByUser implements ShouldQueue
 {
@@ -23,5 +25,7 @@ class CompleteJobsByUser implements ShouldQueue
     {
         $this->job->status = JobsByUserStatus::COMPLETED;
         $this->job->save();
+
+        Mail::to($this->job->user->email)->queue(new JobsByUserMail($this->job));
     }
 }

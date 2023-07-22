@@ -5,11 +5,13 @@ namespace App\Domain\Reports\Jobs;
 use App\Domain\Orders\Models\Order_detail;
 use App\Domain\Orders\QueryBuilders\OrderDetailQueryBuilder;
 use App\Support\Enums\JobsByUserStatus;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -79,6 +81,8 @@ class SalesExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAutoSiz
     {
         $this->sales->status = JobsByUserStatus::FAILED;
         $this->sales->save();
+
+        Mail::to($this->sales->user->email)->queue(new JobsByUserMail($this->sales));
     }
 
     public function styles(Worksheet $sheet): array

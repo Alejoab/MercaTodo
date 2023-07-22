@@ -5,10 +5,12 @@ namespace App\Domain\Products\Jobs;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\QueryBuilders\ProductQueryBuilder;
 use App\Support\Enums\JobsByUserStatus;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
@@ -75,6 +77,8 @@ class ProductsExport implements FromQuery, WithHeadings, ShouldQueue, ShouldAuto
     {
         $this->export->status = JobsByUserStatus::FAILED;
         $this->export->save();
+
+        Mail::to($this->export->user->email)->queue(new JobsByUserMail($this->export));
     }
 
     public function styles(Worksheet $sheet): array

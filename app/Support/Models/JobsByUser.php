@@ -2,12 +2,14 @@
 
 namespace App\Support\Models;
 
+use App\Domain\Users\Models\User;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\QueryBuilders\JobsByUserQueryBuilder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int               $id
@@ -17,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property array             $errors
  * @property ?string           $file_name
  * @property Carbon            $created_at
+ *
+ * @property User              $user
  *
  * @method static JobsByUserQueryBuilder query()
  */
@@ -44,6 +48,11 @@ class JobsByUser extends Model
             'type' => JobsByUserType::class,
             'status' => JobsByUserStatus::class,
         ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function newEloquentBuilder($query): JobsByUserQueryBuilder
     {

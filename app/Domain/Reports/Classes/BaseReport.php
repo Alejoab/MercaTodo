@@ -3,9 +3,11 @@
 namespace App\Domain\Reports\Classes;
 
 use App\Support\Enums\JobsByUserStatus;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -51,5 +53,7 @@ abstract class BaseReport implements FromQuery, WithHeadings, WithTitle, ShouldQ
     {
         $this->report->status = JobsByUserStatus::FAILED;
         $this->report->save();
+
+        Mail::to($this->report->user->email)->queue(new JobsByUserMail($this->report));
     }
 }
