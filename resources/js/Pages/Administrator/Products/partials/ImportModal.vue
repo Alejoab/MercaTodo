@@ -14,7 +14,6 @@ const props = defineProps({
 
 const errors = ref({});
 const message = ref('pending');
-let pollingInterval = null;
 
 const emit = defineEmits(['close']);
 const close = () => {
@@ -34,32 +33,21 @@ const submit = () => {
     errors.value = {};
 
     form.post(route('admin.products.import'), {
-        onSuccess: () => {
-            pollingInterval = setInterval(() => checkImport(), 3000);
-        },
         onError: () => {
             message.value = '';
         }
     });
 }
 
-const initialPolling = async () => {
-    if (!await checkImport()) {
-        pollingInterval = setInterval(() => checkImport(), 3000);
-    }
-}
-
 const checkImport = async () => {
     const response = await axios.get(route('admin.products.import.check'));
 
     if (response.data.length === 0) {
-        clearInterval(pollingInterval);
         message.value = '';
         return true;
     }
 
     if (response.data.status === 'Completed') {
-        clearInterval(pollingInterval);
         if (response.data.data.length === 0) {
             message.value = 'All products have been imported successfully without any errors';
         } else {
@@ -70,7 +58,6 @@ const checkImport = async () => {
     }
 
     if (response.data.status === 'Failed') {
-        clearInterval(pollingInterval);
         message.value = 'An error has occurred in the data export. Please try again later';
         return true;
     }
@@ -79,12 +66,8 @@ const checkImport = async () => {
 }
 
 onMounted(() => {
-    initialPolling();
+    checkImport();
 })
-
-onUnmounted(() => {
-    clearInterval(pollingInterval);
-});
 </script>
 
 <template>

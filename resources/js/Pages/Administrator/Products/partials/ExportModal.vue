@@ -28,44 +28,31 @@ const close = () => {
 };
 
 const exportFileName = ref('pending');
-let pollingInterval = null;
 
 const exportProducts = () => {
     exportFileName.value = 'pending';
 
     form.post(route('admin.products.export'), {
-        onSuccess: () => {
-            pollingInterval = setInterval(() => checkExport(), 3000)
-        },
         onError: () => {
             exportFileName.value = '';
         }
     });
 }
 
-const initialPolling = async () => {
-    if (!await checkExport()) {
-        pollingInterval = setInterval(() => checkExport(), 3000);
-    }
-}
-
 const checkExport = async () => {
     const response = await axios.get(route('admin.products.exports.check'));
 
     if (response.data.length === 0) {
-        clearInterval(pollingInterval);
         exportFileName.value = '';
         return true;
     }
 
     if (response.data.status === 'Completed') {
-        clearInterval(pollingInterval);
         exportFileName.value = route('admin.products.export.download');
         return true;
     }
 
     if (response.data.status === 'Failed') {
-        clearInterval(pollingInterval);
         form.errors.export = 'Export failed. Please try again.';
         exportFileName.value = '';
         return true;
@@ -75,12 +62,8 @@ const checkExport = async () => {
 }
 
 onMounted(() => {
-    initialPolling();
+    checkExport();
 })
-
-onUnmounted(() => {
-    clearInterval(pollingInterval);
-});
 </script>
 
 <template>
