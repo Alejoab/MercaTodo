@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Web\Products;
 use App\Domain\Products\Jobs\ProductsImport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ImportRequest;
+use App\Support\Contracts\CreateJobsByUser;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\ApplicationException;
-use App\Support\Exceptions\JobsByUserException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Http\JsonResponse;
@@ -18,28 +18,13 @@ use Throwable;
 class AdminImportController extends Controller
 {
     /**
-     * @throws JobsByUserException
      * @throws ApplicationException
      */
-    public function import(ImportRequest $request): void
+    public function import(ImportRequest $request, CreateJobsByUser $createJobAction): void
     {
         $userId = auth()->user()->getAuthIdentifier();
 
-        /**
-         * @var JobsByUser $import
-         */
-        $import = JobsByUser::query()->firstOrCreate([
-            'user_id' => $userId,
-            'type' => JobsByUserType::IMPORT,
-        ]);
-
-        if ($import->status === JobsByUserStatus::PENDING) {
-            throw JobsByUserException::importActive();
-        }
-
-        $import->status = JobsByUserStatus::PENDING;
-        $import->errors = [];
-        $import->save();
+        $import = $createJobAction->execute($userId, JobsByUserType::IMPORT);
 
         try {
             Excel::queueImport(new ProductsImport($import), $request->file('file'))

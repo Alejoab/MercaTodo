@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Web\Products;
 
 use App\Domain\Products\Jobs\ProductsExport;
 use App\Http\Controllers\Controller;
+use App\Support\Contracts\CreateJobsByUser;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\ApplicationException;
-use App\Support\Exceptions\JobsByUserException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -21,32 +21,17 @@ use Throwable;
 class AdminExportController extends Controller
 {
     /**
-     * @throws JobsByUserException
      * @throws ApplicationException
      */
-    public function export(Request $request): void
+    public function export(Request $request, CreateJobsByUser $createJobAction): void
     {
         $userId = auth()->user()->getAuthIdentifier();
         $search = $request->input('search');
         $category = $request->input('category');
         $brand = $request->input('brand');
-
-        /**
-         * @var JobsByUser $export
-         */
-        $export = JobsByUser::query()->firstOrCreate([
-            'user_id' => $userId,
-            'type' => JobsByUserType::EXPORT,
-        ]);
-
-        if ($export->status === JobsByUserStatus::PENDING) {
-            throw JobsByUserException::exportActive();
-        }
-
         $fileName = "products_export_$userId.xlsx";
-        $export->status = JobsByUserStatus::PENDING;
-        $export->file_name = $fileName;
-        $export->save();
+
+        $export = $createJobAction->execute($userId, JobsByUserType::EXPORT, $fileName);
 
         try {
             Excel::queue(new ProductsExport($export, $search, $category, $brand), $fileName, 'exports')
@@ -58,7 +43,6 @@ class AdminExportController extends Controller
             $export->save();
             throw new ApplicationException($e, []);
         }
-
     }
 
     public function checkExport(): JsonResponse
