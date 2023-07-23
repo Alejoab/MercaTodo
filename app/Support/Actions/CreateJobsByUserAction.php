@@ -5,6 +5,7 @@ namespace App\Support\Actions;
 use App\Support\Contracts\CreateJobsByUser;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
+use App\Support\Exceptions\CustomException;
 use App\Support\Exceptions\JobsByUserException;
 use App\Support\Models\JobsByUser;
 
@@ -12,7 +13,7 @@ class CreateJobsByUserAction implements CreateJobsByUser
 {
 
     /**
-     * @throws JobsByUserException
+     * @throws CustomException
      */
     public function execute(int $userId, JobsByUserType $type, string $fileName = null): JobsByUser
     {

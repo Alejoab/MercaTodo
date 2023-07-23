@@ -13,16 +13,6 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    /**
-     * Shows the home page for the user.
-     *
-     * @param Request           $request
-     * @param ProductsService   $productsService
-     * @param CategoriesService $categoriesService
-     * @param BrandsService     $brandsService
-     *
-     * @return Response
-     */
     public function index(Request $request, ProductsService $productsService, CategoriesService $categoriesService, BrandsService $brandsService): Response
     {
         $search = $request->get('search');

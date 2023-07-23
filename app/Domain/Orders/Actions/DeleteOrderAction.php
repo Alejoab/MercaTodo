@@ -5,6 +5,7 @@ namespace App\Domain\Orders\Actions;
 use App\Domain\Orders\Contracts\DeleteOrder;
 use App\Domain\Orders\Models\Order;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -12,7 +13,7 @@ class DeleteOrderAction implements DeleteOrder
 {
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(Order $order): void
     {

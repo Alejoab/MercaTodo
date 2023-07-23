@@ -7,15 +7,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductsService
 {
-    /**
-     * Lists products tho the administrator
-     *
-     * @param string|null $search
-     * @param int|null    $category
-     * @param int|null    $brand
-     *
-     * @return LengthAwarePaginator
-     */
     public function listProductsAdmin(?string $search, ?int $category, ?int $brand): LengthAwarePaginator
     {
         return Product::query()
@@ -28,16 +19,6 @@ class ProductsService
             ->paginate(10);
     }
 
-    /**
-     * Lists products tho the customer
-     *
-     * @param string|null $search
-     * @param int|null    $category
-     * @param array|null  $brands
-     * @param int|null    $sort
-     *
-     * @return LengthAwarePaginator
-     */
     public function listProducts(?string $search, ?int $category, ?array $brands, ?int $sort): LengthAwarePaginator
     {
         $sort = $sort !== null ? $sort : 2;

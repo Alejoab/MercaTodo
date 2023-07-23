@@ -8,6 +8,7 @@ use App\Support\Contracts\CreateJobsByUser;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -21,7 +22,7 @@ use Throwable;
 class AdminExportController extends Controller
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function export(Request $request, CreateJobsByUser $createJobAction): void
     {

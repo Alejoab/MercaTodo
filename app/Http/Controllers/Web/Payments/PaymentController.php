@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PayRequest;
 use App\Http\Requests\RetryPaymentRequest;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -25,18 +26,8 @@ use Throwable;
 
 class PaymentController extends Controller
 {
-
     /**
-     * Redirects the user to the payment session
-     *
-     * @param PayRequest   $request
-     * @param CreateOrder  $createOrderAction
-     * @param CartsService $cartService
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws PaymentException
-     * @throws Throwable
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function pay(PayRequest $request, CreateOrder $createOrderAction, CartsService $cartService): \Symfony\Component\HttpFoundation\Response
     {
@@ -53,20 +44,19 @@ class PaymentController extends Controller
             $url = $paymentService->paymentProcess($request, $request->user(), $order);
         } catch (Throwable $e) {
             (new DeleteOrderAction())->execute($order);
-            throw $e;
+
+            if ($e instanceof CustomException) {
+                throw $e;
+            }
+
+            throw new ApplicationException($e, []);
         }
 
         return Inertia::location($url);
     }
 
-
     /**
-     * Checks the payment status
-     *
-     * @param Request $request
-     *
-     * @return Response|RedirectResponse
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function success(Request $request): Response|RedirectResponse
     {
@@ -100,14 +90,6 @@ class PaymentController extends Controller
     }
 
 
-    /**
-     * Cancels the payment session
-     *
-     * @param Request     $request
-     * @param DeleteOrder $deleteOrderAction
-     *
-     * @return Response|RedirectResponse
-     */
     public function cancel(Request $request, DeleteOrder $deleteOrderAction): Response|RedirectResponse
     {
         /**
@@ -124,12 +106,8 @@ class PaymentController extends Controller
         return Inertia::render('Order/CancelOrder');
     }
 
-
     /**
-     * @param RetryPaymentRequest $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws PaymentException
+     * @throws CustomException
      */
     public function retry(RetryPaymentRequest $request): \Symfony\Component\HttpFoundation\Response
     {

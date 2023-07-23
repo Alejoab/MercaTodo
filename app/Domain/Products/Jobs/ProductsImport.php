@@ -10,6 +10,7 @@ use App\Domain\Products\Models\Product;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\ModelStatus;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -41,7 +42,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     }
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function collection(Collection $collection): void
     {

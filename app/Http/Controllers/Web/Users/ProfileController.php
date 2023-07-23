@@ -17,13 +17,6 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    /**
-     * Shows the user profile.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function edit(Request $request): Response
     {
         return Inertia::render('Profile/Edit', [
@@ -34,14 +27,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Updates the user profile.
-     *
-     * @param CustomerUpdateRequest $request
-     * @param UpdateCustomer        $updateCustomerAction
-     *
-     * @return RedirectResponse
-     */
     public function update(CustomerUpdateRequest $request, UpdateCustomer $updateCustomerAction): RedirectResponse
     {
         $updateCustomerAction->execute($request->user(), $request->validated());
@@ -49,14 +34,6 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit');
     }
 
-    /**
-     * Disables the user.
-     *
-     * @param Request    $request
-     * @param DeleteUser $DeleteUserAction
-     *
-     * @return RedirectResponse
-     */
     public function destroy(Request $request, DeleteUser $DeleteUserAction): RedirectResponse
     {
         $request->validate([
@@ -73,13 +50,6 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    /**
-     * Shows the user order history
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function orderHistory(Request $request): Response
     {
         return Inertia::render('Order/OrderHistory', [

@@ -18,11 +18,6 @@ class Auth
         $this->seed = date('c');
     }
 
-    /**
-     * Return the auth array for the placetopay request
-     *
-     * @return array
-     */
     public function getAuth(): array
     {
         return [
@@ -33,21 +28,11 @@ class Auth
         ];
     }
 
-    /**
-     * Return the login key
-     *
-     * @return string
-     */
     private function getLogin(): string
     {
         return config('placetopay.login');
     }
 
-    /**
-     * Return the tranKey
-     *
-     * @return string
-     */
     private function getTranKey(): string
     {
         return base64_encode(hash('sha256', $this->nonce.$this->seed.config('placetopay.tranKey'), true));

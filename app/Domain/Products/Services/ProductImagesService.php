@@ -3,6 +3,7 @@
 namespace App\Domain\Products\Services;
 
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -10,12 +11,7 @@ use Throwable;
 class ProductImagesService
 {
     /**
-     * Stores an image
-     *
-     * @param UploadedFile $image
-     *
-     * @return string
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function storeImage(UploadedFile $image): string
     {
@@ -33,12 +29,7 @@ class ProductImagesService
     }
 
     /**
-     * Deletes an image
-     *
-     * @param string $image_path
-     *
-     * @return void
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function deleteImage(string $image_path): void
     {

@@ -14,11 +14,6 @@ class OrderToPayment
         $this->order = $order;
     }
 
-    /**
-     * Returns the payment array for the placetopay request
-     *
-     * @return array
-     */
     public function getPayment(): array
     {
         return [
@@ -29,11 +24,6 @@ class OrderToPayment
         ];
     }
 
-    /**
-     * Returns the amount and currency
-     *
-     * @return array
-     */
     private function getAmount(): array
     {
         return [
@@ -42,11 +32,6 @@ class OrderToPayment
         ];
     }
 
-    /**
-     * Returns the items array
-     *
-     * @return array
-     */
     private function getItems(): array
     {
         $result = [];

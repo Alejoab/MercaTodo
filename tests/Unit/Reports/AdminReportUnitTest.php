@@ -19,8 +19,10 @@ use App\Domain\Reports\Jobs\ReportExport;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Jobs\CompleteJobsByUser;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\UserTestCase;
@@ -82,6 +84,8 @@ class AdminReportUnitTest extends UserTestCase
             'id' => $this->report->id,
             'status' => JobsByUserStatus::COMPLETED,
         ]);
+
+        Mail::assertQueued(JobsByUserMail::class);
     }
 
     public function test_sales_by_category(): void

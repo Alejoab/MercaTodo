@@ -5,9 +5,9 @@ namespace App\Domain\Customers\Actions;
 use App\Domain\Customers\Contracts\CreateCustomer;
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Users\Actions\CreateUserAction;
+use App\Domain\Users\Models\User;
 use App\Support\Exceptions\ApplicationException;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -15,18 +15,24 @@ class CreateCustomerAction implements CreateCustomer
 {
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
-    public function execute(array $data): Builder|Model
+    public function execute(array $data): Customer
     {
         try {
             DB::beginTransaction();
 
+            /**
+             * @var User $user
+             */
             $user = (new CreateUserAction())->execute([
                 'email' => $data['email'],
                 'password' => $data['password'],
             ]);
 
+            /**
+             * @var Customer $customer
+             */
             $customer = Customer::query()->create([
                 'name' => $data['name'],
                 'surname' => $data['surname'],
@@ -35,17 +41,19 @@ class CreateCustomerAction implements CreateCustomer
                 'phone' => $data['phone'],
                 'address' => $data['address'],
                 'city_id' => $data['city_id'],
-                'user_id' => $user->getAttribute('id'),
+                'user_id' => $user->id,
             ]);
 
             DB::commit();
 
             return $customer;
-        } catch (ApplicationException $e) {
-            DB::rollBack();
-            throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
+
+            if ($e instanceof CustomException) {
+                throw $e;
+            }
+
             throw new ApplicationException($e, $data);
         }
     }

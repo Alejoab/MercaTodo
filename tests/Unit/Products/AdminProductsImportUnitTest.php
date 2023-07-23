@@ -6,8 +6,10 @@ use App\Domain\Products\Jobs\ProductsImport;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Jobs\CompleteJobsByUser;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\UserTestCase;
 
@@ -55,6 +57,8 @@ class AdminProductsImportUnitTest extends UserTestCase
             'id' => $this->import->id,
             'status' => JobsByUserStatus::COMPLETED,
         ]);
+
+        Mail::assertQueued(JobsByUserMail::class);
     }
 
     public function test_import_process_when_create_data(): void

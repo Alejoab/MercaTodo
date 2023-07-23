@@ -6,17 +6,14 @@ use App\Domain\Users\Contracts\UpdateUserRole;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UpdateUserRoleAction implements UpdateUserRole
 {
     /**
-     * @param User   $user
-     * @param string $role
-     * @param array  $permissions
-     *
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(User $user, string $role, array $permissions): void
     {

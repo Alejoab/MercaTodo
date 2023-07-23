@@ -12,6 +12,7 @@ use App\Support\Contracts\CreateJobsByUser;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -33,7 +34,7 @@ class AdminReportController extends Controller
     }
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function generate(ReportRequest $request, CreateJobsByUser $createJobAction): void
     {
@@ -73,7 +74,7 @@ class AdminReportController extends Controller
     }
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function generateSales(SalesRequest $request, CreateJobsByUser $createJobAction): void
     {

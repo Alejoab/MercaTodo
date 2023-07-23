@@ -15,14 +15,6 @@ use Inertia\Response;
 
 class AdminCustomerController extends Controller
 {
-    /**
-     * Show the customers index page for administrator.
-     *
-     * @param Request          $request
-     * @param CustomersService $customersService
-     *
-     * @return Response
-     */
     public function index(Request $request, CustomersService $customersService): Response
     {
         $customers = $customersService->listCustomersToTable($request->get('search'));
@@ -32,13 +24,6 @@ class AdminCustomerController extends Controller
         ]);
     }
 
-    /**
-     * Shows the customer update page for administrator.
-     *
-     * @param User $user
-     *
-     * @return Response
-     */
     public function customerShow(User $user): Response
     {
         return Inertia::render('Administrator/Customers/EditCustomer', [
@@ -47,15 +32,6 @@ class AdminCustomerController extends Controller
         ]);
     }
 
-    /**
-     * Updates the customer.
-     *
-     * @param CustomerUpdateRequest $request
-     * @param User                  $user
-     * @param UpdateCustomer        $updateCustomerAction
-     *
-     * @return RedirectResponse
-     */
     public function customerUpdate(CustomerUpdateRequest $request, User $user, UpdateCustomer $updateCustomerAction): RedirectResponse
     {
         $updateCustomerAction->execute($user, $request->validated());

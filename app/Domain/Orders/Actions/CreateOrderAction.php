@@ -7,6 +7,7 @@ use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Enums\PaymentMethod;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -14,7 +15,7 @@ class CreateOrderAction implements CreateOrder
 {
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(int $userId, array $cart, string $method): Order
     {
@@ -46,11 +47,13 @@ class CreateOrderAction implements CreateOrder
             DB::commit();
 
             return $order;
-        } catch (ApplicationException $e) {
-            DB::rollBack();
-            throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
+
+            if ($e instanceof CustomException) {
+                throw $e;
+            }
+
             throw new ApplicationException($e, [
                 'userId' => $userId,
                 'cart' => $cart,

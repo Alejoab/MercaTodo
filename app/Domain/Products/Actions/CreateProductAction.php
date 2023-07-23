@@ -6,6 +6,7 @@ use App\Domain\Products\Contracts\CreateProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductImagesService;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -13,7 +14,7 @@ use Throwable;
 class CreateProductAction implements CreateProduct
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(array $data): Product
     {
@@ -49,11 +50,13 @@ class CreateProductAction implements CreateProduct
             DB::commit();
 
             return $product;
-        } catch (ApplicationException $e) {
-            DB::rollBack();
-            throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
+
+            if ($e instanceof CustomException) {
+                throw $e;
+            }
+
             throw new ApplicationException($e, $data);
         }
     }

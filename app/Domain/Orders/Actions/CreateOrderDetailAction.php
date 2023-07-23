@@ -6,13 +6,14 @@ use App\Domain\Orders\Contracts\CreateOrderDetail;
 use App\Domain\Orders\Models\Order_detail;
 use App\Domain\Products\Models\Product;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class CreateOrderDetailAction implements CreateOrderDetail
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(array $data): Order_detail
     {

@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Cache;
 
 class CategoriesService
 {
-    /**
-     * Lists all categories.
-     *
-     * @return Collection
-     */
     public function list(): Collection
     {
         return Cache::rememberForever('categories', function () {
@@ -20,13 +15,6 @@ class CategoriesService
         });
     }
 
-    /**
-     * Searches categories by name.
-     *
-     * @param $search
-     *
-     * @return array|Collection
-     */
     public function searchCategories($search): array|Collection
     {
         return Category::query()

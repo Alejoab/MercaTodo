@@ -13,13 +13,6 @@ use Inertia\Response;
 
 class CartController extends Controller
 {
-    /**
-     * Shows the user's cart
-     *
-     * @param CartsService $cartsService
-     *
-     * @return Response
-     */
     public function index(CartsService $cartsService): Response
     {
         return Inertia::render('Order/ViewCart', [
@@ -27,40 +20,16 @@ class CartController extends Controller
         ]);
     }
 
-    /**
-     * Adds a product to the user's cart
-     *
-     * @param CartRequest    $request
-     * @param AddProductCart $addProductCartAction
-     *
-     * @return void
-     */
     public function addProductToCart(CartRequest $request, AddProductCart $addProductCartAction): void
     {
         $addProductCartAction->execute($request->user()->id, $request->validated());
     }
 
-    /**
-     * Deletes a product from the user's cart
-     *
-     * @param Request           $request
-     * @param DeleteProductCart $deleteProductCartAction
-     *
-     * @return void
-     */
     public function deleteProductToCart(Request $request, DeleteProductCart $deleteProductCartAction): void
     {
         $deleteProductCartAction->execute(auth()->id(), $request->all());
     }
 
-    /**
-     * Returns the number of items in the user's cart
-     *
-     * @param Request      $request
-     * @param CartsService $cartsService
-     *
-     * @return int
-     */
     public function getNumberOfItems(Request $request, CartsService $cartsService): int
     {
         return $request->user() !== null ? $cartsService->getNumberOfItems(auth()->id()) : 0;
