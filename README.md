@@ -4,46 +4,15 @@
 
 </div>
 
-## About MercaTodo
+## About
 
 MercaTodo is part of the project proposed for the PHP Bootcamp by Evertec. It is an e-commerce application that allows
 users to buy products.
 
-**PHP:** `8.2.4`  
-**Laravel Framework:** `10.9.0`
-
-### Version 1.0.0
-
-- Customers can register and log in to the application.
-- Administrators can update the customer's information.
-- Administrators can disable and enable the customer's account, as such force de deletion of the account.
-- Email verification is required for the customer to access special features.
-
-### Version 2.0.0
-
-- The administrator can manage his products in such a way that he can create, update, enable and disable them.
-- Registered customers will be able to see the list of products created, so that they can see a showcase of products
-  separated by pages and their data such as photo and price.
-- Customers will also be able to perform a customized search for these products to quickly find what they are looking
-  for.
-
-### Version 3.0.0
-
-- Customers will be able to view available products and add them to a shopping cart.
-- The customer will be able to consult his order and make modifications before confirming the order and proceeding with
-  the payment.
-- Customers will be able to review their order history and retry the payment for those that were not successful.
-- Integrates the web checkout of the Place To Pay payment gateway.
-
-### Version 4.0.0
-
-- The administrator will be able to massively import to the system a list of products in Excel.
-- The administrator will be able to download an Excel list of the registered products in order to modify them and upload
-  them again to the system in a massive way.
-- The administrator will be able to generate system reports with relevant information for the management of your
-  business.
-- The use of the system's functionalities must be allowed only to those users with permissions (ACL).
-- The system must allow managing products from a REST API.
+## Requirements
+- PHP: `8.2.4`  
+- Laravel Framework: `10.9.0`
+- PHP GD Extension
 
 ## Configuration
 
@@ -53,7 +22,6 @@ In order to run the application, you must do the following:
 - Create the .env file from the .env.example file.
 - Configure the needed information in the .env file.
 - Run `composer install` to install the dependencies.
-- Run `npm install` to install the dependencies
 - Run `php artisan key:generate` to generate the application key.
 - Run `php artisan migrate:fresh --seed` to create the database tables.
 - Run `php artisan storage:link` to make the images available to the application.
@@ -61,8 +29,7 @@ In order to run the application, you must do the following:
 - Run `php artisan schedule:work` to check the order status periodically and delete the export files.
 - Run `php artisan queue:work` to export and import processes.
 
-**Note:** Note: In order to use image manipulation features in the application, the PHP `gd` extension must be enabled.
-Please ensure that this extension is enabled on your server.
+**Note:** If you want to execute the tests you have to create a `.env.testing` file from the `.env.example`.
 
 ## .Env file
 
@@ -90,24 +57,16 @@ The .env file contains the configuration of the application. It is important to 
 
 ### User Information of the Administrator
 
-> ADMIN_NAME  
-> ADMIN_SURNAME  
-> ADMIN_DOCUMENT_TYPE  
-> ADMIN_DOCUMENT  
+> ADMIN_NAME   
 > ADMIN_EMAIL  
-> ADMIN_PHONE  
-> ADMIN_ADDRESS  
-> ADMIN_PASSWORD  
-> ADMIN_CITY_ID
-
-**Notes:** The document type must be CC, NIT or RUT. The city id must be a valid city id in the database (1, 1126).
+> ADMIN_PASSWORD
 
 ### Seeders Configuration
 
 > BRAND_SEEDER  
 > CATEGORY_SEEDER  
 > USER_SEEDER  
-> PRODUCT_SEEDER
+> PRODUCT_SEEDER  
 > ORDER_SEEDER
 
 **Note:** The value of the category seeder must not be greater than 62.
