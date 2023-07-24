@@ -89,7 +89,6 @@ class PaymentController extends Controller
         ]);
     }
 
-
     public function cancel(Request $request, DeleteOrder $deleteOrderAction): Response|RedirectResponse
     {
         /**

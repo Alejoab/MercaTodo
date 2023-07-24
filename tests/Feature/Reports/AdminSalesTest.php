@@ -77,11 +77,15 @@ class AdminSalesTest extends UserTestCase
 
         $response = $this->post(route('admin.reports.sales.generate'), [
             'from' => '2023-03-15',
+            'to' => '2023-03-16',
         ]);
         $response->assertOk();
 
         Excel::assertQueued("sales_{$this->admin->id}.xlsx", 'exports', function (SalesExport $export) {
-            return $export->query()->count() === Order_detail::query()->whereDate('created_at', '>=', '2023-03-15')->count();
+            return $export->query()->count() === Order_detail::query()
+                    ->whereDate('created_at', '>=', '2023-03-15')
+                    ->whereDate('created_at', '<=', '2023-03-16')
+                    ->count();
         });
     }
 

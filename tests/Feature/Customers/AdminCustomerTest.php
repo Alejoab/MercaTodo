@@ -30,6 +30,11 @@ class AdminCustomerTest extends UserTestCase
         $this->actingAs($this->customer)->get(route('admin.customers'))->assertForbidden();
     }
 
+    public function test_admin_can_see_a_customer(): void
+    {
+        $this->get(route('admin.customer.show', $this->admin->id))->assertOk();
+    }
+
     public function test_admin_can_update_a_customer(): void
     {
         $response = $this->putJson(route('admin.customer.update', $this->admin->id), [
@@ -58,5 +63,11 @@ class AdminCustomerTest extends UserTestCase
     public function test_not_found_customer(): void
     {
         $this->get(route('admin.customer.show', -1))->assertNotFound();
+    }
+
+    public function test_users_can_see_departments_and_cities(): void
+    {
+        $this->get(route('departments'))->assertOk();
+        $this->get(route('cities', 1))->assertOk();
     }
 }

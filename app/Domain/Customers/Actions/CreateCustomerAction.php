@@ -22,9 +22,6 @@ class CreateCustomerAction implements CreateCustomer
         try {
             DB::beginTransaction();
 
-            /**
-             * @var User $user
-             */
             $user = (new CreateUserAction())->execute([
                 'email' => $data['email'],
                 'password' => $data['password'],

@@ -48,4 +48,21 @@ class AdminProductUnitTest extends UserTestCase
         $imageService->deleteImage($product->image);
         Storage::disk('product_images')->assertMissing($product->image);
     }
+
+    public function test_get_all_products_from_a_brand_and_from_a_category(): void
+    {
+        /**
+         * @var Category $category
+         */
+        $category = Category::factory()->create();
+
+        /**
+         * @var Brand $brand
+         */
+        $brand = Brand::factory()->create();
+        Product::factory(3)->create(['brand_id' => $brand->id]);
+
+        $this->assertCount(3, $brand->products);
+        $this->assertCount(3, $category->products);
+    }
 }

@@ -168,6 +168,41 @@ class AdminProductTest extends UserTestCase
         ]);
     }
 
+    public function test_admin_can_update_a_product_with_a_new_image(): void
+    {
+        Brand::factory()->create();
+        Category::factory()->create();
+
+        /**
+         * @var Product $product
+         */
+        $product = Product::factory()->create();
+
+        $response = $this->post(route('admin.products.update', $product->id), [
+            'code' => '000001',
+            'category_name' => 'Category Update Test',
+            'brand_name' => 'Brand Update Test',
+            'name' => 'Product 1 Updated',
+            'description' => 'Product 1 description Updated',
+            'image' => UploadedFile::fake()->image('image.jpg'),
+            'price' => 5.1,
+            'stock' => 1000,
+        ]);
+
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseCount('products', 1);
+        $this->assertDatabaseHas('products', [
+            'code' => '000001',
+            'name' => 'Product 1 Updated',
+            'description' => 'Product 1 description Updated',
+            'price' => 5.1,
+            'stock' => 1000,
+        ]);
+
+        Storage::disk('product_images')->assertExists(Product::query()->first()->getAttribute('image'));
+    }
+
     public function test_admin_can_delete_a_product(): void
     {
         Brand::factory()->create();
@@ -245,5 +280,96 @@ class AdminProductTest extends UserTestCase
         ]);
 
         $response->assertSessionHasErrors();
+    }
+
+    public function test_get_brands_by_category(): void
+    {
+        /**
+         * @var Category $category1
+         * @var Category $category2
+         */
+        $category1 = Category::factory()->create();
+        $category2 = Category::factory()->create();
+
+        /**
+         * @var Brand $brand1
+         * @var Brand $brand2
+         * @var Brand $brand3
+         */
+        $brand1 = Brand::factory()->create();
+        $brand2 = Brand::factory()->create();
+        $brand3 = Brand::factory()->create();
+
+        Product::factory()->create(['category_id' => $category1->id, 'brand_id' => $brand1->id]);
+        Product::factory()->create(['category_id' => $category1->id, 'brand_id' => $brand2->id]);
+        Product::factory()->create(['category_id' => $category2->id, 'brand_id' => $brand3->id]);
+
+
+        $response = $this->get(route('brands', $category1->id));
+        $response->assertOk();
+        $this->assertCount(2, $response->json());
+
+        $response = $this->get(route('brands'));
+        $response->assertOk();
+        $this->assertCount(3, $response->json());
+
+    }
+
+    public function test_search_brands(): void
+    {
+        Brand::factory()->count(5)->create();
+        Brand::factory()->create(['name' => 'brand 1']);
+
+        $response = $this->get(route('admin.brands.search', ['search' => 'brand 1']));
+        $response->assertOk();
+        $this->assertGreaterThanOrEqual(1, count($response->json()));
+    }
+
+    public function test_search_categories(): void
+    {
+        Category::factory()->count(5)->create();
+        Category::factory()->create(['name' => 'category 1']);
+
+        $response = $this->get(route('admin.categories.search', ['search' => 'category 1']));
+        $response->assertOk();
+        $this->assertGreaterThanOrEqual(1, count($response->json()));
+    }
+
+    public function test_list_products(): void
+    {
+        $this->get(route('list-products', [
+            'search' => 'a',
+            'category' => 1,
+            'brand' => [1],
+            'sortBy' => '1',
+        ]))->assertOk();
+    }
+
+    public function test_show_product(): void
+    {
+        Category::factory()->create();
+        Brand::factory()->create();
+        $product = Product::factory()->create();
+
+        $this->get(route('products.show', $product->id))->assertOk();
+        $this->get(route('product.information', $product->id))->assertOk();
+    }
+
+    public function test_list_categories(): void
+    {
+        Category::factory()->count(5)->create();
+
+        $response = $this->get(route('categories'));
+        $response->assertOk();
+        $this->assertCount(5, $response->json());
+    }
+
+    public function test_show_list_products(): void
+    {
+        $this->get(route('admin.products', [
+            'search' => 'a',
+            'category' => 1,
+            'brand' => 1,
+        ]))->assertOk();
     }
 }
