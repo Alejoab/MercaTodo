@@ -5,6 +5,7 @@ namespace App\Domain\Users\Models;
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Users\QueryBuilders\UserQueryBuilder;
+use App\Support\Enums\ModelStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -113,6 +114,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeletedAttribute($value): string
     {
-        return !$value ? 'Active' : 'Inactive';
+        return !$value ? ModelStatus::ACTIVE->value : ModelStatus::INACTIVE->value;
     }
 }

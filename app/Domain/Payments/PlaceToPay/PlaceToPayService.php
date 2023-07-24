@@ -13,23 +13,14 @@ use App\Support\Exceptions\CustomException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
 class PlaceToPayService implements Payments
 {
-
     /**
-     * Creates a new placetopay payment session and returns the process url
-     *
-     * @param Request $request
-     * @param User    $user
-     * @param Order   $order
-     *
-     * @return string
-     * @throws ApplicationException
      * @throws CustomException
-     * @throws PaymentException
      */
     public function paymentProcess(Request $request, User $user, Order $order): string
     {
@@ -57,9 +48,11 @@ class PlaceToPayService implements Payments
 
                 throw PaymentException::sessionError($result->json()['status']['message']);
             }
-        } catch (CustomException $e) {
-            throw $e;
         } catch (Throwable $e) {
+            if ($e instanceof CustomException) {
+                throw $e;
+            }
+
             throw new ApplicationException($e, [
                 'request' => $request->getContent(),
                 'user' => $user->toArray(),
@@ -68,16 +61,6 @@ class PlaceToPayService implements Payments
         }
     }
 
-    /**
-     * Creates the data that will be sent to placetopay
-     *
-     * @param User   $user
-     * @param Order  $order
-     * @param string $ipAddress
-     * @param string $userAgent
-     *
-     * @return array
-     */
     private function createPaymentSession(User $user, Order $order, string $ipAddress, string $userAgent): array
     {
         $auth = new Auth();
@@ -97,13 +80,6 @@ class PlaceToPayService implements Payments
         ];
     }
 
-    /**
-     * Checks the payment session status
-     *
-     * @param Order $order
-     *
-     * @return OrderStatus
-     */
     public function checkPayment(Order $order): OrderStatus
     {
         $auth = new Auth();
@@ -119,13 +95,6 @@ class PlaceToPayService implements Payments
         }
     }
 
-    /**
-     * Matches the placetopay status with the application status
-     *
-     * @param string $status
-     *
-     * @return OrderStatus
-     */
     private function paymentStatus(string $status): OrderStatus
     {
         return match ($status) {

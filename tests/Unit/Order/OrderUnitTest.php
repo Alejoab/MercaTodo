@@ -9,6 +9,8 @@ use App\Domain\Orders\Actions\CreateOrderAction;
 use App\Domain\Orders\Actions\DeleteOrderAction;
 use App\Domain\Orders\Actions\RejectOrderAction;
 use App\Domain\Orders\Enums\OrderStatus;
+use App\Domain\Orders\Models\Order;
+use App\Domain\Orders\Models\Order_detail;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
@@ -160,6 +162,21 @@ class OrderUnitTest extends UserTestCase
         $this->assertNull($this->product->deleted_at);
     }
 
+    public function test_try_delete_order_with_one_product_force_deleted(): void
+    {
+        $order = Order::factory()->create([
+            'user_id' => $this->admin->id,
+        ]);
+
+        $this->product->forceDelete();
+
+        $rejectOrder = new DeleteOrderAction();
+        $rejectOrder->execute($order);
+
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertDatabaseCount('order_details', 0);
+    }
+
     public function test_order_details_exists_even_product_was_deleted(): void
     {
         $action = new CreateOrderAction();
@@ -235,5 +252,15 @@ class OrderUnitTest extends UserTestCase
         $this->expectException(CartException::class);
         $this->expectExceptionMessage('The product Product 1 only has 2 items left in stock. Please remove some items from your cart.');
         $service->getValidData($this->admin->id);
+    }
+
+    public function test_get_the_order_from_the_order_details(): void
+    {
+        $order = Order::factory()->create([
+            'user_id' => $this->admin->id,
+        ]);
+
+        $orderDetail = Order_detail::query()->first();
+        $this->assertEquals($order->id, $orderDetail->order->id);
     }
 }

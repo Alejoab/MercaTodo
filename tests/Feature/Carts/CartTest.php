@@ -50,6 +50,10 @@ class CartTest extends UserTestCase
         $this->assertEquals([
             $product->id => 1,
         ], $data);
+
+        $response = $this->actingAs($this->customer)->get(route('cart.count'));
+        $response->assertOk();
+        $response->assertContent('1');
     }
 
     public function test_a_customer_can_update_a_product_in_the_cart(): void

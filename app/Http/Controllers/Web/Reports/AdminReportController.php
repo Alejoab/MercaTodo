@@ -8,10 +8,11 @@ use App\Domain\Reports\Jobs\SalesExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
 use App\Http\Requests\SalesRequest;
+use App\Support\Contracts\CreateJobsByUser;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Exceptions\ApplicationException;
-use App\Support\Exceptions\JobsByUserException;
+use App\Support\Exceptions\CustomException;
 use App\Support\Jobs\CompleteJobsByUser;
 use App\Support\Models\JobsByUser;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -33,29 +34,14 @@ class AdminReportController extends Controller
     }
 
     /**
-     * @throws JobsByUserException
-     * @throws ApplicationException
+     * @throws CustomException
      */
-    public function generate(ReportRequest $request): void
+    public function generate(ReportRequest $request, CreateJobsByUser $createJobAction): void
     {
         $userId = auth()->user()->getAuthIdentifier();
-
-        /**
-         * @var JobsByUser $report
-         */
-        $report = JobsByUser::query()->firstOrCreate([
-            'user_id' => $userId,
-            'type' => JobsByUserType::REPORT,
-        ]);
-
-        if ($report->status === JobsByUserStatus::PENDING) {
-            throw JobsByUserException::reportActive();
-        }
-
         $fileName = "report_$userId.xlsx";
-        $report->status = JobsByUserStatus::PENDING;
-        $report->file_name = $fileName;
-        $report->save();
+
+        $report = $createJobAction->execute($userId, JobsByUserType::REPORT, $fileName);
 
         try {
             Excel::queue(new ReportExport($report, $request->input('reports'), $request->date('from'), $request->date('to')), $fileName, 'exports')
@@ -87,47 +73,15 @@ class AdminReportController extends Controller
         };
     }
 
-    public function download(): StreamedResponse
-    {
-        $userId = auth()->user()->getAuthIdentifier();
-        $fileName = JobsByUser::query()->fromUser($userId)->getReports()->latest()->first()?->getAttribute('file_name');
-
-        /**
-         * @var FilesystemAdapter $disk
-         */
-        $disk = Storage::disk('exports');
-
-        if ($fileName === null || !$disk->exists($fileName)) {
-            abort(404);
-        }
-
-        return $disk->download($fileName);
-    }
-
     /**
-     * @throws JobsByUserException
-     * @throws ApplicationException
+     * @throws CustomException
      */
-    public function generateSales(SalesRequest $request): void
+    public function generateSales(SalesRequest $request, CreateJobsByUser $createJobAction): void
     {
         $userId = auth()->user()->getAuthIdentifier();
-
-        /**
-         * @var JobsByUser $sales
-         */
-        $sales = JobsByUser::query()->firstOrCreate([
-            'user_id' => $userId,
-            'type' => JobsByUserType::SALES,
-        ]);
-
-        if ($sales->status === JobsByUserStatus::PENDING) {
-            throw JobsByUserException::salesActive();
-        }
-
         $fileName = "sales_$userId.xlsx";
-        $sales->status = JobsByUserStatus::PENDING;
-        $sales->file_name = $fileName;
-        $sales->save();
+
+        $sales = $createJobAction->execute($userId, JobsByUserType::SALES, $fileName);
 
         try {
             Excel::queue(new SalesExport($sales, $request->date('from'), $request->date('to')), $fileName, 'exports')
@@ -163,6 +117,23 @@ class AdminReportController extends Controller
     {
         $userId = auth()->user()->getAuthIdentifier();
         $fileName = JobsByUser::query()->fromUser($userId)->getSales()->latest()->first()?->getAttribute('file_name');
+
+        /**
+         * @var FilesystemAdapter $disk
+         */
+        $disk = Storage::disk('exports');
+
+        if ($fileName === null || !$disk->exists($fileName)) {
+            abort(404);
+        }
+
+        return $disk->download($fileName);
+    }
+
+    public function download(): StreamedResponse
+    {
+        $userId = auth()->user()->getAuthIdentifier();
+        $fileName = JobsByUser::query()->fromUser($userId)->getReports()->latest()->first()?->getAttribute('file_name');
 
         /**
          * @var FilesystemAdapter $disk

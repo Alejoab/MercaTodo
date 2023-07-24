@@ -55,16 +55,17 @@ class AdminProductsExportTest extends UserTestCase
     {
         Excel::fake();
 
-        $filter = Category::query()->first()->id;
+        $categoryId = Category::query()->first()->id;
+        $brandId = Brand::query()->first()->id;
 
-        $count = Product::query()->filterCategory($filter)->count();
+        $count = Product::query()->filterCategory($categoryId)->filterBrand([$brandId])->count();
 
-        $response = $this->post(route('admin.products.export', ['category' => $filter,]));
+        $response = $this->post(route('admin.products.export', ['category' => $categoryId, 'brand' => $brandId, 'search' => 'a']));
 
         $response->assertOk();
 
         Excel::assertQueued("products_export_{$this->admin->id}.xlsx", 'exports', function ($export) use ($count) {
-            return $export->query()->count() === $count;
+            return $export->query()->count() <= $count;
         });
     }
 

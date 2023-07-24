@@ -29,11 +29,6 @@ class Category extends Model
         return CategoryFactory::new();
     }
 
-    /**
-     * Defines the relationship between category and products.
-     *
-     * @return HasMany
-     */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

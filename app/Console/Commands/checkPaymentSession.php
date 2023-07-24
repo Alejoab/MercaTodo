@@ -8,29 +8,17 @@ use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Domain\Payments\Factories\PaymentFactory;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Console\Command;
 
 class checkPaymentSession extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:check-payment-session';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = 'Check the status of the pending orders';
 
     /**
-     * Checks the payment session when the order is pending and monitors the status of the order while it is active.
-     *
-     * @return void
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function handle(): void
     {

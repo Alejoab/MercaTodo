@@ -12,6 +12,17 @@ class AdminProductApiTest extends UserTestCase
 {
     use RefreshDatabase;
 
+    public function test_admin_can_login(): void
+    {
+        $response = $this->postJson(route('api.login'), [
+            'email' => $this->admin->email,
+            'password' => 'password',
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['message', 'data']);
+    }
+
     public function test_only_admin_can_create_new_products(): void
     {
         $this->actingAs($this->customer);

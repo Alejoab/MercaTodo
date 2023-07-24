@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -14,7 +14,6 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const reportFile = ref('');
-let pollingInterval = null;
 
 const form = useForm({
     from: null,
@@ -24,13 +23,8 @@ const form = useForm({
 
 const submit = () => {
     isLoading.value = true;
-
     form.post(route('admin.reports.generate'), {
         preserveScroll: true,
-        onSuccess: () => {
-            reportFile.value = '';
-            pollingInterval = setInterval(() => checkReport(), 3000);
-        },
         onError: () => {
             isLoading.value = false;
         }
@@ -41,42 +35,25 @@ const checkReport = async () => {
     const response = await axios.get(route('admin.reports.check'));
 
     if (response.data.length === 0) {
-        clearInterval(pollingInterval);
-        isLoading.value = false;
-        return true;
+        return;
     }
 
     if (response.data.status === 'Completed') {
-        clearInterval(pollingInterval);
-        isLoading.value = false;
         reportFile.value = route('admin.reports.download');
-        return true;
+        return;
     }
 
     if (response.data.status === 'Failed') {
-        clearInterval(pollingInterval);
-        isLoading.value = false;
         form.errors.report = 'An error has occurred in the report. Please try again later';
-        return true;
+        return;
     }
 
-    return false;
-}
-
-const initialPolling = async () => {
     isLoading.value = true;
-    if (!await checkReport()) {
-        pollingInterval = setInterval(() => checkReport(), 3000);
-    }
 }
 
 onMounted(() => {
-    initialPolling();
+    checkReport();
 })
-
-onUnmounted(() => {
-    clearInterval(pollingInterval);
-});
 </script>
 
 <template>

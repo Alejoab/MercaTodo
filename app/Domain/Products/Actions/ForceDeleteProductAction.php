@@ -5,11 +5,16 @@ namespace App\Domain\Products\Actions;
 use App\Domain\Products\Contracts\ForceDeleteProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductImagesService;
+use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Log;
 
 class ForceDeleteProductAction implements ForceDeleteProduct
 {
 
+    /**
+     * @throws CustomException
+     */
     public function execute(Product $product): void
     {
         $imageService = new ProductImagesService();

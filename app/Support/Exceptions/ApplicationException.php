@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
-class ApplicationException extends Exception
+class ApplicationException extends CustomException
 {
+    protected string $sessionErrorName = 'app';
+
     public function __construct(Throwable $e, array $data = [])
     {
         parent::__construct("The application is not working properly. Please contact with support.");
@@ -21,13 +23,5 @@ class ApplicationException extends Exception
                 'Trace' => $e->getTraceAsString(),
             ]
         );
-    }
-
-    /**
-     * @throws ValidationException
-     */
-    public function render()
-    {
-        throw ValidationException::withMessages(['app' => $this->getMessage()]);
     }
 }

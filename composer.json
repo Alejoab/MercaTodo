@@ -56,7 +56,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "phpstan": "./vendor/bin/phpstan analyze"
     },
     "extra": {
         "laravel": {

@@ -29,11 +29,6 @@ class Brand extends Model
         return BrandFactory::new();
     }
 
-    /**
-     * Get all the products for the Brand
-     *
-     * @return HasMany
-     */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

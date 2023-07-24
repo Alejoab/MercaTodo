@@ -6,6 +6,7 @@ use App\Domain\Orders\Contracts\AcceptOrder;
 use App\Domain\Orders\Enums\OrderStatus;
 use App\Domain\Orders\Models\Order;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -13,7 +14,7 @@ class AcceptOrderAction implements AcceptOrder
 {
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(Order $order): void
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Order;
+namespace Tests\Feature\Orders;
 
 use App\Domain\Customers\Models\City;
 use App\Domain\Customers\Models\Customer;
@@ -12,6 +12,7 @@ use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
 use App\Domain\Users\Models\User;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -127,6 +128,88 @@ class OrderTest extends UserTestCase
         ]);
     }
 
+    public function test_reject_payment(): void
+    {
+        Http::fake(
+            [
+                config('placetopay.url')."/api/session/1" => [
+                    "requestId" => 1,
+                    "status" => [
+                        "status" => "REJECTED",
+                        "reason" => "00",
+                        "message" => "La petición ha sido aprobada exitosamente",
+                        "date" => "2022-07-27T14:51:27-05:00",
+                    ],
+                ],
+            ]
+        );
+
+        Order::query()->create([
+            'user_id' => $this->customer->id,
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->get(route('payment.success'));
+        $response->assertOk();
+
+        $this->assertDatabaseCount('orders', 1);
+        $this->assertDatabaseHas('orders', [
+            'user_id' => $this->customer->id,
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::REJECTED,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+    }
+
+    public function test_pending_payment(): void
+    {
+        Http::fake(
+            [
+                config('placetopay.url')."/api/session/1" => [
+                    "requestId" => 1,
+                    "status" => [
+                        "status" => "PENDING",
+                        "reason" => "00",
+                        "message" => "La petición ha sido aprobada exitosamente",
+                        "date" => "2022-07-27T14:51:27-05:00",
+                    ],
+                ],
+            ]
+        );
+
+        Order::query()->create([
+            'user_id' => $this->customer->id,
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->get(route('payment.success'));
+        $response->assertOk();
+
+        $this->assertDatabaseCount('orders', 1);
+        $this->assertDatabaseHas('orders', [
+            'user_id' => $this->customer->id,
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+    }
+
     public function test_retry_payment_when_the_session_is_still_active(): void
     {
         /**
@@ -158,6 +241,38 @@ class OrderTest extends UserTestCase
             'requestId' => 1,
             'processUrl' => 'https://test-route.com',
         ]);
+    }
+
+    public function test_retry_payment_with_another_active_payment(): void
+    {
+        /**
+         * @var Order $order
+         */
+        $order = Order::query()->create([
+            'user_id' => $this->customer->id,
+            'code' => '123456',
+            'total' => 300,
+            'status' => OrderStatus::REJECTED,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        Order::query()->create([
+            'user_id' => $this->customer->id,
+            'code' => '123457',
+            'total' => 300,
+            'status' => OrderStatus::PENDING,
+            'payment_method' => PaymentMethod::PLACE_TO_PAY,
+            'requestId' => 1,
+            'processUrl' => 'https://test-route.com',
+        ]);
+
+        $response = $this->post(route('payment.retry'), [
+            'orderId' => $order->id,
+        ]);
+
+        $response->assertSessionHasErrors();
     }
 
     public function test_retry_payment_when_the_session_is_expired(): void
@@ -332,6 +447,54 @@ class OrderTest extends UserTestCase
     {
         $this->product->stock = 2;
         $this->product->save();
+        $response = $this->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
+
+        $response->assertSessionHasErrors();
+    }
+
+    public function test_try_to_buy_a_cart_with_an_error_in_the_session(): void
+    {
+        Http::fake(
+            [
+                config('placetopay.url').'/api/session' => Http::response([
+                    "status" => [
+                        "status" => "Failed",
+                        "reason" => "PC",
+                        "message" => "La petición se ha procesado correctamente",
+                        "date" => "2021-11-30T15:08:27-05:00",
+                    ],
+                    "requestId" => 1,
+                    "processUrl" => "https://test-route.com",
+                ], 500),
+            ]
+        );
+
+        $response = $this->post(route('cart.buy'), [
+            'paymentMethod' => 'PlaceToPay',
+        ]);
+
+        $response->assertSessionHasErrors();
+    }
+
+    public function test_try_to_buy_a_cart_with_an_error_in_the_auth(): void
+    {
+        Http::fake(
+            [
+                config('placetopay.url').'/api/session' => Http::response([
+                    "status" => [
+                        "status" => "Failed",
+                        "reason" => 401,
+                        "message" => "La petición se ha procesado correctamente",
+                        "date" => "2021-11-30T15:08:27-05:00",
+                    ],
+                    "requestId" => 1,
+                    "processUrl" => "https://test-route.com",
+                ], 500),
+            ]
+        );
+
         $response = $this->post(route('cart.buy'), [
             'paymentMethod' => 'PlaceToPay',
         ]);
