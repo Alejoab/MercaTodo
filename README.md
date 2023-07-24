@@ -22,7 +22,6 @@ In order to run the application, you must do the following:
 - Create the .env file from the .env.example file.
 - Configure the needed information in the .env file.
 - Run `composer install` to install the dependencies.
-- Run `npm install` to install the dependencies
 - Run `php artisan key:generate` to generate the application key.
 - Run `php artisan migrate:fresh --seed` to create the database tables.
 - Run `php artisan storage:link` to make the images available to the application.
@@ -67,7 +66,7 @@ The .env file contains the configuration of the application. It is important to 
 > BRAND_SEEDER  
 > CATEGORY_SEEDER  
 > USER_SEEDER  
-> PRODUCT_SEEDER
+> PRODUCT_SEEDER  
 > ORDER_SEEDER
 
 **Note:** The value of the category seeder must not be greater than 62.
