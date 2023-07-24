@@ -5,6 +5,7 @@ namespace App\Domain\Users\Actions;
 use App\Domain\Users\Contracts\UpdateUserPassword;
 use App\Domain\Users\Models\User;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -12,7 +13,7 @@ use Throwable;
 class UpdateUserPasswordAction implements UpdateUserPassword
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(User $user, string $password): void
     {

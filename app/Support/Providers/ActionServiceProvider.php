@@ -48,6 +48,8 @@ use App\Domain\Users\Contracts\RestoreUser;
 use App\Domain\Users\Contracts\UpdateUser;
 use App\Domain\Users\Contracts\UpdateUserPassword;
 use App\Domain\Users\Contracts\UpdateUserRole;
+use App\Support\Actions\CreateJobsByUserAction;
+use App\Support\Contracts\CreateJobsByUser;
 use Illuminate\Support\ServiceProvider;
 
 class ActionServiceProvider extends ServiceProvider
@@ -81,5 +83,7 @@ class ActionServiceProvider extends ServiceProvider
             RejectOrder::class => RejectOrderAction::class,
             UpdateOrder::class => UpdateOrderAction::class,
             RestoreProducts::class => RestoreProductsAction::class,
+
+            CreateJobsByUser::class => CreateJobsByUserAction::class,
         ];
 }

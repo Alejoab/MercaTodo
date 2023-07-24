@@ -6,6 +6,7 @@ use App\Domain\Users\Contracts\CreateUser;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,12 +16,14 @@ use Throwable;
 class CreateUserAction implements CreateUser
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
-    public function execute(array $data): Builder|Model
+    public function execute(array $data): User
     {
         try {
-            /** @var User $user */
+            /**
+             * @var User $user
+             */
             $user = User::query()->create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),

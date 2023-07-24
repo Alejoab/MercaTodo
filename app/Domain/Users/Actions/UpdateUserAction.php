@@ -5,13 +5,14 @@ namespace App\Domain\Users\Actions;
 use App\Domain\Users\Contracts\UpdateUser;
 use App\Domain\Users\Models\User;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UpdateUserAction implements UpdateUser
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(User $user, array $data): void
     {

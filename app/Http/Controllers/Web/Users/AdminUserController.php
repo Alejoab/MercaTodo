@@ -22,14 +22,6 @@ use Inertia\Response;
 
 class AdminUserController extends Controller
 {
-    /**
-     * Show the users list.
-     *
-     * @param Request      $request
-     * @param UsersService $service
-     *
-     * @return Response
-     */
     public function index(Request $request, UsersService $service): Response
     {
         $users = $service->listUsersToTable($request->get('search'));
@@ -39,13 +31,6 @@ class AdminUserController extends Controller
         ]);
     }
 
-    /**
-     * Shows the user page.
-     *
-     * @param User $user
-     *
-     * @return Response
-     */
     public function userShow(User $user): Response
     {
         return Inertia::render('Administrator/Users/EditUser', [
@@ -55,15 +40,6 @@ class AdminUserController extends Controller
         ]);
     }
 
-    /**
-     * Updates a user.
-     *
-     * @param UserRoleUpdateRequest $request
-     * @param User                  $user
-     * @param UpdateUserRole        $updateRoleAction
-     *
-     * @return RedirectResponse
-     */
     public function userUpdate(UserRoleUpdateRequest $request, User $user, UpdateUserRole $updateRoleAction): RedirectResponse
     {
         $updateRoleAction->execute($user, $request['role'], $request['permissions']);
@@ -71,15 +47,6 @@ class AdminUserController extends Controller
         return redirect()->route('admin.user.show', $user->getKey());
     }
 
-    /**
-     * Updates a user password.
-     *
-     * @param Request            $request
-     * @param User               $user
-     * @param UpdateUserPassword $action
-     *
-     * @return RedirectResponse
-     */
     public function userUpdatePassword(Request $request, User $user, UpdateUserPassword $action): RedirectResponse
     {
         $request->validate([
@@ -91,41 +58,16 @@ class AdminUserController extends Controller
         return redirect()->route('admin.user.show', $user->getKey());
     }
 
-    /**
-     * Disables a user.
-     *
-     * @param User       $user
-     * @param DeleteUser $action
-     *
-     * @return void
-     */
     public function userDestroy(User $user, DeleteUser $action): void
     {
         $action->execute($user);
     }
 
-    /**
-     * Restores a user.
-     *
-     * @param User        $user
-     * @param RestoreUser $action
-     *
-     * @return void
-     */
     public function userRestore(User $user, RestoreUser $action): void
     {
         $action->execute($user);
     }
 
-    /**
-     * Force deletes a user.
-     *
-     * @param Request         $request
-     * @param User            $user
-     * @param ForceDeleteUser $action
-     *
-     * @return RedirectResponse
-     */
     public function userForceDelete(Request $request, User $user, ForceDeleteUser $action): RedirectResponse
     {
         $request->validate([

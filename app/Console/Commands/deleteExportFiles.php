@@ -8,24 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class deleteExportFiles extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:delete-export-files';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = 'Delete export files';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): void
     {
         $exports = JobsByUser::query()->whereCompletedStatus()->get();
 

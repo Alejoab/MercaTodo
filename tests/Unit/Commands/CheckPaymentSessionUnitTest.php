@@ -59,6 +59,33 @@ class CheckPaymentSessionUnitTest extends UserTestCase
         ]);
     }
 
+    public function test_command_check_payment_session_with_rejected_order()
+    {
+        $this->travel(config('payment.expire') + 1)->minutes();
+
+        Http::fake(
+            [
+                config('placetopay.url')."/api/session/1" => [
+                    "requestId" => 1,
+                    "status" => [
+                        "status" => "REJECTED",
+                        "reason" => "00",
+                        "message" => "La petición ha sido aprobada exitosamente",
+                        "date" => "2022-07-27T14:51:27-05:00",
+                    ],
+                ],
+            ]
+        );
+
+        $this->artisan('app:check-payment-session');
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $this->order->id,
+            'status' => OrderStatus::REJECTED,
+            'active' => false,
+        ]);
+    }
+
     public function test_command_check_payment_session_with_active_rejected_order(): void
     {
         $this->order->status = OrderStatus::REJECTED;

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Domain\Customers\Enums\DocumentType;
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Users\Enums\RoleEnum;
 use App\Domain\Users\Models\User;
@@ -25,12 +26,12 @@ class UserSeeder extends Seeder
 
         Customer::factory()->create([
             'name' => env('ADMIN_NAME'),
-            'surname' => env('ADMIN_SURNAME'),
-            'document_type' => env('ADMIN_DOCUMENT_TYPE'),
-            'document' => env('ADMIN_DOCUMENT'),
-            'phone' => env('ADMIN_PHONE'),
-            'address' => env('ADMIN_ADDRESS'),
-            'city_id' => env('ADMIN_CITY_ID'),
+            'surname' => '',
+            'document_type' => DocumentType::CC,
+            'document' => '',
+            'phone' => '',
+            'address' => '',
+            'city_id' => 1,
             'user_id' => $adminUser->id,
         ]);
 

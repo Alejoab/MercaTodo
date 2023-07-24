@@ -41,7 +41,6 @@ Route::middleware('auth')->group(function () {
     Route::get('order-history', [ProfileController::class, 'orderHistory'])->name('order.history');
 });
 
-
 Route::middleware([])->group(function () {
     Route::get('', [UserController::class, 'index'])->name('home');
     Route::get('categories', [CategoryController::class, 'list'])->name('categories');

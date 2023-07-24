@@ -4,29 +4,37 @@ namespace App\Domain\Products\Actions;
 
 use App\Domain\Products\Models\Category;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use App\Support\Services\CacheDeleteService;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
 class CreateCategoryAction
 {
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
-    public function execute($name): Builder|Model
+    public function execute($name): Category
     {
         try {
             $name = ucwords(strtolower($name));
-            $category = Category::query()->where('name', '=', $name)->first();
-            if (!is_null($category)) {
-                return $category;
-            }
-            (new CacheDeleteService())->deleteCategoriesCache();
 
-            return Category::query()->create([
-                'name' => $name,
-            ]);
+            /**
+             * @var ?Category $category
+             */
+            $category = Category::query()->where('name', '=', $name)->first();
+
+            if (!$category) {
+                (new CacheDeleteService())->deleteCategoriesCache();
+
+                /**
+                 * @var Category $category
+                 */
+                $category = Category::query()->create([
+                    'name' => $name,
+                ]);
+            }
+
+            return $category;
         } catch (Throwable $e) {
             throw new ApplicationException($e, [
                 'name' => $name,

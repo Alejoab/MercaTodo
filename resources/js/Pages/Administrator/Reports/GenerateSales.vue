@@ -7,7 +7,6 @@ import InputLabel from "@/Components/InputLabel.vue";
 
 const isLoading = ref(false);
 const salesFile = ref('');
-let pollingInterval = null;
 
 const form = useForm({
     from: null,
@@ -19,10 +18,6 @@ const submit = () => {
 
     form.post(route('admin.reports.sales.generate'), {
         preserveScroll: true,
-        onSuccess: () => {
-            salesFile.value = '';
-            pollingInterval = setInterval(() => checkSales(), 10000);
-        },
         onError: () => {
             isLoading.value = false;
         }
@@ -33,42 +28,25 @@ const checkSales = async () => {
     const response = await axios.get(route('admin.reports.sales.check'));
 
     if (response.data.length === 0) {
-        clearInterval(pollingInterval);
-        isLoading.value = false;
-        return true;
+        return;
     }
 
     if (response.data.status === 'Completed') {
-        clearInterval(pollingInterval);
-        isLoading.value = false;
         salesFile.value = route('admin.reports.sales.download');
-        return true;
+        return;
     }
 
     if (response.data.status === 'Failed') {
-        clearInterval(pollingInterval);
-        isLoading.value = false;
         form.errors.sales = 'An error has occurred generating the sales. Please try again later';
-        return true;
+        return;
     }
 
-    return false;
-}
-
-const initialPolling = async () => {
     isLoading.value = true;
-    if (!await checkSales()) {
-        pollingInterval = setInterval(() => checkSales(), 10000);
-    }
 }
 
 onMounted(() => {
-    initialPolling();
+    checkSales();
 })
-
-onUnmounted(() => {
-    clearInterval(pollingInterval);
-});
 </script>
 
 <template>

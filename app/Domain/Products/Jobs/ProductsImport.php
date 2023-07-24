@@ -8,10 +8,14 @@ use App\Domain\Products\Contracts\CreateProduct;
 use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
 use App\Support\Enums\JobsByUserStatus;
+use App\Support\Enums\ModelStatus;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -38,12 +42,11 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     }
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function collection(Collection $collection): void
     {
         foreach ($collection as $row) {
-
             if (!isset($row['description'])) {
                 $row['description'] = null;
             }
@@ -56,32 +59,15 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
              * @var ?Product $productFound
              */
             $productFound = Product::query()->withTrashed()->where('code', '=', $row['code'])->latest()->first();
+            $data = $this->getData($row);
 
             if ($productFound) {
-                $product = $this->updateAction->execute($productFound, [
-                    'code' => $row['code'],
-                    'name' => $row['name'],
-                    'description' => $row['description'],
-                    'price' => $row['price'],
-                    'stock' => $row['stock'],
-                    'category_name' => $row['category_name'],
-                    'brand_name' => $row['brand_name'],
-                    'image' => null,
-                ]);
+                $product = $this->updateAction->execute($productFound, $data);
             } else {
-                $product = $this->createAction->execute([
-                    'code' => $row['code'],
-                    'name' => $row['name'],
-                    'description' => $row['description'],
-                    'price' => $row['price'],
-                    'stock' => $row['stock'],
-                    'category_name' => $row['category_name'],
-                    'brand_name' => $row['brand_name'],
-                    'image' => null,
-                ]);
+                $product = $this->createAction->execute($data);
             }
 
-            if ($row['status'] === 'Inactive') {
+            if ($row['status'] === ModelStatus::INACTIVE->value) {
                 $product->delete();
             } else {
                 $product->restore();
@@ -100,18 +86,32 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
                 'stock' => ['required', 'integer', 'min:0'],
                 'category_name' => ['required', 'string', 'max:255'],
                 'brand_name' => ['required', 'string', 'max:255'],
-                'status' => ['required', Rule::in(['Active', 'Inactive'])],
+                'status' => ['required', Rule::enum(ModelStatus::class)],
             ])->validate();
 
             return true;
         } catch (ValidationException $e) {
             $errors = [
-                $row['code'] ?? '' => $e->errors(),
+                    $row['code'] ?? '' => $e->errors(),
             ];
             $this->errors += $errors;
 
             return false;
         }
+    }
+
+    private function getData(Collection $row): array
+    {
+        return [
+            'code' => $row['code'],
+            'name' => $row['name'],
+            'description' => $row['description'],
+            'price' => $row['price'],
+            'stock' => $row['stock'],
+            'category_name' => $row['category_name'],
+            'brand_name' => $row['brand_name'],
+            'image' => null,
+        ];
     }
 
     public function chunkSize(): int
@@ -134,5 +134,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading, 
     {
         $this->import->status = JobsByUserStatus::FAILED;
         $this->import->save();
+
+        Mail::to($this->import->user->email)->queue(new JobsByUserMail($this->import));
     }
 }

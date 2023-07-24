@@ -6,6 +6,7 @@ use App\Domain\Products\Contracts\UpdateProduct;
 use App\Domain\Products\Models\Product;
 use App\Domain\Products\Services\ProductImagesService;
 use App\Support\Exceptions\ApplicationException;
+use App\Support\Exceptions\CustomException;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -13,7 +14,7 @@ class UpdateProductAction implements UpdateProduct
 {
 
     /**
-     * @throws ApplicationException
+     * @throws CustomException
      */
     public function execute(Product $product, array $data): Product
     {
@@ -44,11 +45,13 @@ class UpdateProductAction implements UpdateProduct
             DB::commit();
 
             return $product;
-        } catch (ApplicationException $e) {
-            DB::rollBack();
-            throw $e;
         } catch (Throwable $e) {
             DB::rollBack();
+
+            if ($e instanceof CustomException) {
+                throw $e;
+            }
+
             throw new ApplicationException($e, [
                 'product' => $product->toArray(),
                 'data' => $data,

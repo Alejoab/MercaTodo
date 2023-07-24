@@ -9,18 +9,21 @@ use App\Domain\Orders\Models\Order;
 use App\Domain\Products\Models\Brand;
 use App\Domain\Products\Models\Category;
 use App\Domain\Products\Models\Product;
-use App\Domain\Reports\Classes\SalesByBrand;
-use App\Domain\Reports\Classes\SalesByCategory;
 use App\Domain\Reports\Classes\OrdersByDepartment;
 use App\Domain\Reports\Classes\OrdersByPaymentMethodAndStatus;
+use App\Domain\Reports\Classes\SalesByBrand;
+use App\Domain\Reports\Classes\SalesByCategory;
 use App\Domain\Reports\Classes\SalesByProduct;
 use App\Domain\Reports\Enums\ReportType;
 use App\Domain\Reports\Jobs\ReportExport;
 use App\Support\Enums\JobsByUserStatus;
 use App\Support\Enums\JobsByUserType;
 use App\Support\Jobs\CompleteJobsByUser;
+use App\Support\Mails\JobsByUserMail;
 use App\Support\Models\JobsByUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\UserTestCase;
@@ -64,7 +67,17 @@ class AdminReportUnitTest extends UserTestCase
 
     public function test_store_report(): void
     {
-        Excel::store(new ReportExport($this->report, [ReportType::R1->value], null, null), $this->report->file_name, 'exports');
+        Excel::store(
+            new ReportExport($this->report, [
+                ReportType::R1->value,
+                ReportType::R2->value,
+                ReportType::R3->value,
+                ReportType::R4->value,
+                ReportType::R5->value,
+            ], Carbon::create(2017, 2, 1), Carbon::create(2017, 2, 10)),
+            $this->report->file_name,
+            'exports'
+        );
 
         Storage::disk('exports')->assertExists($this->report->file_name);
     }
@@ -82,6 +95,8 @@ class AdminReportUnitTest extends UserTestCase
             'id' => $this->report->id,
             'status' => JobsByUserStatus::COMPLETED,
         ]);
+
+        Mail::assertQueued(JobsByUserMail::class);
     }
 
     public function test_sales_by_category(): void
